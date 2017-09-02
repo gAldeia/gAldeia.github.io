@@ -1,4 +1,4 @@
-//expression.js
+//Expression.js
 
 
 //VARIAVEIS GLOBAIS-------------------------------------------------------------
@@ -143,10 +143,16 @@ function play(){
 	inputPoints.push(new DataPoint([1, 0, 5], 2));
 	inputPoints.push(new DataPoint([2, 2, 5], 5));
 
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
 	//teste da criação de expressões.
 	for (var i=0; i<10; i++) {
 		var exp1 = new Expression();
 		console.log(exp1.getStringExpression_d());
+		ctx.fillText(exp1.getStringExpression_d(), 50, 50 + 25*i);
+		ctx.stroke();
 	}
 	
 }
