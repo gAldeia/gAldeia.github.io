@@ -8,32 +8,24 @@
 		<meta content="text/html"/>
 		<meta charset="UTF-8"/>
 
-		<script type="text/javascript" src=source.js></script>
+		<script type="text/javascript" src=expression.js></script>
 		<link rel="stylesheet" href="style.css">
 
-		<title>Genetica polinomial</title>
-
-			
+		<title>Genetic Algorithm</title>
 
 	</head>
 
-	<body onload="canvas_setup()">
+	<body onload="setup()">
 
 		<div id="canvas_container">
+			
 			<canvas id="canvas" width="600px" height="600px">Canvas não suportado</canvas>
 		</div>
 
-		<div id ="control_panel">
-			Mutation rate: <input type="range" id="nMutateRate" min="0" max="1" step="0.01" value="0.0"/>
-			</br>
-			Constants range: <input type="range" id="nConstRate" min="0" max="100" step="0.1" value="10"/>
-			</br>
-			Number of terms: <input type="range" id="nTerms" min="0" max="10" step="1" value="2"/>
-			</br>
-			Max Degree: <input type="range" id="nGrau" min="0" max="10" step="1" value="2"/>
+		<div id="control_panel">
+			<button id="" onclick="play()">Iniciar evolução</button></br>
 		</div>
 
 	</body>
 
 </html>
-
