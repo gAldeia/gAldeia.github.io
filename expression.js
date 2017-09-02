@@ -146,6 +146,8 @@ function play(){
 
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
+	ctx.clearRect(0, 0, 600, 600);
+	
 
 	//teste da criação de expressões.
 	for (var i=0; i<10; i++) {
