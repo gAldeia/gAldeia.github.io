@@ -14,6 +14,9 @@ var exponentRange = 3;
 //o intervalo que as potências das variáveis poderão assumir. isso é controlado
 //para evitar números absurdos. 
 
+//variáveis do canvas
+var canvas;
+var ctx;
 
 //CLASSES-----------------------------------------------------------------------
 var DataPoint = function(x, y){
@@ -134,6 +137,11 @@ function getRandomOperation(){
 
 function setup(){
 
+	canvas = document.getElementById("canvas");
+	ctx = canvas.getContext("2d");
+
+	ctx.canvas.width  = window.innerWidth;
+  	ctx.canvas.height = window.innerHeight;
 }
 
 function play(){
@@ -143,17 +151,14 @@ function play(){
 	inputPoints.push(new DataPoint([1, 0, 5], 2));
 	inputPoints.push(new DataPoint([2, 2, 5], 5));
 
-
-	var canvas = document.getElementById("canvas");
-	var ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, 600, 600);
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
-
 	//teste da criação de expressões.
 	for (var i=0; i<10; i++) {
 		var exp1 = new Expression();
 		console.log(exp1.getStringExpression_d());
-		ctx.fillText(exp1.getStringExpression_d(), 50, 50 + 25*i);
+		ctx.font="20px Arial";
+		ctx.fillText(exp1.getStringExpression_d(), 50, 50 + 35*i);
 		ctx.stroke();
 	}
 	
