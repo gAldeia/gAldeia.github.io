@@ -3,7 +3,6 @@
 <html lan="pt-br">
 <html>
 
-	
 <head>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -65,7 +64,7 @@
 		<section>
 			<div class="page-header" id="main">
 				
-				<h2>Regressão Simbólica usando técnicas de Programação Genética</h2>
+				<h1>Regressão Simbólica usando técnicas de Programação Genética</h1>
 
 				<p>Página do projeto de iniciação científica que aplica técnicas de programação genética no método de regressão simbólica.</p>
 
@@ -77,8 +76,9 @@
 
 				<h1>Sobre</h1>
 
-				<p>Regressão simbólica é uma técnica que consiste na criação e manipulação de expressões matemáticas a fim de encontrar um modelo que seja capaz de descrever suficientemente bem uma série de pontos. As expressões são criadas arbitráriamente e são avaliadas.</p>
-				<p>Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar muito mais rápido operações do que um humano. Assim, com a programação genética, podemos realizar uma busca ampla pelo universo de expressões matemáticas e tentar encontrar o modelo que descreve a série de pontos.</p>
+				<p class="text-justify">Regressão simbólica é uma técnica que consiste na criação e manipulação de expressões matemáticas a fim de encontrar um modelo que seja capaz de descrever suficientemente bem uma série de pontos. As expressões são criadas arbitráriamente e são avaliadas.</p>
+
+				<p class="text-justify">Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar muito mais rápido operações do que um humano. Assim, com a programação genética, podemos realizar uma busca ampla pelo universo de expressões matemáticas e tentar encontrar o modelo que descreve a série de pontos.</p>
 			</div>
 		</section>
 
@@ -90,27 +90,26 @@
 				<section>
 					<div class="well" id="guide">
 
-						<h3>Como utilizar a ferramenta online</h3>
+						<h2>Como utilizar a ferramenta online</h2>
 
 						<div class="row">
 							<div class="col-lg-4">
 
-									<h3>Entrada</h3>
+								<h3>Entrada</h3>
 
-									<p>Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão .csv.</p>
-									<p></p>
+								<p class="text-justify">Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão .csv.</p>
 							</div>
 							<div class="col-lg-4">
 
-									<h3>Processamento</h3>
+								<h3>Processamento</h3>
 
-									<p>O processamento é feito na sua própria máquina (cuidado, isso pode prejudicar o desempenho do seu sistema caso esteja realizando muitas operações ao mesmo tempo!).</p>
+								<p class="text-justify">O processamento é feito na sua própria máquina (cuidado, isso pode prejudicar o desempenho do seu sistema caso esteja realizando muitas operações ao mesmo tempo!).</p>
 							</div>
 							<div class="col-lg-4">
 
-									<h3>Saída</h3>
+								<h3>Saída</h3>
 
-									Conforme os dados vão sendo processados e uma equação ideal é procurada, informações serão mostradas na aba "Resultados".
+								<p class="text-justify">Conforme os dados vão sendo processados e uma equação ideal é procurada, informações serão mostradas na aba "Resultados".</p>
 							</div>
 						</div>
 
@@ -120,9 +119,29 @@
 				<section>
 					<div class="well" id="input">
 
-						<h3>Entrada de dados</h3>
+						<h2>Entrada de dados</h2>
 
 						<p>Digite os dados aqui ou carregue um arquivo do seu computador:</p>
+
+						<div class="page-header">
+							<h3>Entrada manual de dados</h3>
+						
+							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui. Utilize o formato: x.xxx, e separe os valores por vírgulas. Ex: 3.14, 3.1415, 0"></textarea>
+						</div>
+
+						<div class="page-header">
+							<h3>Upload de arquivo local</h3>
+
+							<span class="btn btn-default btn-file">
+								<input type="file">
+							</span>
+						</div>
+
+						<div class="page-header">
+							<button type="button" class="btn btn-primary btn-lg btn-block">Usar valores digitados</button>
+							<button type="button" class="btn btn-info btn-lg btn-block">Usar arquivo enviado</button>
+						</div>
+
 					</div>
 				</section>
 
@@ -131,12 +150,14 @@
 
 						<h3>Resultado</h3>
 
-						<p>Conforme a evolução for ocorrendo, informações sobre a população e a melhor resposta que conseguimos serão mostradas e atualizadas no quadro abaixo.</p>
-						<p>O que se espera é encontrar a equação que deu origem aos dados de entrada. Se os dados vieram de uma equação, espera-se encontrar a própria equação (ou uma muito próxima dela).</p>
-						<p>Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
+						<p class="text-justify">Conforme a evolução for ocorrendo, informações sobre a população e a melhor resposta que conseguimos serão mostradas e atualizadas no quadro abaixo.</p>
 
-						<button onclick="setup()">Preparar teste</button>
-						<button onclick="play()">Testar</button>
+						<p class="text-justify">O que se espera é encontrar a equação que deu origem aos dados de entrada. Se os dados vieram de uma equação, espera-se encontrar a própria equação (ou uma muito próxima dela).</p>
+
+						<p class="text-justify">Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
+
+						<button type="button" class="btn btn-primary" onclick="setup()">Preparar teste</button>
+						<button type="button" class="btn btn-primary" onclick="play()">Testar</button>
 
 						<div class="well" id="canvas-container">
 							<canvas class="text-center" width="0px" height="0px" id="canvas" >Seu browser não suporta algumas características do site.</canvas>
@@ -149,7 +170,7 @@
 
 						<h3>O resultado obtido foi o esperado?</h3>
 
-						<p>A evolução é muito influenciada pelos melhores indivíduos das primeiras gerações. Casos infelizes onde uma expressão insatisfatória (distante da expressão que rege os dados de entrada) guie esta primeira etapa podem acontecer. Com a primeira geração sendo criada aleatóriamente, o rumo da evolução pode acabar sendo erroneamente direcionado. Se o resultado obtido não parece, a princípio, correto, tente executar o algoritmo mais uma vez. Este fator aleatório pode ter uma influência minimizada quando vários testes são realizados, ou quando a população é grande. </p>
+						<p class="text-justify">A evolução é muito influenciada pelos melhores indivíduos das primeiras gerações. Casos infelizes onde uma expressão insatisfatória (distante da expressão que rege os dados de entrada) guie esta primeira etapa podem acontecer. Com a primeira geração sendo criada aleatóriamente, o rumo da evolução pode acabar sendo erroneamente direcionado. Se o resultado obtido não parece, a princípio, correto, tente executar o algoritmo mais uma vez. Este fator aleatório pode ter uma influência minimizada quando vários testes são realizados, ou quando a população é grande. </p>
 					</div>
 				</section>
 
