@@ -71,5 +71,5 @@ function manual_upload(){
 	}
 	console.log(lines);
 	
-	window.alert("Arquivo carregado.");
+	window.alert("Leitura efetuada.");
 }
