@@ -10,6 +10,8 @@
 	<meta charset="UTF-8"/>
 
 	<script type="text/javascript" src=expression.js></script>
+	<script type="text/javascript" src=loadFile.js></script>
+
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 	<title>Regressão Simbólica com Programação Genética</title>
@@ -50,7 +52,7 @@
 		</div><!--container-->
 	</nav><!--navbar-->
 
-	<div class="jumbotron">
+	<div class="jumbotron container-fluid">
 		<div class="container text-center">
 
 			<h2>Regressão Simbólica usando técnicas de Programação Genética</h2>
@@ -121,25 +123,27 @@
 
 						<h2>Entrada de dados</h2>
 
-						<p>Digite os dados aqui ou carregue um arquivo do seu computador:</p>
+						<p class="text-justify">Digite os dados aqui ou carregue um arquivo do seu computador:</p>
 
 						<div class="page-header">
 							<h3>Entrada manual de dados</h3>
 						
-							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui. Utilize o formato: x.xxx, e separe os valores por vírgulas. Ex: 3.14, 3.1415, 0"></textarea>
+							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui. Utilize o formato x.xxx, e separe os valores por vírgulas. Quebre uma linha no final de cada ponto. Ex: 3.14, 3.1415, 0" id="my-manualinput"></textarea>
 						</div>
 
 						<div class="page-header">
 							<h3>Upload de arquivo local</h3>
 
+							<p class="text-justify">Atenção: O arquivo deve ser do tipo .csv, com os dados separados por vírgulas.</p>
+
 							<span class="btn btn-default btn-file">
-								<input type="file">
+								<input type="file" id="my-csvinput" accept=".csv" />
 							</span>
 						</div>
 
 						<div class="page-header">
-							<button type="button" class="btn btn-primary btn-lg btn-block">Usar valores digitados</button>
-							<button type="button" class="btn btn-info btn-lg btn-block">Usar arquivo enviado</button>
+							<button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
+							<button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
 						</div>
 
 					</div>
