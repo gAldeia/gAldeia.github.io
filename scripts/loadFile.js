@@ -21,6 +21,8 @@ function csv_upload(){
 
 	reader.readAsText(csv);
 	reader.onload = loadHandler;
+	
+	window.alert("Arquivo carregado.");
 }
 
 function loadHandler(event){
@@ -67,5 +69,7 @@ function manual_upload(){
 		}
 		lines.push(tarr);
 	}
-	console.log(lines);	
+	console.log(lines);
+	
+	window.alert("Arquivo carregado.");
 }
