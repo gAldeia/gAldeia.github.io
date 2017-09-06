@@ -21,7 +21,7 @@ function csv_upload(){
 
 	reader.readAsText(csv);
 	reader.onload = loadHandler;
-	
+
 	window.alert("Arquivo carregado.");
 }
 
@@ -70,6 +70,23 @@ function manual_upload(){
 		lines.push(tarr);
 	}
 	console.log(lines);
-	
-	window.alert("Leitura efetuada.");
+
+	window.alert("leitura efetuada");
+}
+
+function linesToDataPoint(){
+	var Points = [];
+
+	var y;
+	var aux;
+
+	for (var i=0; i<lines.length; i++){
+		y = lines[i][0];
+		aux = [];
+		for(var j=1; j<lines[i].length; j++){
+			aux.push(lines[i][j]);
+		}
+		Points.push(new DataPoint(aux, y) );
+	}
+	return Points;
 }
