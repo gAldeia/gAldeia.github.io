@@ -48,7 +48,7 @@ var SimpleFunction = function(){
 	this.operation = getRandomOperation();
 }
 
-var Expression = function(){
+var Expression = function(size){
 
 	//classe que representa a função final, onde é feita a composição
 	//com as funções menores. Aqui as variáveis globais têm efeito na
@@ -59,9 +59,9 @@ var Expression = function(){
 	//f(x, y, ...) = w0*g(x, y, ...) + w1*f(x, y, ...) + ...
 
 	this.equation = [ ];
-	this.expressionSize = expressionSize;
+	this.expressionSize = size;
 
-	for (var i=0; i<expressionSize; i++) 
+	for (var i=0; i<this.expressionSize; i++) 
 		this.equation.push(new SimpleFunction());
 }
 
@@ -137,25 +137,26 @@ function getRandomOperation(){
 
 function setup(){
 
+	//configura o canvas para desenhos e plot do gráfico. transforma os 
+	//dados lidos em um array de dataPoint.
+
 	canvas = document.getElementById("canvas");
 	ctx = canvas.getContext("2d");
 
 	ctx.canvas.width  = window.innerWidth;
   	ctx.canvas.height = window.innerHeight;
+
+	  inputPoints = linesToDataPoint();
+	  console.log(inputPoints);
 }
 
 function play(){
-
-	//"leitura" dos dados de entrada. (futuramente, esses dados serão
-	//digitados pelo usuário ou lidos de um arquivo .csv)
-	inputPoints.push(new DataPoint([1, 0, 5], 2));
-	inputPoints.push(new DataPoint([2, 2, 5], 5));
 
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
 	//teste da criação de expressões.
 	for (var i=0; i<10; i++) {
-		var exp1 = new Expression();
+		var exp1 = new Expression(expressionSize);
 		console.log(exp1.getStringExpression_d());
 		ctx.font="20px Arial";
 		ctx.fillText(exp1.getStringExpression_d(), 50, 50 + 35*i);
