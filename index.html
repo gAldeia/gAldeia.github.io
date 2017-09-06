@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 
 <html lan="pt-br">
-<html>
 
 <head>
 
@@ -26,9 +25,9 @@
 
 </head>
 
-<body background="http://www.webdesigndev.com/wp-content/uploads/2013/06/White-Linen.jpg">
+<body background="http://2.bp.blogspot.com/-UfAd2wJL8wE/TsdDJgxvv8I/AAAAAAAAADQ/S0DZGNjdu0Y/s1600/backgroundgray.png">
 	<!--Cabeçalho da página-->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
 		<div class="container">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#">Regressão Simbólica</a>
@@ -52,28 +51,38 @@
 		</div><!--container-->
 	</nav><!--navbar-->
 
-	<div class="jumbotron container-fluid">
-		<div class="container text-center">
+	<div class="jumbotron page-header"> <!--JUMBOTRON-->
+		<div class=" text-center">
 
 			<h2>Regressão Simbólica usando técnicas de Programação Genética</h2>
 
 			<p>Página do projeto de iniciação científica que aplica técnicas de programação genética no método de regressão simbólica.</p>
+
 		</div>
 	</div>
 
 	<div class="container">
 
-		<section>
+		<section> <!--MAIN-->
 			<div class="page-header" id="main">
-				
-				<h1>Regressão Simbólica usando técnicas de Programação Genética</h1>
 
-				<p>Página do projeto de iniciação científica que aplica técnicas de programação genética no método de regressão simbólica.</p>
+				<div class="well">
+					<h2>Avisos</h2>
 
+					<p class="text-justify">O site ainda está em desenvolvimento. Podem acontecer problemas durante a execução de algumas operações.</p>
+
+					<h2>Updates</h2>
+
+					<p class="text-justify">-Novo quadro de avisos e updates no início da página.</p>
+					<p class="text-justify">-Leitura de dados funcionando e convertendo os valores para dataPoint.</p>
+
+					<p class="text-justify"></p>
+
+				</div>
 			</div>
-		</section>
+		</section> 
 
-		<section>
+		<section> <!--ABOUT-->
 			<div class="page-header" id="about">
 
 				<h1>Sobre</h1>
@@ -81,10 +90,12 @@
 				<p class="text-justify">Regressão simbólica é uma técnica que consiste na criação e manipulação de expressões matemáticas a fim de encontrar um modelo que seja capaz de descrever suficientemente bem uma série de pontos. As expressões são criadas arbitráriamente e são avaliadas.</p>
 
 				<p class="text-justify">Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar muito mais rápido operações do que um humano. Assim, com a programação genética, podemos realizar uma busca ampla pelo universo de expressões matemáticas e tentar encontrar o modelo que descreve a série de pontos.</p>
+
+				<p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sagittis tincidunt congue. Sed dapibus, augue vitae varius facilisis, nisl felis rutrum nisi, vitae elementum eros tellus aliquam ligula. Curabitur aliquet, urna eget pellentesque tempus, quam nulla lacinia lacus, eu posuere lacus lectus vitae lorem. Nullam egestas dignissim ex et tempus. Cras euismod sed magna vel ultricies. Nulla pretium nisi id massa varius accumsan. Curabitur pharetra justo metus, id vestibulum ipsum hendrerit sit amet. Cras enim nunc, tempus a dapibus nec, accumsan ac sem. In dapibus placerat lacinia.</p>
 			</div>
 		</section>
 
-		<section>
+		<section> <!--PROJECT-->
 			<div class="page-header" id="project">
 
 				<h1>Ferramenta online</h1>
@@ -128,7 +139,7 @@
 						<div class="page-header">
 							<h3>Entrada manual de dados</h3>
 						
-							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui. Utilize o formato x.xxx, e separe os valores por vírgulas. Quebre uma linha no final de cada ponto. Ex: 3.14, 3.1415, 0" id="my-manualinput"></textarea>
+							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui, um ponto em cada linha, no seguinte esquema: y.yy, x1.x1x1, x2.x2x2, x3.x3x3" id="my-manualinput"></textarea>
 						</div>
 
 						<div class="page-header">
@@ -139,6 +150,10 @@
 							<span class="btn btn-default btn-file">
 								<input type="file" id="my-csvinput" accept=".csv" />
 							</span>
+						</div>
+
+						<div class="well">
+							<p class="text-justify">OBS: O algoritmo precisa de pelo menos um ponto de entrada para funcionar. Em caso de vários pontos, certifique-se de que todos tem a mesma quantidade de variáveis, caso contrário, também não funcionará.
 						</div>
 
 						<div class="page-header">
@@ -181,7 +196,7 @@
 			</div>
 		</section>
 
-		<section>
+		<section><!--CONTACT-US-->
 			<div class="page-header text-center" id="contact-us">
 				<h2>Contato</h2>
 				<p>Dúvidas, críticas ou sugestões?</p> 
