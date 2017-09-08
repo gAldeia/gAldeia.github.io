@@ -32,7 +32,7 @@
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#">Regressão Simbólica</a>
 			</div><!--logo do site-->
-			<div class="collapse navbar-collapse">
+			<div>
 				<ul class="nav navbar-nav">
 					<li><a href="#main">Home</a></li>
 					<li><a href="#about">O projeto</a></li>
@@ -112,24 +112,24 @@
 				<section>
 					<div class="well" id="guide">
 
-						<h2>Como utilizar a ferramenta online</h2>
+						<h1>Como utilizar a ferramenta online</h1>
 
 						<div class="row">
 							<div class="col-lg-4">
 
-								<h3>Entrada</h3>
+								<h4>Entrada</h4>
 
 								<p class="text-justify">Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão .csv.</p>
 							</div>
 							<div class="col-lg-4">
 
-								<h3>Processamento</h3>
+								<h4>Processamento</h4>
 
 								<p class="text-justify">O processamento é feito na sua própria máquina (cuidado, isso pode prejudicar o desempenho do seu sistema caso esteja realizando muitas operações ao mesmo tempo!).</p>
 							</div>
 							<div class="col-lg-4">
 
-								<h3>Saída</h3>
+								<h4>Saída</h4>
 
 								<p class="text-justify">Conforme os dados vão sendo processados e uma equação ideal é procurada, informações serão mostradas na aba "Resultados".</p>
 							</div>
@@ -141,18 +141,18 @@
 				<section>
 					<div class="well" id="input">
 
-						<h2>Entrada de dados</h2>
+						<h1>Entrada de dados</h1>
 
 						<p class="text-justify">Digite os dados aqui ou carregue um arquivo do seu computador:</p>
 
 						<div class="page-header">
-							<h3>Entrada manual de dados</h3>
+							<h4>Entrada manual de dados</h4>
 						
 							<textarea class="form-control" rows="3" placeholder="Digite os dados aqui, um ponto em cada linha, no seguinte esquema: y.yy, x1.x1x1, x2.x2x2, x3.x3x3" id="my-manualinput"></textarea>
 						</div>
 
 						<div class="page-header">
-							<h3>Upload de arquivo local</h3>
+							<h4>Upload de arquivo local</h4>
 
 							<p class="text-justify">Atenção: O arquivo deve ser do tipo .csv, com os dados separados por vírgulas.</p>
 
@@ -176,7 +176,7 @@
 				<section>
 					<div class="well" id="output">
 
-						<h3>Resultado</h3>
+						<h1>Resultados</h1>
 
 						<p class="text-justify">Conforme a evolução for ocorrendo, informações sobre a população e a melhor resposta que conseguimos serão mostradas e atualizadas no quadro abaixo.</p>
 
@@ -196,7 +196,7 @@
 				<section>
 					<div class="well" id="target">
 
-						<h3>O resultado obtido foi o esperado?</h3>
+						<h1>O resultado obtido foi o esperado?</h1>
 
 						<p class="text-justify">A evolução é muito influenciada pelos melhores indivíduos das primeiras gerações. Casos infelizes onde uma expressão insatisfatória (distante da expressão que rege os dados de entrada) guie esta primeira etapa podem acontecer. Com a primeira geração sendo criada aleatóriamente, o rumo da evolução pode acabar sendo erroneamente direcionado. Se o resultado obtido não parece, a princípio, correto, tente executar o algoritmo mais uma vez. Este fator aleatório pode ter uma influência minimizada quando vários testes são realizados, ou quando a população é grande. </p>
 					</div>
