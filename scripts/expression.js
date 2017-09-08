@@ -8,17 +8,18 @@ var inputPoints = [ ];
 //gráfico.
 
 var expressionSize = 1;
-//representa o número de termos que a expressão terá.
+//representa o número de funções menores que a expressão terá.
 
 var exponentRange = 3;
 //o intervalo que as potências das variáveis poderão assumir. isso é controlado
 //para evitar números absurdos. 
 
-//variáveis do canvas
+//variáveis do canvas da página
 var canvas;
 var ctx;
 
-//CLASSES-----------------------------------------------------------------------
+
+//CLASSES DA REGRESSÃO----------------------------------------------------------
 var DataPoint = function(x, y){
 
 	//dataPoint é a estrutura que armazena cada ponto de entrada 
@@ -27,7 +28,7 @@ var DataPoint = function(x, y){
 
 	this.x = x;
 	this.y = y;
-	this.size = x.size;
+	//this.size = x.size; //não sei se é necessário
 }
 
 var SimpleFunction = function(){
@@ -58,7 +59,8 @@ var Expression = function(size){
 	//somando o resultado de cada uma das funções menores (g(), h(), ...):
 	//f(x, y, ...) = w0*g(x, y, ...) + w1*f(x, y, ...) + ...
 
-	//inicializando
+	//inicializando algumas coisas (o mse é calculado no construtor,
+	//para evitar que existam individuos com mse = 0)
 	this.coefficients = [ ];
 	this.equation = [ ];
 	this.mse = 0.0;
@@ -66,15 +68,14 @@ var Expression = function(size){
 
 	for (var i=0; i<this.equationSize; i++){
 		this.equation.push(new SimpleFunction());
-		this.coefficients.push(1.0);
 	}
 
 	this.adjustCoefficients();
-	this.mse = this.calculateMSE();
+	this.mse = this.evaluateExpression();
 }
 
 
-//IMPLEMENTAÇÃO DE MÉTODOS DAS CLASSES------------------------------------------
+//IMPLEMENTAÇÃO DE MÉTODOS DA CLASSE SIMPLEFUNCTION-----------------------------
 SimpleFunction.prototype.getStringExpression_d = function() {
 
 	//método que retorna uma string contendo a função menor.
@@ -88,7 +89,11 @@ SimpleFunction.prototype.getStringExpression_d = function() {
 
 SimpleFunction.prototype.evaluateSimpleFunction = function(x){
 
-	//realizo o cálculo da equação menor
+	//realizo o cálculo da equação menor. O valor é calculado pegando
+	//todos os valores de x passados por parâmetro e elevando às suas
+	//respectivas potências e os multiplicando entre sí. Após isso,
+	//retorna a operação da função menor usando como parâmetro o
+	//valor calculado.
 
 	var value = 1.0;
 
@@ -106,7 +111,7 @@ SimpleFunction.prototype.evaluateSimpleFunction = function(x){
 		case "tan": //tangente
 			return Math.tan(value);
 		case "abs": //módulo
-			return value<0 ? -value: value;
+			return Math.abs(value);
 		case "sqrt": //raiz quadrada
 			return Math.sqrt(value);
 		case "exp": //exponencial
@@ -118,6 +123,8 @@ SimpleFunction.prototype.evaluateSimpleFunction = function(x){
 	}
 }
 
+
+//IMPLEMENTAÇÃO DE MÉTODOS DA CLASSE EXPRESSION---------------------------------
 Expression.prototype.getStringExpression_d = function(){
 
 	//método que retorna uma string equivalente à expressão completa,
@@ -126,7 +133,7 @@ Expression.prototype.getStringExpression_d = function(){
 
 	var expression = "";
 	for (var i=0; i<this.equationSize; i++){
-		expression += "w" + i + "*" + this.equation[i].getStringExpression_d() + (i<this.equationSize-1? " + " : "");
+		expression += this.coefficients[i].toFixed(3) + "*" + this.equation[i].getStringExpression_d() + (i<this.equationSize-1? " + " : "");
 	}
 	return expression;
 }
@@ -136,12 +143,35 @@ Expression.prototype.adjustCoefficients = function(){
 	//aqui uso uma regressão linear para ajustar os coeficientes dos
 	//pequenos termos.
 	
-	console.log("Ajustando coeficientes");
+	//guarda o valor temporário dos novos coeficientes calculados.
+	var aux = [ ];
+
+	//guardam valores para evitar processos repetidos.
+	var X = xvaluesToMatrix();
+	var Y = yvaluesToArray();
+	var Xtransp = math.transpose(X);
+
+	//no final dos calculos a seguir, espera-se que o valor seja:
+	//aux = ((X'X)^-1)X'Y
+
+	aux =  math.multiply(X, Xtransp);
+
+	//transforma a matrix aux em aux^-1
+	for (var i=0; i<aux.length; i++){
+		for(var j=0; j<aux[0].length; j++){
+			aux[i][j] = 1/aux[i][j];
+		}
+	}
+
+	aux = math.multiply(Xtransp, aux);
+	aux = math.multiply(aux, Y);
+
+	this.coefficients = aux;
 }
 
-Expression.prototype.calculateMSE = function(){
+Expression.prototype.evaluateExpression = function(){
 
-	//calculo do mse
+	//Avaliação da equação a partir do cálculo do MSE.
 
 	this.mse = 0.0;
 
@@ -166,17 +196,8 @@ Expression.prototype.calculateMSE = function(){
 	return this.mse;
 }
 
-Expression.prototype.evaluateExpression = function(){
 
-	//aqui a expressão é avaliada: 
-	
-	this.adjustCoefficients();
-	this.calculateMSE();
-	
-	return this.mse;
-}
-
-//FUNÇÕES DA PÁGINA-------------------------------------------------------------
+//FUNÇÕES ÚTEIS-----------------------------------------------------------------
 function getRandomInt(min, max) {
 
 	//função que recebe um intervalo de números inteiros (min e max)
@@ -217,6 +238,33 @@ function getRandomOperation(){
 	}
 }
 
+function xvaluesToMatrix(){
+
+	//transforma os pontos X da entrada numa matrix, para que possa ser
+	//utilizado na regressão linear.
+
+	var matrix = [];
+
+	for(var i=0; i<inputPoints.length; i++)
+		matrix.push(inputPoints[i].x);
+
+	return matrix;
+}
+
+function yvaluesToArray(){
+
+	//transforma os pontos Y da entrada num vetor, para que possa ser
+	//utilizado na regressão linear
+
+	var array = [ ];
+
+	for(var i=0; i<inputPoints.length; i++)
+		array.push(inputPoints[i].y);
+
+	return array;
+}
+
+//FUNÇÕES DA PÁGINA-------------------------------------------------------------
 function setup(){
 
 	//configura o canvas para desenhos e plot do gráfico. transforma os 
@@ -237,7 +285,7 @@ function play(){
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
 	//teste da criação de expressões.
-	for (var i=0; i<50; i++) {
+	for (var i=0; i<10; i++) {
 
 		//na criação de uma nova expressão o valor de coeficiente e
 		//fitness já é calculado.
