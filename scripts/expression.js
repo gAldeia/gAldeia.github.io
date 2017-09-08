@@ -7,7 +7,7 @@ var inputPoints = [ ];
 //da regressão simbólica, assim como métodos futuros para plotar os pontos no
 //gráfico.
 
-var expressionSize = 3;
+var expressionSize = 1;
 //representa o número de termos que a expressão terá.
 
 var exponentRange = 3;
@@ -58,11 +58,19 @@ var Expression = function(size){
 	//somando o resultado de cada uma das funções menores (g(), h(), ...):
 	//f(x, y, ...) = w0*g(x, y, ...) + w1*f(x, y, ...) + ...
 
+	//inicializando
+	this.coefficients = [ ];
 	this.equation = [ ];
-	this.expressionSize = size;
+	this.mse = 0.0;
+	this.equationSize = size;
 
-	for (var i=0; i<this.expressionSize; i++) 
+	for (var i=0; i<this.equationSize; i++){
 		this.equation.push(new SimpleFunction());
+		this.coefficients.push(1.0);
+	}
+
+	this.adjustCoefficients();
+	this.mse = this.calculateMSE();
 }
 
 
@@ -78,6 +86,38 @@ SimpleFunction.prototype.getStringExpression_d = function() {
 	return (expression + ")");
 }
 
+SimpleFunction.prototype.evaluateSimpleFunction = function(x){
+
+	//realizo o cálculo da equação menor
+
+	var value = 1.0;
+
+	for(var i=0; i<x.length; i++){
+		value *= Math.pow(x[i], this.exponents[i]);
+	}
+
+	switch (this.operation){
+		case "id": //identidade
+			return value;
+		case "sin": //seno
+			return Math.sin(value);
+		case "cos": //cosseno
+			return Math.cos(value);
+		case "tan": //tangente
+			return Math.tan(value);
+		case "abs": //módulo
+			return value<0 ? -value: value;
+		case "sqrt": //raiz quadrada
+			return Math.sqrt(value);
+		case "exp": //exponencial
+			return Math.exp( Math.floor(value) );
+		case "log": //log 
+			return Math.log(value);
+		default:
+			alert("PROBLEMA EM EVALUATESIMPLEFUNCTIOn");
+	}
+}
+
 Expression.prototype.getStringExpression_d = function(){
 
 	//método que retorna uma string equivalente à expressão completa,
@@ -85,12 +125,56 @@ Expression.prototype.getStringExpression_d = function(){
 	//menores.
 
 	var expression = "";
-	for (var i=0; i<this.expressionSize; i++){
-		expression += "w" + i + "*" + this.equation[i].getStringExpression_d() + (i<this.expressionSize-1? " + " : "");
+	for (var i=0; i<this.equationSize; i++){
+		expression += "w" + i + "*" + this.equation[i].getStringExpression_d() + (i<this.equationSize-1? " + " : "");
 	}
 	return expression;
 }
 
+Expression.prototype.adjustCoefficients = function(){
+
+	//aqui uso uma regressão linear para ajustar os coeficientes dos
+	//pequenos termos.
+	
+	console.log("Ajustando coeficientes");
+}
+
+Expression.prototype.calculateMSE = function(){
+
+	//calculo do mse
+
+	this.mse = 0.0;
+
+	for (var i=0; i<inputPoints.length; i++){
+		var expressionValue = 0.0;
+
+		for(var j=0; j<this.equationSize; j++){
+			//multiplico cada um dos coeficientes pela resolução da eq.
+			expressionValue += this.coefficients[j]*this.equation[j].evaluateSimpleFunction(inputPoints[i].x);
+		}
+
+		this.mse += Math.pow(inputPoints[i].y - expressionValue, 2);
+	}
+
+	console.log("Calculando mse");
+	this.mse = Math.sqrt(this.mse/inputPoints.length);
+	console.log(this.mse);
+
+	if (this.mse == 0.0)
+		console.log("EITA GIOVANA");
+
+	return this.mse;
+}
+
+Expression.prototype.evaluateExpression = function(){
+
+	//aqui a expressão é avaliada: 
+	
+	this.adjustCoefficients();
+	this.calculateMSE();
+	
+	return this.mse;
+}
 
 //FUNÇÕES DA PÁGINA-------------------------------------------------------------
 function getRandomInt(min, max) {
@@ -111,7 +195,7 @@ function getRandomOperation(){
 	//funções trigonométricas, raiz, exponencial, logarítmo e módulo
 	//também foram incluidas na lista.
 
-	switch(getRandomInt(0, 8)){
+	switch(getRandomInt(0, 7)){
 		case 0: //identidade
 			return "id";
 		case 1: //seno
@@ -128,8 +212,6 @@ function getRandomOperation(){
 			return "exp";
 		case 7: //log 
 			return "log";
-		case 8: //soma dos termos
-			return "sum";
 		default:
 			alert("PROBLEMA EM GETRANDOMOPERATION");
 	}
@@ -155,12 +237,15 @@ function play(){
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
 	//teste da criação de expressões.
-	for (var i=0; i<10; i++) {
-		var exp1 = new Expression(expressionSize);
-		console.log(exp1.getStringExpression_d());
+	for (var i=0; i<50; i++) {
+
+		//na criação de uma nova expressão o valor de coeficiente e
+		//fitness já é calculado.
+
+		var exp = new Expression(expressionSize);
+		console.log(exp.getStringExpression_d());
 		ctx.font="20px Arial";
-		ctx.fillText(exp1.getStringExpression_d(), 50, 50 + 35*i);
+		ctx.fillText(exp.getStringExpression_d(), 50, 50 + 35*i);
 		ctx.stroke();
 	}
-	
 }
