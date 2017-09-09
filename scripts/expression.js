@@ -157,11 +157,7 @@ Expression.prototype.adjustCoefficients = function(){
 	aux =  math.multiply(X, Xtransp);
 
 	//transforma a matrix aux em aux^-1
-	for (var i=0; i<aux.length; i++){
-		for(var j=0; j<aux[0].length; j++){
-			aux[i][j] = 1/aux[i][j];
-		}
-	}
+	aux = math.inv(aux);
 
 	aux = math.multiply(Xtransp, aux);
 	aux = math.multiply(aux, Y);
