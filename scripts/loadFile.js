@@ -41,9 +41,18 @@ function loadHandler(event){
 		var tarr = [];
 		
 		for (var j=0; j<data.length; j++){
-			tarr.push( parseFloat(data[j]) );
+
+			//controle para ver se é um número, pois o usuário pode digitar
+			//coisas sem sentido acidentalmente.
+
+			var aux = parseFloat(data[j]);
+			if (!isNaN(aux))
+				tarr.push(aux);
 		}
-		lines.push(tarr);
+
+		console.log(tarr);
+		if (tarr.length>0)
+			lines.push(tarr);
 	}
 	console.log(lines);
 }
@@ -63,11 +72,20 @@ function manual_upload(){
 	
 		var data = allTextLines[i].split(',');
 		var tarr = [];
-		
+
 		for (var j=0; j<data.length; j++){
-			tarr.push( parseFloat(data[j]) );
+
+			//controle para ver se é um número, pois o usuário pode digitar
+			//coisas sem sentido acidentalmente.
+
+			var aux = parseFloat(data[j]);
+			if (!isNaN(aux))
+				tarr.push(aux);
 		}
-		lines.push(tarr);
+
+		console.log(tarr);
+		if (tarr.length>0)
+			lines.push(tarr);
 	}
 	console.log(lines);
 
