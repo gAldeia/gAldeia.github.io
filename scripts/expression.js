@@ -7,12 +7,18 @@ var inputPoints = [ ];
 //da regressão simbólica, assim como métodos futuros para plotar os pontos no
 //gráfico.
 
-var expressionSize = 1;
+var expressionSize = 2;
 //representa o número de funções menores que a expressão terá.
+
+var populationSize = 15;
+//tamanho da população
 
 var exponentRange = 3;
 //o intervalo que as potências das variáveis poderão assumir. isso é controlado
 //para evitar números absurdos. 
+
+var mutationRate = 5;
+//chance de ocorrer mutação, em % (0 a 100).
 
 //variáveis do canvas da página
 var canvas;
@@ -60,7 +66,7 @@ var Expression = function(size){
 	//f(x, y, ...) = w0*g(x, y, ...) + w1*f(x, y, ...) + ...
 
 	//inicializando algumas coisas (o mse é calculado no construtor,
-	//para evitar que existam individuos com mse = 0)
+	//para evitar que existam subjects com mse = 0)
 	this.coefficients = [ ];
 	this.equation = [ ];
 	this.mse = 0.0;
@@ -68,12 +74,26 @@ var Expression = function(size){
 
 	for (var i=0; i<this.equationSize; i++){
 		this.equation.push(new SimpleFunction());
+		this.coefficients.push(1.0);
 	}
 
 	this.adjustCoefficients();
 	this.mse = this.evaluateExpression();
 }
 
+var Population = function(size, expressionSize){
+
+	//classe para gerenciar um array de expressões, denominado população.
+	//aqui invoco os eventos seleção, crossover e mutação.
+
+	this.subjects = [ ];
+	this.subjectsSize = size;
+
+	for(var i=0; i<size; i++){
+		this.subjects.push(new Expression(expressionSize) );
+	}
+
+}
 
 //IMPLEMENTAÇÃO DE MÉTODOS DA CLASSE SIMPLEFUNCTION-----------------------------
 SimpleFunction.prototype.getStringExpression_d = function() {
@@ -143,6 +163,12 @@ Expression.prototype.adjustCoefficients = function(){
 	//aqui uso uma regressão linear para ajustar os coeficientes dos
 	//pequenos termos.
 	
+
+
+	/*
+
+	IMPLEMENTAÇÃO (ANTIGA) DO MÉTODO ORDINARY LEAST SQUARES
+
 	//guarda o valor temporário dos novos coeficientes calculados.
 	var aux = [ ];
 
@@ -163,6 +189,8 @@ Expression.prototype.adjustCoefficients = function(){
 	aux = math.multiply(aux, Y);
 
 	this.coefficients = aux;
+
+	*/
 }
 
 Expression.prototype.evaluateExpression = function(){
@@ -182,6 +210,8 @@ Expression.prototype.evaluateExpression = function(){
 		this.mse += Math.pow(inputPoints[i].y - expressionValue, 2);
 	}
 
+	//calculo e atualizo o valor do mse
+
 	console.log("Calculando mse");
 	this.mse = Math.sqrt(this.mse/inputPoints.length);
 	console.log(this.mse);
@@ -192,6 +222,55 @@ Expression.prototype.evaluateExpression = function(){
 	return this.mse;
 }
 
+
+//IMPLEMENTAÇÃO DOS MÉTODOS DA CLASSE POPULAION---------------------------------
+Population.prototype.getStringBestIndividual_d = function(){
+
+	//busca pela população o melhor mse e devolve uma string equivalente
+	//à sua equação.
+
+	var theBest = this.subjects[0];
+	
+	for(var i=1; i<this.subjectsSize; i++){
+
+		console.log("check");
+
+		if (this.subjects[i].mse < theBest.mse)
+			theBest = this.subjects[i];
+	}
+
+	console.log("MSE DO MELHOR:");
+	console.log(theBest.mse.toFixed(3));
+
+	return theBest.getStringExpression_d();
+}
+
+Population.prototype.mutate = function(rate){
+
+	//percorro toda a população, sorteando se ocorrerá mutação ou não.
+
+	for (var i=0; i<this.subjectsSize; i++){
+		//percorre cada individuo
+
+		for (var j=0; j<this.subjects[i].equationSize; j++){
+			//percorre cada equação menor
+
+			if (getRandomInt(0, 100) <= rate){
+				this.subjects[i].equation[j] = new SimpleFunction();
+			}
+		}
+	}
+}
+
+Population.prototype.evaluateExpressions = function(){
+	
+	//atualiza todos os mse da população
+
+	for(var i=0; i<this.subjectsSize; i++){
+		this.subjects[i].evaluateExpression();
+	}
+
+}
 
 //FUNÇÕES ÚTEIS-----------------------------------------------------------------
 function getRandomInt(min, max) {
@@ -272,14 +351,36 @@ function setup(){
 	ctx.canvas.width  = window.innerWidth;
   	ctx.canvas.height = window.innerHeight;
 
-	  inputPoints = linesToDataPoint();
-	  console.log(inputPoints);
+	inputPoints = linesToDataPoint();
+	console.log(inputPoints);
 }
 
 function play(){
 
+	//limpa o canvas
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
+	//cria uma nova população
+	var myPop = new Population(populationSize, expressionSize);
+	
+	//imprime informação no canvas
+	ctx.font="20px Arial";	
+	ctx.fillText(myPop.getStringBestIndividual_d(), 50, 50);
+
+	//aplica mutação na população
+	myPop.mutate(5);
+
+	//atualiza o mse
+	myPop.evaluateExpressions();
+
+	//imprime o melhor mse. espera-se aqui que alguma coisa mude (ou
+	//não, já que não está ocorrendo seleção)
+	ctx.fillText(myPop.getStringBestIndividual_d(), 50, 150);
+
+	/*
+
+	ANTIGO TESTE DE CRIAÇÃO DE EXPRESSÕES, PŔE-POPULATION
+
 	//teste da criação de expressões.
 	for (var i=0; i<10; i++) {
 
@@ -292,4 +393,6 @@ function play(){
 		ctx.fillText(exp.getStringExpression_d(), 50, 50 + 35*i);
 		ctx.stroke();
 	}
+	
+	*/
 }
