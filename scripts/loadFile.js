@@ -93,17 +93,23 @@ function manual_upload(){
 }
 
 function linesToDataPoint(){
+
+	//Converte os pontos lidos para DataPoint.
+
 	var Points = [];
 
 	var y;
 	var aux;
 
 	for (var i=0; i<lines.length; i++){
+
 		y = lines[i][0];
 		aux = [];
+
 		for(var j=1; j<lines[i].length; j++){
 			aux.push(lines[i][j]);
 		}
+		
 		Points.push(new DataPoint(aux, y) );
 	}
 	return Points;
