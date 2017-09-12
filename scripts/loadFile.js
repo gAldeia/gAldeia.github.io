@@ -1,39 +1,54 @@
 //loadFile.js
 
 
-//variável que armazena os valores numa matriz, sem realizar conversão
-//para dataPoint.
+//VARIÁVEIS GLOBAIS-------------------------------------------------------------
 var lines = [];
+//variável que armazena os valores numa matriz, no seguinte esquema:
+//[ [y, [x1, x2, x3, ...]], [y, [x1, x2, x3, ...]], ... ] 
 
 
+//MÉTODOS DE LEITURA------------------------------------------------------------
 function csv_upload(){
-	/* Função chamada ao fazer upload de um arquivo .csv. é responsável pela
-	 * leitura e transformação do arquivo num array multidimensional, contendo
-	 * os valores para plotar o gráfico.
-	 */
+
+	//função que é chamada para ler um arquivo enviado localmente. O arquivo
+	//deve ser do tipo .csv, e os dados separados por vírgulas. o resultado
+	//será carregar lines com os valores lidos.
 
 	var reader = new FileReader();
 	var csv = document.getElementById("my-csvinput").files[0];
-	
-	//nova referência para o array, para incorpovar apenas os valores
-	//novos
-	lines = [];
 
 	reader.readAsText(csv);
-	reader.onload = loadHandler;
+	reader.onload = function(event) {
+		var data = event.target.result;
+		loadHandler(data);
+	}
 
+	//aviso ao usuário de que o arquivo foi carregado.
 	window.alert("Arquivo carregado.");
 }
 
-function loadHandler(event){
-	/* Função destinada a dividir o arquivo .csv em vários arrays para serem
-		* utilizados pelas funções de plot. Ela separa a entrada .csv no seguin-
-		* te formato: array[ array[], array[], array[] ...], onde cara array 
-		* menor é um conjunto de coordenadas (2 ou 3 eixos).
-		*/
+function manual_upload(){
+
+	//função que lê os dados digitados pelo usuário. funciona da mesma forma
+	//que a anterior, porém retira os valores de um lugar diferente.
+
+	var textArea = document.getElementById("my-manualinput").value;
+
+	loadHandler(textArea);
+
+	//aviso ao usuário de que o arquivo foi carregado.
+	window.alert("Leitura efetuada.");
+}
+
+function loadHandler(inputData){
 	
-	var csv = event.target.result;
-	var allTextLines = csv.split(/\r\n|\n/);
+	//é aqui que a magia acontece. Função separa cada linha da entrada,
+	//e em cada linha separa cada valor. O resultado é armazenado em 
+	//lines, pronto para ser utilizado por funções matemáticas.
+
+	lines = [ ];
+
+	var allTextLines = inputData.split(/\r\n|\n/);
 	
 	for (var i=0; i<allTextLines.length;i++){
 	
@@ -42,75 +57,36 @@ function loadHandler(event){
 		
 		for (var j=0; j<data.length; j++){
 
-			//controle para ver se é um número, pois o usuário pode digitar
-			//coisas sem sentido acidentalmente.
+			//controle para ver se é um número (jamais duvide da capacidade
+			//do usuário). Isso previne entradas que não sejam números de
+			//serem processados como se fossem um.
 
 			var aux = parseFloat(data[j]);
 			if (!isNaN(aux))
 				tarr.push(aux);
 		}
-
-		console.log(tarr);
 		if (tarr.length>0)
 			lines.push(tarr);
 	}
-	console.log(lines);
-}
-
-
-function manual_upload(){
-
-	/*é preciso fazer a validação dos dados!!!!*/
-
-	//nova referência pra lines
-	lines = [];
-
-	var textArea = document.getElementById("my-manualinput").value;
-	var allTextLines = textArea.split(/\r\n|\n/);
-	
-	for (var i=0; i<allTextLines.length;i++){
-	
-		var data = allTextLines[i].split(',');
-		var tarr = [];
-
-		for (var j=0; j<data.length; j++){
-
-			//controle para ver se é um número, pois o usuário pode digitar
-			//coisas sem sentido acidentalmente.
-
-			var aux = parseFloat(data[j]);
-			if (!isNaN(aux))
-				tarr.push(aux);
-		}
-
-		console.log(tarr);
-		if (tarr.length>0)
-			lines.push(tarr);
-	}
-	console.log(lines);
-
-	window.alert("leitura efetuada");
 }
 
 function linesToDataPoint(){
 
-	//Converte os pontos lidos para DataPoint.
+	//Converte os pontos lidos para DataPoint. DataPoint é uma classe
+	//da expressão genética. é apenas um rearranjo de points, porem
+	//com uma notação mais "intuitiva"
 
 	var Points = [];
-
-	var y;
 	var aux;
 
 	for (var i=0; i<lines.length; i++){
-
-		y = lines[i][0];
 		aux = [];
 
-		for(var j=1; j<lines[i].length; j++){
+		for(var j=1; j<lines[i].length; j++)
 			aux.push(lines[i][j]);
-		}
 		
-		Points.push(new DataPoint(aux, y) );
+		Points.push(new DataPoint(aux, lines[i][0]) );
 	}
+
 	return Points;
 }
