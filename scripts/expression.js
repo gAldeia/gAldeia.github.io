@@ -5,9 +5,10 @@
 var inputPoints = [ ];
 //armazena os pontos de entrada. é global pois é de interesse de muitos métodos
 //da regressão simbólica, assim como métodos futuros para plotar os pontos no
-//gráfico.
+//gráfico. Lembrando ainda que existe o array multidimensional lines, do
+//código loadFile, que armazena os dados sem separação
 
-var expressionSize = 2;
+var expressionSize = 3;
 //representa o número de funções menores que a expressão terá.
 
 var populationSize = 15;
@@ -70,6 +71,7 @@ var Expression = function(size){
 	this.coefficients = [ ];
 	this.equation = [ ];
 	this.mse = 0.0;
+	this.expressionValue = 0.0;
 	this.equationSize = size;
 
 	for (var i=0; i<this.equationSize; i++){
@@ -77,7 +79,8 @@ var Expression = function(size){
 		this.coefficients.push(1.0);
 	}
 
-	this.adjustCoefficients();
+	this.mse = this.evaluateExpression();
+	this.adjustCoefficients(10, 0.1);
 	this.mse = this.evaluateExpression();
 }
 
@@ -158,16 +161,60 @@ Expression.prototype.getStringExpression_d = function(){
 	return expression;
 }
 
-Expression.prototype.adjustCoefficients = function(){
+Expression.prototype.adjustCoefficients = function(numIterations, learningRate){
 
 	//aqui uso uma regressão linear para ajustar os coeficientes dos
 	//pequenos termos.
-	
 
+	//funciona tentando achar os coeficientes através da minimização do
+	//custo 
+
+	// O esquema de acesso utilizado é:
+	//[ [[x0,x1,x2,x3,...], y] ,[[x0,x1,x2,x3,...], y],... ]
+
+	var auxExpressionValue = this.expressionValue;
+
+	//parameters são os nossos coeficientes
+	var auxParameters = new Array(this.equationSize);
+
+	// usa aux pois todos os parâmetros tem que ser ajustados "simultanea-
+	//mente"
+	for (var i = 0; i < this.equationSize; i++)
+		auxParameters[i] = this.coefficients[i];
+
+	//aqui começa o gradiente descendente, por numIterations iterações
+	for (var i = 0; i < numIterations; i++){
+
+		console.log("X");
+		console.log(inputPoints[0].x.length);
+
+		//para cada linha de entrada o valor é ajustado
+		//note que então o número de funções menores deve ser
+		//igual ao número de entrada para isso funcionar.
+		for (var j = 0; j < inputPoints[0].x.length;j++){
+
+			//calculo do custo, através da diferença do calculado e do alvo
+			var result = 0;
+
+			for (var k = 0; k < inputPoints.length; k++)
+				result += ( auxExpressionValue - inputPoints[k].y ) * inputPoints[k].x[j];
+
+			result =  (result * 2 / inputPoints.length);
+
+			//aqui é feito o ajuste
+			auxParameters[j] -= learningRate * result;
+		}
+
+		console.log(this.coefficients);
+		// atualiza os coeficientes
+		for (var j = 0; j < this.equationSize; j++)
+			this.coefficients[j] = auxParameters[j];
+	}
 
 	/*
-
 	IMPLEMENTAÇÃO (ANTIGA) DO MÉTODO ORDINARY LEAST SQUARES
+	OBS: se for utilizar essa versão, precisa refazer as funções
+	de ajustar x e y em matriz/array, e usar a biblioteca math.js
 
 	//guarda o valor temporário dos novos coeficientes calculados.
 	var aux = [ ];
@@ -195,19 +242,20 @@ Expression.prototype.adjustCoefficients = function(){
 
 Expression.prototype.evaluateExpression = function(){
 
-	//Avaliação da equação a partir do cálculo do MSE.
+	//Avaliação da equação a partir do cálculo do MSE. atualiza o valor
+	//do mse e da expressão.
 
 	this.mse = 0.0;
 
 	for (var i=0; i<inputPoints.length; i++){
-		var expressionValue = 0.0;
+		this.expressionValue = 0.0;
 
 		for(var j=0; j<this.equationSize; j++){
 			//multiplico cada um dos coeficientes pela resolução da eq.
-			expressionValue += this.coefficients[j]*this.equation[j].evaluateSimpleFunction(inputPoints[i].x);
+			this.expressionValue += this.coefficients[j]*this.equation[j].evaluateSimpleFunction(inputPoints[i].x);
 		}
 
-		this.mse += Math.pow(inputPoints[i].y - expressionValue, 2);
+		this.mse += Math.pow(inputPoints[i].y - this.expressionValue, 2);
 	}
 
 	//calculo e atualizo o valor do mse
@@ -216,6 +264,7 @@ Expression.prototype.evaluateExpression = function(){
 	this.mse = Math.sqrt(this.mse/inputPoints.length);
 	console.log(this.mse);
 
+	//um pequeno alerta
 	if (this.mse == 0.0)
 		console.log("EITA GIOVANA");
 
@@ -313,31 +362,6 @@ function getRandomOperation(){
 	}
 }
 
-function xvaluesToMatrix(){
-
-	//transforma os pontos X da entrada numa matrix, para que possa ser
-	//utilizado na regressão linear.
-
-	var matrix = [];
-
-	for(var i=0; i<inputPoints.length; i++)
-		matrix.push(inputPoints[i].x);
-
-	return matrix;
-}
-
-function yvaluesToArray(){
-
-	//transforma os pontos Y da entrada num vetor, para que possa ser
-	//utilizado na regressão linear
-
-	var array = [ ];
-
-	for(var i=0; i<inputPoints.length; i++)
-		array.push(inputPoints[i].y);
-
-	return array;
-}
 
 //FUNÇÕES DA PÁGINA-------------------------------------------------------------
 function setup(){
@@ -360,6 +384,8 @@ function play(){
 	//limpa o canvas
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
+	expressionSize = inputPoints[0].x.length;
+
 	//cria uma nova população
 	var myPop = new Population(populationSize, expressionSize);
 	
