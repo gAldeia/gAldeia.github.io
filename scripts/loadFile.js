@@ -3,8 +3,11 @@
 
 //VARIÁVEIS GLOBAIS-------------------------------------------------------------
 var lines = [];
-//variável que armazena os valores numa matriz, no seguinte esquema:
+//variável que armazena os valores numa matriz. A entrada deve ser feita
+//no seguinte esquema:
 //[ [y, [x1, x2, x3, ...]], [y, [x1, x2, x3, ...]], ... ] 
+//e os valores serão salvos (sem separar os x-zes em uma nova dimensão:
+//[ [y, x1, x2, ...], [y, x1, x2, ...] ]
 
 
 //MÉTODOS DE LEITURA------------------------------------------------------------
