@@ -22,9 +22,9 @@
 			outline: 1px solid black;
 		}
 		.jumbotron{
-			background: url("./images/bg.png") repeat-x center center fixed;
-			border-bottom: 2px solid #fff;
-			border-top: 2px solid #fff;
+			background: url("./images/bg.png") repeat center center fixed;
+			border-bottom: 3px solid #fff;
+			border-top: 3px solid #fff;
 		}
 		.vertical-center {
 			min-height: 100%;
@@ -45,7 +45,7 @@
 			box-shadow: 10px 10px 5px #000;
 		}
 		.body-background {
-			 background: url("./images/ibg.png") repeat-x center center fixed;
+			 background: url("./images/ibg.png") repeat center center fixed;
 		}
 	</style>
 
@@ -57,9 +57,11 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
 		<div class="container">
 			<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+			</button>
 				<a class="navbar-brand" href="#">Regressão Simbólica</a>
 			</div><!--logo do site-->
-			<div>
+			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					<li><a href="#main">Home</a></li>
 					<li><a href="#about">O projeto</a></li>
