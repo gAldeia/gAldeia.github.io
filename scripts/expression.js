@@ -210,34 +210,6 @@ Expression.prototype.adjustCoefficients = function(numIterations, learningRate){
 		for (var j = 0; j < this.equationSize; j++)
 			this.coefficients[j] = auxParameters[j];
 	}
-
-	/*
-	IMPLEMENTAÇÃO (ANTIGA) DO MÉTODO ORDINARY LEAST SQUARES
-	OBS: se for utilizar essa versão, precisa refazer as funções
-	de ajustar x e y em matriz/array, e usar a biblioteca math.js
-
-	//guarda o valor temporário dos novos coeficientes calculados.
-	var aux = [ ];
-
-	//guardam valores para evitar processos repetidos.
-	var X = xvaluesToMatrix();
-	var Y = yvaluesToArray();
-	var Xtransp = math.transpose(X);
-
-	//no final dos calculos a seguir, espera-se que o valor seja:
-	//aux = ((X'X)^-1)X'Y
-
-	aux =  math.multiply(X, Xtransp);
-
-	//transforma a matrix aux em aux^-1
-	aux = math.inv(aux);
-
-	aux = math.multiply(Xtransp, aux);
-	aux = math.multiply(aux, Y);
-
-	this.coefficients = aux;
-
-	*/
 }
 
 Expression.prototype.evaluateExpression = function(){
@@ -402,23 +374,4 @@ function play(){
 	//imprime o melhor mse. espera-se aqui que alguma coisa mude (ou
 	//não, já que não está ocorrendo seleção)
 	ctx.fillText(myPop.getStringBestIndividual_d(), 50, 150);
-
-	/*
-
-	ANTIGO TESTE DE CRIAÇÃO DE EXPRESSÕES, PŔE-POPULATION
-
-	//teste da criação de expressões.
-	for (var i=0; i<10; i++) {
-
-		//na criação de uma nova expressão o valor de coeficiente e
-		//fitness já é calculado.
-
-		var exp = new Expression(expressionSize);
-		console.log(exp.getStringExpression_d());
-		ctx.font="20px Arial";
-		ctx.fillText(exp.getStringExpression_d(), 50, 50 + 35*i);
-		ctx.stroke();
-	}
-	
-	*/
 }
