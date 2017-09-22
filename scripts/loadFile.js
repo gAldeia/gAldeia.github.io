@@ -90,6 +90,5 @@ function linesToDataPoint(){
 		
 		Points.push(new DataPoint(aux, lines[i][0]) );
 	}
-	alert(Points[1]===Points[2]);
 	return Points;
 }

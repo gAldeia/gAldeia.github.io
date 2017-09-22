@@ -115,7 +115,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                     result += (aux*coefficients[j] - inputPoints[k].y)*aux;
                 }
                 //não sei se deveria tirar a média
-                result /= inputPoints.length;
+                result *= 2/inputPoints.length;
 
                 coefficients[j] -= learningRate*result;
 
@@ -144,12 +144,17 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
         
         //alerta (será removido algum dia se eu lembrar)
         if (mse == 0.0){
-            alert("ACHOU");
+
+            var expression = "";
+            for(var i=0; i<size; i++){
+                expression += coefficients[i].toFixed(2) + "*" + equation[i].getMiniExpression_d() + (i<size-1? "+" : "");
+            }
+            alert(expression);
         }
     };
 
     //dá uma primeira ajustada
-    adjustCoefficients(inputPoints, 15, 0.1);
+    adjustCoefficients(inputPoints, 50, 0.01);
 
     return{
         getExpression_d : function(){
@@ -172,7 +177,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints, 15, 0.1);
+            adjustCoefficients(inputPoints, 50, 0.01);
             calculateMse(inputPoints);
 
             return mse;
@@ -199,12 +204,12 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
             var theBest = subjects[0];
 
             for(var i=1; i<size; i++){
-                if(theBest.getMse() < subjects[i].getMse())
+                if(subjects[i].getMse() <= theBest.getMse())
                     theBest = subjects[i];
             }
-
             return theBest.getExpression_d();
         },
+
         evaluate : function(){
             
             //chama os métodos de todos os individuos
@@ -271,7 +276,6 @@ function setup(){
   	ctx.canvas.height = window.innerHeight;
 
 	inputPoints = linesToDataPoint();
-	console.log(inputPoints);
 }
 
 function play(){
@@ -281,8 +285,15 @@ function play(){
 
 	//cria uma nova população
 	var myPop = new Population(150, 2, inputPoints[0].x.length, 3);
-	
+    
+    myPop.evaluate(inputPoints); 
+
 	//imprime informação no canvas
 	ctx.font="20px Arial";	
-	ctx.fillText(myPop.getBestExpression_d(), 50, 50);
+    ctx.fillText(myPop.getBestExpression_d(), 50, 50);
+    
+    myPop.evaluate(inputPoints);
+
+    ctx.font="20px Arial";	
+    ctx.fillText(myPop.getBestExpression_d(), 50, 100);
 }
