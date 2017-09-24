@@ -44,6 +44,14 @@ var MiniExpression = function(numberOfVariables, exponentRange){
             return expression + ")";
         },
 
+        getOp : function(){
+            return operation;
+        },
+
+        setOp : function(op){
+            operation = op;
+        },
+
         evaluate : function(DataPoint){
 
             //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
@@ -73,6 +81,32 @@ var MiniExpression = function(numberOfVariables, exponentRange){
                     return Math.log(value);
                 default:
                     alert("PROBLEMA EM EVALUATESIMPLEFUNCTIOn");
+            }
+        },
+
+        shiftOp : function (){
+            
+            //faz um shift no operador, útil para a busca local.
+        
+            switch(operation){
+                case "id": //identidade
+                    return "sin";
+                case "sin": //seno
+                    return "cos";
+                case "cos": //cosseno
+                    return "tan";
+                case "tan": //tangente
+                    return "abs";
+                case "abs": //módulo
+                    return "sqrt";
+                case "sqrt": //raiz quadrada
+                    return "exp";
+                case "exp": //exponencial
+                    return "log";
+                case "log": //log 
+                    return "id";
+                default:
+                    alert("PROBLEMA EM SHIFTOPERATOR");
             }
         }
     };
@@ -181,6 +215,35 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
             calculateMse(inputPoints);
 
             return mse;
+        },
+
+        localSearch : function(inputPoints, numberOfOperators){
+
+            //faz um shift entre os operadores (8 operadores no total)
+
+            var previousMse = mse;
+            var previousOp;
+            var bestOp;
+
+            for (var i=0; i<size; i++){
+                //percorre todas as mini expressões
+
+                //salva os anteriores p comparações
+                previousOp = equation[i].getOp();
+                bestOp = previousOp;
+
+                for(var j=0; j<numberOfOperators; j++){
+                    //percorre cada um dos operadores buscando um novo melhor
+                    equation[i].shiftOp();
+                    this.evaluate(inputPoints);
+
+                    if (mse < previousMse){
+                        bestOp = equation[i].getOp();
+                    }
+                }
+
+                equation[i].setOp(bestOp);
+            }
         }
     };
 };
@@ -196,17 +259,21 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
         subjects.push(new Expression(expressionSize, numberOfVariables, exponentRange));
     }
 
+    var theBest = subjects[0];
+
+    var findBestExpression = function(){
+        //pega a melhor expressão da pop (a com o menor mse)
+        
+        for(var i=0; i<size; i++){
+            if(subjects[i].getMse() <= theBest.getMse())
+                theBest = subjects[i];
+        }
+    };
+
     return {
+
         getBestExpression_d : function(){
 
-            //pega a melhor expressão da pop (a com o menor mse)
-
-            var theBest = subjects[0];
-
-            for(var i=1; i<size; i++){
-                if(subjects[i].getMse() <= theBest.getMse())
-                    theBest = subjects[i];
-            }
             return theBest.getExpression_d();
         },
 
@@ -217,6 +284,23 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
             for(var i=0; i<size; i++){
                 subjects[i].evaluate(inputPoints);
             }
+        },
+
+        localSearch : function(inputPoints, numberOfOperators){
+            for(var i=0; i<size; i++){
+                subjects[i].localSearch(inputPoints, numberOfOperators);
+                subjects[i].evaluate(inputPoints);
+            }
+            console.log("local search executado.");
+        },
+
+        localSearchBestExpression : function(inputPoints, numberOfOperators){
+
+            //executa o local search, mas só no melhor indivíduo, e não
+            //na pop inteira.
+            findBestExpression();
+            theBest.localSearch(inputPoints, numberOfOperators);
+            theBest.evaluate(inputPoints);
         }
     };
 };
@@ -262,7 +346,8 @@ function getRndOp(){
 	}
 }
 
-// - ------------//
+
+// -------------------------------------------------------------------------- //
 
 function setup(){
 
@@ -288,12 +373,23 @@ function play(){
     
     myPop.evaluate(inputPoints); 
 
-	//imprime informação no canvas
+    //imprime informação no canvas
+    ctx.fillText("pop inicial criada. o melhor da inicial:", 50, 25);
 	ctx.font="20px Arial";	
     ctx.fillText(myPop.getBestExpression_d(), 50, 50);
     
-    myPop.evaluate(inputPoints);
-
+    myPop.localSearchBestExpression(inputPoints, 7);
+    ctx.fillText("Local search efetuado. a melhor opção:", 50, 75);
     ctx.font="20px Arial";	
     ctx.fillText(myPop.getBestExpression_d(), 50, 100);
+
+    myPop.localSearchBestExpression(inputPoints, 7);
+    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor:", 50, 125);
+    ctx.font="20px Arial";	
+    ctx.fillText(myPop.getBestExpression_d(), 50, 150);
+
+    myPop.localSearchBestExpression(inputPoints, 7);
+    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor:", 50, 175);
+    ctx.font="20px Arial";	
+    ctx.fillText(myPop.getBestExpression_d(), 50, 200);
 }
