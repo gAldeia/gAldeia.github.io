@@ -277,6 +277,10 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
             return theBest.getExpression_d();
         },
 
+        getBestExpressionMse_d : function(){
+            return theBest.getMse();
+        },
+
         evaluate : function(){
             
             //chama os métodos de todos os individuos
@@ -373,23 +377,25 @@ function play(){
     
     myPop.evaluate(inputPoints); 
 
+	ctx.font="20px Arial";
+
     //imprime informação no canvas
     ctx.fillText("pop inicial criada. o melhor da inicial:", 50, 25);
-	ctx.font="20px Arial";	
     ctx.fillText(myPop.getBestExpression_d(), 50, 50);
-    
-    myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Local search efetuado. a melhor opção:", 50, 75);
-    ctx.font="20px Arial";	
-    ctx.fillText(myPop.getBestExpression_d(), 50, 100);
+    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 75);
 
     myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor:", 50, 125);
-    ctx.font="20px Arial";	
+    ctx.fillText("Local search efetuado. a melhor opção:", 50, 120);
     ctx.fillText(myPop.getBestExpression_d(), 50, 150);
+    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 175);
 
     myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor:", 50, 175);
-    ctx.font="20px Arial";	
-    ctx.fillText(myPop.getBestExpression_d(), 50, 200);
+    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor):", 50, 225);
+    ctx.fillText(myPop.getBestExpression_d(), 50, 250);
+    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 275);
+
+    myPop.localSearchBestExpression(inputPoints, 7);
+    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor):", 50, 325);
+    ctx.fillText(myPop.getBestExpression_d(), 50, 350);
+    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 375);
 }
