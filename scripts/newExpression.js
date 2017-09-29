@@ -44,12 +44,42 @@ var MiniExpression = function(numberOfVariables, exponentRange){
             return expression + ")";
         },
 
+        getSize : function(){
+            return size;
+        },
+
         getOp : function(){
             return operation;
         },
 
         setOp : function(op){
             operation = op;
+        },
+
+        shiftOp : function (){
+            
+            //faz um shift no operador, útil para a busca local.
+        
+            switch(operation){
+                case "id": //identidade
+                    return "sin";
+                case "sin": //seno
+                    return "cos";
+                case "cos": //cosseno
+                    return "tan";
+                case "tan": //tangente
+                    return "abs";
+                case "abs": //módulo
+                    return "sqrt";
+                case "sqrt": //raiz quadrada
+                    return "exp";
+                case "exp": //exponencial
+                    return "log";
+                case "log": //log 
+                    return "id";
+                default:
+                    alert("PROBLEMA EM SHIFTOPERATOR");
+            }
         },
 
         evaluate : function(DataPoint){
@@ -84,30 +114,33 @@ var MiniExpression = function(numberOfVariables, exponentRange){
             }
         },
 
-        shiftOp : function (){
-            
-            //faz um shift no operador, útil para a busca local.
-        
-            switch(operation){
-                case "id": //identidade
-                    return "sin";
-                case "sin": //seno
-                    return "cos";
-                case "cos": //cosseno
-                    return "tan";
-                case "tan": //tangente
-                    return "abs";
-                case "abs": //módulo
-                    return "sqrt";
-                case "sqrt": //raiz quadrada
-                    return "exp";
-                case "exp": //exponencial
-                    return "log";
-                case "log": //log 
-                    return "id";
-                default:
-                    alert("PROBLEMA EM SHIFTOPERATOR");
-            }
+        getExp : function(index){
+            //out of range
+            if (index>=size)
+                return 0;
+            return exponents[index];
+        },
+
+        setExp : function(index, value){
+            //out of range
+            if (index>=size)
+                return 0;
+            exponents[index] = value;
+        },
+
+        increaseExp : function (index, value){
+
+            //out of range
+            if (index>=size)
+                return 0;
+            exponents[index] += value;
+        },
+
+        decreaseExp : function(index, value){
+            //out of range
+            if (index>=size)
+            return 0;
+        exponents[index] -=value;
         }
     };
 };
@@ -183,7 +216,6 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
             for(var i=0; i<size; i++){
                 expression += coefficients[i].toFixed(2) + "*" + equation[i].getMiniExpression_d() + (i<size-1? "+" : "");
             }
-            alert(expression);
         }
     };
 
@@ -219,18 +251,26 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
         localSearch : function(inputPoints, numberOfOperators){
 
+            //local search nos operadores:
             //faz um shift entre os operadores (8 operadores no total)
 
-            var previousMse = mse;
-            var previousOp;
+            var previousMse;
+
+            //operador
             var bestOp;
 
+            //expoente
+            var bestExp;
+
+            //percorre todas as mini expressões
             for (var i=0; i<size; i++){
-                //percorre todas as mini expressões
+
+                console.log("local search nos operadores");
+                //salva o mse anterior do local search
+                previousMse = mse;
 
                 //salva os anteriores p comparações
-                previousOp = equation[i].getOp();
-                bestOp = previousOp;
+                bestOp = equation[i].getOp();
 
                 for(var j=0; j<numberOfOperators; j++){
                     //percorre cada um dos operadores buscando um novo melhor
@@ -241,8 +281,41 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                         bestOp = equation[i].getOp();
                     }
                 }
-
                 equation[i].setOp(bestOp);
+
+                //atualiza o mse do local search para efetuar nos expoentes
+                previousMse = mse;
+
+                //local search entre os exp:
+                for (var j=0; j<equation[0].getSize(); j++){
+                    
+                    bestExp = equation[i].getExp(j);
+
+                    //aumenta 1 no original e calcula
+                    equation[i].increaseExp(j, 1);
+                    this.evaluate(inputPoints);
+                    if (mse < previousMse)
+                        bestExp++;
+
+                    //aqui a diminuição não é feita diretamente para -2 pois
+                    //faz com que o coeficiente seja ajustado a partir do
+                    //valor que foi calculado após aumentar o exp em 1.
+                    //isso faz com que o valor seja diferente do que inicial-
+                    //mente, influenciando no calculo. ISSO SERÁ ARRUMADO!    
+
+                    //diminui 1 no original e calcula
+                    equation[i].decreaseExp(j, 1);
+                    this.evaluate(inputPoints);
+                    equation[i].decreaseExp(j, 1);
+                    this.evaluate(inputPoints);
+                    if (mse < previousMse)
+                        bestExp--;
+
+                    equation[i].setExp(j, bestExp);
+                    
+                    //caso o diminuido seja menor, não faz nada, pois já está diminuido
+                    this.evaluate(inputPoints);
+                }
             }
         }
     };
