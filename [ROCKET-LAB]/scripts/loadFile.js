@@ -9,8 +9,8 @@ var lines = [];
 //e os valores serão salvos (sem separar os x-zes em uma nova dimensão:
 //[ [y, x1, x2, ...], [y, x1, x2, ...] ]
 
-//var scale = 0.0174533;
-var scale = 0.166666666666667;
+var scale = 0.0174533;
+//var scale = 0.166666666666667;
 //escala para ajustar os dados de acordo com o gyro 6050.
 //a sensibilidade do gyro mpu 6050 é de 250 graus por seg. a conversão
 //para radianos é feita multiplicando por 0,0174533.
@@ -32,12 +32,13 @@ function csv_upload(){
 	}
 }
 
-function manual_upload(){
+function manual_upload(text){
 
 	//função que lê os dados digitados pelo usuário. funciona da mesma forma
 	//que a anterior, porém retira os valores de um lugar diferente.
 
-	var textArea = document.getElementById("my-manualinput").value;
+	//var textArea = document.getElementById("my-manualinput").value;
+	var textArea = text.value;
 
 	loadHandler(textArea);
 }

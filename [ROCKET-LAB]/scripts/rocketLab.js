@@ -1,4 +1,5 @@
 //rocketLab.js
+//extensão do gyro
 
 
 //VARIÁVEIS GLOBAIS-------------------------------------------------------------
@@ -62,6 +63,7 @@ var rocket = function(sizeX, sizeY, sizeZ){
         }
     }    
 
+    //corpo do boitatá
     var rocketBody = function(sizeXZ, sizeY){
 
         //OBS: para mudar a quantidade de poligonos do foguete voce ira ter
@@ -97,17 +99,17 @@ var rocket = function(sizeX, sizeY, sizeZ){
             },
             draw : function(){
                 //desenha o cilindro de cor laranja (transparente).
-                ctx.fillStyle = '#cc8d06';
+                
 
                 //desenha todos os retangulos com excessao do ultimo
                 for (var i=0; i<19; i++){
+                    ctx.fillStyle = '#cc8d06';
                     ctx.beginPath();
                     ctx.moveTo(points[i+1][0], points[i+1][1]);
                     ctx.lineTo(points[i][0], points[i][1]);
                     ctx.lineTo(points[i+20][0], points[i+20][1]);
                     ctx.lineTo(points[i+1+20][0], points[i+1+20][1]);
                     ctx.closePath();
-                    //ctx.stroke();
                     ctx.fill();
                 }
                 //finaliza o desenho com o último retangulo (a separação é
@@ -115,13 +117,13 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 //evitar verificação dentro do for (aumentando tempo de pro-
                 //cessamento), o ultimo é feito do lado de fora, evitando 20
                 //comparações)
+                ctx.fillStyle = '#cc8d06';
                 ctx.beginPath();
                 ctx.moveTo(points[0][0], points[0][1]);
                 ctx.lineTo(points[19][0], points[19][1]);
                 ctx.lineTo(points[39][0], points[39][1]);
                 ctx.lineTo(points[20][0], points[20][1]);
                 ctx.closePath();
-                //ctx.stroke();
                 ctx.fill();
 
                 //desenha a coifa
@@ -133,7 +135,6 @@ var rocket = function(sizeX, sizeY, sizeZ){
                     ctx.lineTo(points[40][0], points[40][1]);
                     ctx.lineTo(points[i+1][0], points[i+1][1]);
                     ctx.closePath();
-                    //ctx.stroke();
                     ctx.fill();
                 }
                 ctx.beginPath();
@@ -141,7 +142,6 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 ctx.lineTo(points[40][0], points[40][1]);
                 ctx.lineTo(points[19][0], points[19][1]);
                 ctx.closePath();
-                //ctx.stroke();
                 ctx.fill();
             }
         }
@@ -200,19 +200,19 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 rocketModel[i].draw();
             }
         },
-        rotate : function(xDeg, yDeg, zDeg){
+        rotate : function(xRad, yRad, zRad){
             for (var i=0; i<rocketModel.length; i++){
-                rocketModel[i].rotateX(xDeg);
-                rocketModel[i].rotateY(yDeg);
-                rocketModel[i].rotateZ(zDeg);
+                rocketModel[i].rotateX(xRad);
+                rocketModel[i].rotateY(yRad);
+                rocketModel[i].rotateZ(zRad);
             }
         }
     }
 }
 
 
-//CONTROLE DE ANIMAÇÃO----------------------------------------------------------
-function rotate_animation(boitata){
+//CONTROLE DE ANIMAÇÃO DO GIROSCÓPIO--------------------------------------------
+function gyro_rotate_animation(boitata){
 	//função que gera a animação de rotação.
     ctx.clearRect(-ctx.canvas.width/2, -ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
     
@@ -235,7 +235,7 @@ function rotate_animation(boitata){
     boitata.draw();
 }
 
-function noData_animation(boitata){
+function gyro_noData_animation(boitata){
     ctx.clearRect(-ctx.canvas.width/2, -ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
     
     boitata.rotate(-0.005, -0.005, -0.005);
@@ -248,9 +248,10 @@ function noData_animation(boitata){
 }
 
 
-//"MAIN"------------------------------------------------------------------------
-function setup(){
-    canvas = document.getElementById("canvas");
+//"MAIN" DO ANALISADOR GYRO-----------------------------------------------------
+function setup_gyro(){
+    delete canvas;
+    canvas = document.getElementById("gyro_canvas");
 
     //configurando o canvas
 	ctx = canvas.getContext("2d");
@@ -259,18 +260,22 @@ function setup(){
     ctx.globalAlpha = 0.6;
     ctx.translate(ctx.canvas.width/2,ctx.canvas.height/2);
 
-    var boitata = new rocket(15, 200, 15);
-
     clearInterval(animation);
 
+    var boitata = new rocket(15, 200, 15);
+    //rotacionar pois o canvas é invertido
+    boitata.rotate(3.14159, 0, 0);
+
     if (lines.length==0){
+        
         animation = setInterval(function(){
-            noData_animation(boitata);
+            gyro_noData_animation(boitata);
         }, 10);
     }
     else {
+        boitata.rotate(3.141, 3.141, 3.141);
         animation = setInterval(function(){
-            rotate_animation(boitata);
-        }, 20);
+            gyro_rotate_animation(boitata);
+        }, 10);
     }
 }
