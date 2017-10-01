@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+    <script type="text/javascript" src=./scripts/loadFile.js></script>
+    <script type="text/javascript" src=./scripts/rocketLabGyro.js></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<title>Analisador: Giroscópio</title>
+
+	<style>
+		canvas {
+			width: 100%;
+			height: 100%;
+			/*outline: 1px solid black;*/
+		}
+		.body-background {
+			background: url("./images/main-bg.png") repeat center center fixed;
+		}
+		body {
+			padding-top: 70px;
+		}
+		.well{
+			border-radius: 24px 24px 24px 24px;
+			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
+		}
+		table, th, td {
+			border: 1px solid black;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+<body class="body-background">
+	
+	<!--Cabeçalho da página-->
+	<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+		<div class="container">
+			<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+			</button>
+				<a class="navbar-brand" href="#"><u><strong>Analisador</strong><small>:</small> Giroscópio</u></a>
+			</div><!--logo do site-->
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a href="#">Início</a></li>
+					<li><a href="#explicacao">Notas de estudo</a></li>
+					<li><a href="#source">Códigos</a></li>
+				</ul><!--Lista de opções-->
+			</div><!--menu-->
+		</div><!--container-->
+	</nav><!--navbar-->
+
+	<div class="container body-content">
+		<div class="well">
+			<div class="page-header" id="gyro">
+				<h2>Analisador: Giroscópio <small>(Atualizado em 01/10/2017)</small></h2><hr>
+
+				<div class="row">
+					<div class="col-lg-4">
+
+						<h4>Entrada de dados</h4>
+
+						<textarea style="max-width: 100%; min-width:100%" class="form-control" rows="6" placeholder="Digite os valores das rotações do giroscópio(separados por vírgula) na seguinte ordem: x, y, z" id="manualInput_gyro"></textarea>
+						
+						<button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload(manualInput_gyro), setup_gyro()">Ler dados</button>
+
+						<p class="text-justify">Caso não tenha dados, use <a target="_blank" href="./examples/gyro_data1.txt">estes dados de exemplo</a>. Eles são reais e medidos com o giroscópio do módulo mpu-6050. Também temos um  <a target="_blank" href="./examples/gyro_data2.txt">outro conjunto de dados</a>. O primeiro conjunto de dados foi feito com o sensor parado, e o segundo aplicando muito movimento no sensor (conhecido como "foguete abestado").</p>
+
+					</div>
+					
+					<div class="col-lg-8">
+
+						<h4>Saída</h4>
+
+						<canvas class="text-center canvas" width="0px" height="0px" id="gyro_canvas" >Seu navegador não suporta o canvas</canvas>
+					</div>
+				</div>
+			</div>
+			
+			<div class="page-header" id="explicacao">
+				<h2>Notas de estudo</h2><hr>
+
+				<p class="text-justify">O giroscópio utilizado funciona medindo a variação angular (graus/segundo). Isso quer dizer que cada medida obtida por ele é a velocidade angular instantânea do tempo da medida. Para transformar a velocidade em graus percorridos, é preciso integrar o valor obtido. A integral no código é feita calculando a área do retangulo, onde a altura é a velocidade medida pelo giroscópio e a base é o intervalo de tempo em que foi feito a medida. Assim, conseguimos converter o dado medido pelo giroscópio para um valor em graus percorridos, e utilizamos esse valor para rotacionar o foguete.</p>
+
+				<p class="text-justify">Porém, para rotacionar o modelo 3D do foguete, a função utiliza dados em radianos. É preciso fazer uma conversão de graus para radianos (que acontece no arquivo <a target="_blank" href="./scripts/loadFile.js">loadFile.js</a>). A conversão é feita da seguinte forma: rad = (grau*PI)/180.</p>
+				
+				<p class="text-justify">O giroscópio do módulo mpu-6050 tem as seguintes resoluções: 250 DPS(padrão), 500 DPS, 1000 DPS e 2000 DPS. Cada resolução implica num coeficiente diferente para multiplicar ao valor bruto medido pelo sensor para obtermos a velocidade angular real. A tabela abaixo apresenta a relação de coeficientes e resoluções, que pode ser encontrado no <a target="_blank" href="https://store.invensense.com/datasheets/invensense/MPU-6050_DataSheet_V3%204.pdf">DataSheet</a> do sensor:</p>
+
+				<p>
+					<table style="width: 100%">
+						<tr>
+						<th>Resolução</th>
+						<th>Fator de escala (DataSheet)</th>
+						<th>Coeficiente (1/Fator de escala)</th>
+						</tr>
+
+						<tr>
+						<td>&plusmn 250</td>
+						<td>131</td>
+						<td>.007644</td>
+						</tr>
+
+						<tr>
+							<td>&plusmn 500</td>
+							<td>65.5</td>
+							<td>.015267</td>
+						</tr>
+
+						<tr>
+							<td>&plusmn 1000</td>
+							<td>32.8</td>
+							<td>.030487</td>
+						</tr>
+
+						<tr>
+							<td>&plusmn 2000</td>
+							<td>16.4</td>
+							<td>.060975</td>
+						</tr>
+						<caption class="text-center">Fator à ser multiplicado dependendo da resolução</caption>
+					</table>
+				</p>
+
+				<br>
+				<p class="text-justify">Um problema comum em giroscópios é o "drift". Um giroscópio ideal não tem esse problema, mas no mundo real, há uma perturbação que faz com que o valor bruto do giroscópio tenha um pequeno movimento imaginário. É preciso corrigir este problema, que de maneira simples pode ser feito através de filtros e/ou compensações (ajuste com offsets ou uso de dados de outros sensores). Assim como um usuário uma vez disse num fórum sobre arduíno:</p>
+
+				<br>
+				<div class="well">
+					<p class="text-center">The gyro drifts.</p>
+					<p class="text-center">The accelerometer is sensivite for vibrations.</p>
+					<p class="text-center">The magnetometer is disturbed by magnetic fields of devices.</p>
+					<p class="text-center">The barometer is the only one without problems, it measures the baromic pressure.</p>
+				</div>
+				<br>
+
+				<p class="text-justify">Esta página basicamente só desenha um foguete e o rotaciona conforme os dados digitados. O processamento real deve ser feito no arduíno - medindo os dados, ajustando-os de acordo com a escala, integrando-os em relação ao tempo e, por fim, digitando-os aqui.</p>
+			</div>
+
+			<div class="page-header" id="source">
+				<h2>Códigos usados</h2><hr>
+
+				<p class="text-justify">Este mini projeto contou com 3 códigos principais (todos os códigos do projeto estão no <a target="_blank"href="https://github.com/gAldeia">GitHub</a>):</p>
+				<ul>
+					<li><a target="_blank" href="./scripts/loadFile.js">Código de leitura de dados</a>;</li>
+					<li><a target="_blank" href="./scripts/rocketLabGyro.js">Código de desenho e rotação do foguete</a>;</li>
+					<li><a target="_blank" href="./src/main.ino">Código do arduíno de leitura de dados do sensor</a> (ainda em desenvolvimento).</li>
+				</ul>
+			</div>	
+		</div>
+	</div>
+
+	<footer></footer>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+
+</html>
