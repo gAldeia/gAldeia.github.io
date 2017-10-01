@@ -214,7 +214,7 @@ function gyro_rotate_animation(boitata, line){
 	//função que gera a animação de rotação.
     ctx.clearRect(-ctx.canvas.width/2, -ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
 
-    ctx.font = '15pt Calibri';
+    ctx.font = '22pt Calibri';
     ctx.fillStyle = 'black';
     ctx.fillText(line[0], -ctx.canvas.width/2 + 50, -ctx.canvas.height/2 + 50);
     ctx.fillText(line[1], -ctx.canvas.width/2 + 50, -ctx.canvas.height/2 + 100);
