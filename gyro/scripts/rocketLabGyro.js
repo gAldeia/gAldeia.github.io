@@ -65,27 +65,22 @@ var rocket = function(sizeX, sizeY, sizeZ){
 
     //corpo do boitatá
     var rocketBody = function(sizeXZ, sizeY){
-
-        //OBS: para mudar a quantidade de poligonos do foguete voce ira ter
-        //um trampo demoniaco, então recomendo NÃO MUDAR. se o pc não aguentar,
-        //SÓ CHORA, NENE.
+        
+        //MÁGICA. NÃO TOQUE. NÃO OLHE. NÃO TENTE ENTENDER
 
         var points = [ ];
         var rotate = new Model3DManager(points);
+        var pl = 16; //numero de poligonos
 
         //fazer um cilindro com pontos (lembrando que y cresce de cima para
         //baixo)
-        for(var i=0; i<2; i++){
-
-            //sempre jogar 1 ponto a mais do que será plotado
-            for(var j=0; j<20; j++){
-                aux = [sizeXZ, i==0? sizeY : -sizeY, sizeXZ];
-                rotate.rotateY(6.283/20, points);
-                points.push(aux);
-            }
+        for(var i=0; i<(pl/2)+1; i++){
+            points.push([sizeXZ, -sizeY, sizeXZ]);
+            points.push([sizeXZ, sizeY, sizeXZ]);
+            rotate.rotateY((6.283/pl)*2, points);
         }
         //ponto para ser o bico da coifa do foguete
-        points.push([0, sizeY*1.55, 0]);
+        points.push([0, sizeY*1.45, 0]);
 
         return {
             rotateX : function(theta){
@@ -100,49 +95,28 @@ var rocket = function(sizeX, sizeY, sizeZ){
             draw : function(){
                 //desenha o cilindro de cor laranja (transparente).
                 
-
-                //desenha todos os retangulos com excessao do ultimo
-                for (var i=0; i<19; i++){
-                    ctx.fillStyle = '#cc8d06';
+                var fov = 750;
+                
+                //desenha todos os retangulos
+                for (var i=0; i<pl-1; i=i+2){
+                    ctx.fillStyle = '#cc8d06'; //fov/(fov+points[i][2]);
                     ctx.beginPath();
-                    ctx.moveTo(points[i+1][0], points[i+1][1]);
-                    ctx.lineTo(points[i][0], points[i][1]);
-                    ctx.lineTo(points[i+20][0], points[i+20][1]);
-                    ctx.lineTo(points[i+1+20][0], points[i+1+20][1]);
+                    ctx.moveTo(points[i][0]*fov/(fov+points[i][2]), points[i][1]*fov/(fov+points[i][2]));
+                    ctx.lineTo(points[i+1][0]*fov/(fov+points[i+1][2]), points[i+1][1]*fov/(fov+points[i+1][2]));
+                    ctx.lineTo(points[i+3][0]*fov/(fov+points[i+3][2]), points[i+3][1]*fov/(fov+points[i+3][2]));
+                    ctx.lineTo(points[i+2][0]*fov/(fov+points[i+2][2]), points[i+2][1]*fov/(fov+points[i+2][2]));
                     ctx.closePath();
                     ctx.fill();
                 }
-                //finaliza o desenho com o último retangulo (a separação é
-                //feita pq é preciso ligar o ultimo ponto ao primeiro, e para
-                //evitar verificação dentro do for (aumentando tempo de pro-
-                //cessamento), o ultimo é feito do lado de fora, evitando 20
-                //comparações)
-                ctx.fillStyle = '#cc8d06';
-                ctx.beginPath();
-                ctx.moveTo(points[0][0], points[0][1]);
-                ctx.lineTo(points[19][0], points[19][1]);
-                ctx.lineTo(points[39][0], points[39][1]);
-                ctx.lineTo(points[20][0], points[20][1]);
-                ctx.closePath();
-                ctx.fill();
-
-                //desenha a coifa
-                ctx.fillStyle = '#000000';
-
-                for (var i=0; i<20-1; i++){
+                for(var i=0; i<pl-1; i=i+2){ //coifa
+                    ctx.fillStyle = '#000000';
                     ctx.beginPath();
-                    ctx.moveTo(points[i][0], points[i][1]);
-                    ctx.lineTo(points[40][0], points[40][1]);
-                    ctx.lineTo(points[i+1][0], points[i+1][1]);
+                    ctx.moveTo(points[i+1][0]*fov/(fov+points[i+1][2]), points[i+1][1]*fov/(fov+points[i+1][2]));
+                    ctx.lineTo(points[points.length-1][0]*fov/(fov+points[points.length-1][2]), points[points.length-1][1]*fov/(fov+points[points.length-1][2]));
+                    ctx.lineTo(points[i+3][0]*fov/(fov+points[i+3][2]), points[i+3][1]*fov/(fov+points[i+3][2]));
                     ctx.closePath();
                     ctx.fill();
                 }
-                ctx.beginPath();
-                ctx.moveTo(points[0][0], points[0][1]);
-                ctx.lineTo(points[40][0], points[40][1]);
-                ctx.lineTo(points[19][0], points[19][1]);
-                ctx.closePath();
-                ctx.fill();
             }
         }
     }
@@ -151,14 +125,16 @@ var rocket = function(sizeX, sizeY, sizeZ){
 
         var points = [ ];
         var rotate = new Model3DManager(points);
+        var nOf = 4; //numero de empenas
 
-        for(var i=0; i<3; i++){
+        for(var i=0; i<nOf; i++){
             
             //sempre jogar 1 ponto a mais do que será plotado
-            points.push([sizeXZ, -sizeY*0.55, sizeXZ]);
-            points.push([sizeXZ, -sizeY*0.85, sizeXZ]);
-            points.push([sizeXZ*4, -sizeY*1.25, sizeXZ*4]);
-            rotate.rotateY(6.283/3, points);
+            points.push([sizeXZ, -sizeY*0.65, sizeXZ]);
+            points.push([sizeXZ, -sizeY*0.95, sizeXZ]);
+            points.push([sizeXZ*3, -sizeY*0.9, sizeXZ*3]);
+            points.push([sizeXZ*3, -sizeY*0.75, sizeXZ*3]);
+            rotate.rotateY(6.283/nOf, points);
         }
 
         return {
@@ -173,14 +149,17 @@ var rocket = function(sizeX, sizeY, sizeZ){
             },
             draw : function(){
 
+				//FOV
+				var fov = 750;
+			
                 ctx.fillStyle = '#000000';
 
-                for (var i=0; i<3; i++){
+                for (var i=0; i<nOf; i++){
                     ctx.beginPath();
-                    ctx.moveTo(points[i*3][0], points[i*3][1]);
-                    ctx.lineTo(points[(i*3)+1][0], points[(i*3)+1][1]);
-                    ctx.lineTo(points[(i*3)+2][0], points[(i*3)+2][1]);
-                    ctx.lineTo(points[i*3][0], points[i*3][1]);
+                    ctx.moveTo(points[i*nOf][0]*fov/(fov+points[i*nOf][2]), points[i*nOf][1]*fov/(fov+points[i*nOf][2]));
+                    ctx.lineTo(points[(i*nOf)+1][0]*fov/(fov+points[(i*nOf)+1][2]), points[(i*nOf)+1][1]*fov/(fov+points[(i*nOf)+1][2]));
+                    ctx.lineTo(points[(i*nOf)+2][0]*fov/(fov+points[(i*nOf)+2][2]), points[(i*nOf)+2][1]*fov/(fov+points[(i*nOf)+2][2]));
+                    ctx.lineTo(points[(i*nOf)+3][0]*fov/(fov+points[(i*nOf)+3][2]), points[(i*nOf)+3][1]*fov/(fov+points[(i*nOf)+3][2]));
                     ctx.closePath();
                     ctx.stroke();
                     ctx.fill();
@@ -190,15 +169,19 @@ var rocket = function(sizeX, sizeY, sizeZ){
     }
 
     //guardar o modelo
-    var rocketModel = [new rocketBody(sizeX, sizeY), new rocketFins(sizeX, sizeY)];
+    var rocketModel = [
+        new rocketBody(sizeX, sizeY),
+        new rocketFins(sizeX, sizeY)
+    ];
 
     return {
         draw : function(){
             for (var i=0; i<rocketModel.length; i++){
-                rocketModel[i].draw();
+                rocketModel[i].draw(); //desenha cada componente
             }
         },
         rotate : function(xRad, yRad, zRad){
+            //distribui a rotação para cada componente
             for (var i=0; i<rocketModel.length; i++){
                 rocketModel[i].rotateX(xRad);
                 rocketModel[i].rotateY(yRad);
@@ -214,7 +197,7 @@ function gyro_rotate_animation(boitata, line){
 	//função que gera a animação de rotação.
     ctx.clearRect(-ctx.canvas.width/2, -ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
 
-    ctx.font = '22pt Calibri';
+    ctx.font = '20pt Calibri';
     ctx.fillStyle = 'black';
     ctx.fillText(line[0], -ctx.canvas.width/2 + 50, -ctx.canvas.height/2 + 50);
     ctx.fillText(line[1], -ctx.canvas.width/2 + 50, -ctx.canvas.height/2 + 100);
@@ -246,12 +229,12 @@ function setup_gyro(){
 	ctx = canvas.getContext("2d");
 	ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    ctx.globalAlpha = 0.7;
+    ctx.globalAlpha = 0.8;
     ctx.translate(ctx.canvas.width/2,ctx.canvas.height/2);
 
     //rotacionar pois o canvas é invertido e o boitata é criado de ponta
     //cabeça
-    var boitata = new rocket(15, 200, 15);
+    var boitata = new rocket(15, 225, 15);
     boitata.rotate(3.14159, 0, 0);
 
     clearInterval(animation);
