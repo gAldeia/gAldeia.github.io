@@ -210,7 +210,7 @@ function gyro_rotate_animation(boitata, line){
 function gyro_noData_animation(boitata){
     ctx.clearRect(-ctx.canvas.width/2, -ctx.canvas.height/2, ctx.canvas.width, ctx.canvas.height);
     
-    boitata.rotate(-0.005, -0.005, -0.005);
+    boitata.rotate(0, 0.005, -0.000);
     boitata.draw();
 
     ctx.font = '60pt Calibri';
@@ -240,7 +240,7 @@ function setup_gyro(){
     clearInterval(animation);
 
     if (lines.length==0){
-        
+        boitata.rotate(1.2, 0, 0);
         animation = setInterval(function(){
             gyro_noData_animation(boitata);
         }, 10);
