@@ -195,27 +195,20 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
     var calculateMse = function(inputPoints){
 
         //calcula o mse.
-
         mse = 0.0;
+
         for(var i=0; i< inputPoints.length; i++){
             var aux = 0.0;
 
             for(var j=0; j<size; j++){
                 aux+= coefficients[j]*equation[j].evaluate(inputPoints[i]);
             }
-
             mse += Math.pow(inputPoints[i].y - aux, 2);
         }
         mse = Math.sqrt(mse/inputPoints.length);
-        
-        //alerta (será removido algum dia se eu lembrar)
-        if (mse == 0.0){
 
-            var expression = "";
-            for(var i=0; i<size; i++){
-                expression += coefficients[i].toFixed(2) + "*" + equation[i].getMiniExpression_d() + (i<size-1? "+" : "");
-            }
-        }
+        if (!isFinite(mse) || isNaN(mse))
+            mse = Math.exp(300);
     };
 
     return{
@@ -242,8 +235,6 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
             adjustCoefficients(inputPoints,  50, 0.005);
             calculateMse(inputPoints);
 
-            if (!isFinite(mse) || isNaN(mse))
-                mse = Math.exp(300);
             return mse;
         },
 
@@ -262,8 +253,6 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
             //percorre todas as mini expressões
             for (var i=0; i<size; i++){
-
-                console.log("local search nos operadores");
                 //salva o mse anterior do local search
                 previousMse = mse;
 
@@ -293,9 +282,10 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                     //aumenta 1 no original e calcula
                     equation[i].increaseExp(j, 1);
                     this.evaluate(inputPoints);
-                    if (mse < previousMse)
+                    if (mse < previousMse){
                         bestExp++;
-
+                        previousMse = mse;
+                    }
                     //aqui a diminuição não é feita diretamente para -2 pois
                     //faz com que o coeficiente seja ajustado a partir do
                     //valor que foi calculado após aumentar o exp em 1.
@@ -303,9 +293,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                     //mente, influenciando no calculo. ISSO SERÁ ARRUMADO!    
 
                     //diminui 1 no original e calcula
-                    equation[i].decreaseExp(j, 1);
-                    this.evaluate(inputPoints);
-                    equation[i].decreaseExp(j, 1);
+                    equation[i].decreaseExp(j, 2);
                     this.evaluate(inputPoints);
                     if (mse < previousMse){
                         bestExp--;
@@ -352,7 +340,7 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
     return {
 
         getBestExpression_d : function(){
-
+            findBestExpression();
             return theBest.getExpression_d();
         },
 
@@ -374,7 +362,6 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
                 subjects[i].localSearch(inputPoints, numberOfOperators);
                 subjects[i].evaluate(inputPoints);
             }
-            console.log("local search executado.");
         },
 
         localSearchBestExpression : function(inputPoints, numberOfOperators){
@@ -439,7 +426,7 @@ function setup(){
 function play(){
 
 	//cria uma nova população
-	var myPop = new Population(150, 1, inputPoints[0].x.length, 3);
+	var myPop = new Population(1, 2, inputPoints[0].x.length, 3);
     myPop.evaluate(inputPoints); 
 
     //imprime informação no canvas
