@@ -3,9 +3,6 @@
 //conjunto dos pontos de entrada
 inputPoints = [ ];
 
-//variáveis do canvas da página
-var canvas;
-var ctx;
 
 // --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
 var DataPoint = function(x, y){
@@ -176,6 +173,8 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
             for(var j=0; j<size; j++){
                 var result = 0.0;
       
+                coefficients[j]=1;
+
                 for(var k=0; k<inputPoints.length; k++){
                     aux = equation[j].evaluate(inputPoints[k]);
 
@@ -187,7 +186,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                 coefficients[j] -= learningRate*result;
 
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
-                if (isNaN(coefficients[j]))
+                if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = Math.exp(300);
             }
         }
@@ -219,9 +218,6 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
         }
     };
 
-    //dá uma primeira ajustada
-    adjustCoefficients(inputPoints, 50, 0.01);
-
     return{
         getExpression_d : function(){
 
@@ -243,9 +239,11 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints, 50, 0.01);
+            adjustCoefficients(inputPoints,  50, 0.005);
             calculateMse(inputPoints);
 
+            if (!isFinite(mse) || isNaN(mse))
+                mse = Math.exp(300);
             return mse;
         },
 
@@ -279,6 +277,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
                     if (mse < previousMse){
                         bestOp = equation[i].getOp();
+                        previousMse = mse;
                     }
                 }
                 equation[i].setOp(bestOp);
@@ -308,8 +307,10 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                     this.evaluate(inputPoints);
                     equation[i].decreaseExp(j, 1);
                     this.evaluate(inputPoints);
-                    if (mse < previousMse)
+                    if (mse < previousMse){
                         bestExp--;
+                        previousMse = mse;
+                    }
 
                     equation[i].setExp(j, bestExp);
                     
@@ -330,6 +331,11 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
 
     for(var i=0; i<size; i++){
         subjects.push(new Expression(expressionSize, numberOfVariables, exponentRange));
+    }
+
+    //aqui chama o ajuste de coeficientes e calculo do mse
+    for(var i=0; i<size; i++){
+        subjects[i].evaluate(inputPoints);
     }
 
     var theBest = subjects[0];
@@ -427,48 +433,22 @@ function getRndOp(){
 // -------------------------------------------------------------------------- //
 
 function setup(){
-
-	//configura o canvas para desenhos e plot do gráfico. transforma os 
-	//dados lidos em um array de dataPoint.
-
-	canvas = document.getElementById("canvas");
-	ctx = canvas.getContext("2d");
-
-	ctx.canvas.width  = window.innerWidth;
-  	ctx.canvas.height = window.innerHeight;
-
 	inputPoints = linesToDataPoint();
 }
 
 function play(){
 
-	//limpa o canvas
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
 	//cria uma nova população
-	var myPop = new Population(150, 2, inputPoints[0].x.length, 3);
-    
+	var myPop = new Population(150, 1, inputPoints[0].x.length, 3);
     myPop.evaluate(inputPoints); 
 
-	ctx.font="20px Arial";
-
     //imprime informação no canvas
-    ctx.fillText("pop inicial criada. o melhor da inicial:", 50, 25);
-    ctx.fillText(myPop.getBestExpression_d(), 50, 50);
-    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 75);
+    document.getElementById("results").innerHTML="<p>População criada. O melhor da primeira pop:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
 
-    myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Local search efetuado. a melhor opção:", 50, 120);
-    ctx.fillText(myPop.getBestExpression_d(), 50, 150);
-    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 175);
-
-    myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor):", 50, 225);
-    ctx.fillText(myPop.getBestExpression_d(), 50, 250);
-    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 275);
-
-    myPop.localSearchBestExpression(inputPoints, 7);
-    ctx.fillText("Repetição do local search (para ver se realmente encontrou o melhor):", 50, 325);
-    ctx.fillText(myPop.getBestExpression_d(), 50, 350);
-    ctx.fillText(myPop.getBestExpressionMse_d(), 50, 375);
+    for(var i=0; i<3; i++){
+        myPop.localSearchBestExpression(inputPoints, 7);
+        document.getElementById("results").innerHTML+="<p>Local search numero "+i+":</p>";
+        document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
+    }
 }
