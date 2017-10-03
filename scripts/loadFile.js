@@ -23,11 +23,8 @@ function csv_upload(){
 	reader.readAsText(csv);
 	reader.onload = function(event) {
 		var data = event.target.result;
-		loadHandler(data);
+		return loadHandler(data);
 	}
-
-	//aviso ao usuário de que o arquivo foi carregado.
-	window.alert("Arquivo carregado.");
 }
 
 function manual_upload(){
@@ -37,10 +34,7 @@ function manual_upload(){
 
 	var textArea = document.getElementById("my-manualinput").value;
 
-	loadHandler(textArea);
-
-	//aviso ao usuário de que o arquivo foi carregado.
-	window.alert("Leitura efetuada.");
+	return loadHandler(textArea);
 }
 
 function loadHandler(inputData){
@@ -53,7 +47,7 @@ function loadHandler(inputData){
 
 	var allTextLines = inputData.split(/\r\n|\n/);
 	
-	for (var i=0; i<allTextLines.length;i++){
+	for (var i=0; i<allTextLines.length; i++){
 	
 		var data = allTextLines[i].split(',');
 		var tarr = [];
@@ -68,8 +62,31 @@ function loadHandler(inputData){
 			if (!isNaN(aux))
 				tarr.push(aux);
 		}
-		if (tarr.length>0)
+		if (tarr.length>0) {
 			lines.push(tarr);
+			if (lines[0].length != tarr.length){
+				lines = [ ];
+
+				document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Nem todas as suas linhas de entrada contém a mesma quantidade de números!</p></div>";
+
+				return;
+			}
+		}
+	}
+
+	//avisos ao usuário
+	if (lines.length==0){
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar. O site só aceita arquivos de extensão .csv.</p></div>";
+		
+		lines = [ ];
+	}
+	else if (lines[0].length==1){
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores, separados por vírgulas!</p></div>";
+		
+		lines = [ ];
+	}
+	else {
+		document.getElementById("notification").innerHTML="<div class='alert alert-success'><strong>Sucesso!</strong> Os dados foram carregados.</div>";
 	}
 }
 
