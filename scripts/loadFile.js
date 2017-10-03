@@ -49,7 +49,7 @@ function loadHandler(inputData){
 	
 	for (var i=0; i<allTextLines.length; i++){
 	
-		var data = allTextLines[i].split(',');
+		var data = allTextLines[i].split(' ');
 		var tarr = [];
 		
 		for (var j=0; j<data.length; j++){
@@ -81,7 +81,7 @@ function loadHandler(inputData){
 		lines = [ ];
 	}
 	else if (lines[0].length==1){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores, separados por vírgulas!</p></div>";
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores!</p></div>";
 		
 		lines = [ ];
 	}
