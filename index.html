@@ -115,7 +115,7 @@
 
 					<p class="text-justify">Regressão simbólica é uma técnica que consiste na criação e manipulação de expressões matemáticas a fim de encontrar um modelo que seja capaz de descrever suficientemente bem uma série de pontos. Existem diversas técnicas para isso.</p>
 
-					<p class="text-justify">Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar operações muito mais rápido do que um humano. A ideia de regressão simbólica foi introduzida originalmente por Koza, em seu livro Genetic Programming; e desde então, a técnica tem sido estudada e aprimorada. Este site implementa dois algoritmos poderosos de regressão simbólica: EFS e FFX, com o objetivo de oferecer uma ferramenta online que aplica tais técnicas num ambiente agradável.</p>
+					<p class="text-justify">Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar operações muito mais rápido do que um humano. A ideia de regressão simbólica foi introduzida originalmente por Koza, em seu livro Genetic Programming; e desde então, a técnica tem sido estudada e aprimorada. Este site implementa alguns algoritmos poderosos de regressão simbólica, com o objetivo de oferecer uma ferramenta online que aplica tais técnicas num ambiente agradável.</p>
 				</div>
 			</section>
 
@@ -174,11 +174,11 @@
 
 					<div class="row">
 							<div class="col-lg-6">
-								<button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
+								<button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload(), setup()">Usar valores digitados</button>
 							</div>
 
 							<div class="col-lg-6">
-								<button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
+								<button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload(), setup()">Usar arquivo enviado</button>
 							</div>
 					</div><br>
 
@@ -196,7 +196,9 @@
 
 					<p class="text-justify">Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
 
-					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="setup(), play()">Executar algoritmo</button>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
+
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (não implementado ainda)</button>
 
 					<div id="results" class="page-header">
 							

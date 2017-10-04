@@ -423,7 +423,7 @@ function setup(){
 	inputPoints = linesToDataPoint();
 }
 
-function play(){
+function run_ITLS(){
 
 	//cria uma nova população
 	var myPop = new Population(1, 2, inputPoints[0].x.length, 3);
@@ -438,4 +438,8 @@ function play(){
         document.getElementById("results").innerHTML+="<p>Local search numero "+i+":</p>";
         document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
     }
+}
+
+function run_SymTree(){
+    
 }
