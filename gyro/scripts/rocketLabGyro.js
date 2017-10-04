@@ -23,11 +23,13 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 var sin = Math.sin(theta);
             
                 for (var i=0; i<points.length; i++){
-                    nodeY = points[i][1];
-                    nodeZ = points[i][2];
-            
-                    points[i][1] = (cos*nodeY) - (sin*nodeZ);
-                    points[i][2] = (cos*nodeZ) + (sin*nodeY);
+                    for(var j=0; j<points[i].length; j++){
+                        nodeY = points[i][j][1];
+                        nodeZ = points[i][j][2];
+                
+                        points[i][j][1] = (cos*nodeY) - (sin*nodeZ);
+                        points[i][j][2] = (cos*nodeZ) + (sin*nodeY);
+                    }
                 }
             },
             
@@ -38,11 +40,13 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 var sin = Math.sin(theta);
         
                 for (var i=0; i<points.length; i++){
-                    nodeX = points[i][0];
-                    nodeZ = points[i][2];
-            
-                    points[i][0] = (cos*nodeX) - (sin*nodeZ);
-                    points[i][2] = (cos*nodeZ) + (sin*nodeX);
+                    for(var j=0; j<points[i].length; j++){
+                        nodeX = points[i][j][0];
+                        nodeZ = points[i][j][2];
+                
+                        points[i][j][0] = (cos*nodeX) - (sin*nodeZ);
+                        points[i][j][2] = (cos*nodeZ) + (sin*nodeX);
+                    }
                 }
             },
             
@@ -53,116 +57,143 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 var sin = Math.sin(theta);
             
                 for (var i=0; i<points.length; i++){
-                    nodeX = points[i][0];
-                    nodeY = points[i][1];
-            
-                    points[i][0] = (cos*nodeX) - (sin*nodeY);
-                    points[i][1] = (cos*nodeY) + (sin*nodeX);
+                    for(var j=0; j<points[i].length; j++){
+                        nodeX = points[i][j][0];
+                        nodeY = points[i][j][1];
+                
+                        points[i][j][0] = (cos*nodeX) - (sin*nodeY);
+                        points[i][j][1] = (cos*nodeY) + (sin*nodeX);
+                    }
                 }
+            },
+
+            draw : function(points, color){
+
+                fov = 750;
+
+                ctx.fillStyle = color;
+
+                ctx.beginPath();
+                ctx.moveTo(points[0][0]*fov/(fov+points[0][2]), points[0][1]*fov/(fov+points[0][2]));
+
+                for(var i=1; i<points.length; i++){
+                    ctx.lineTo(points[i][0]*fov/(fov+points[i][2]), points[i][1]*fov/(fov+points[i][2]));
+                }
+                ctx.closePath();
+                ctx.fill();
             }
         }
     }    
 
+    var rocketCoifa = function(sizeXZ, sizeY, posY, color){
+        
+        var pl = 13;
+        var points = [];
+        var Manager3D = new Model3DManager(points);
+
+        for (var i=0; i<pl; i++){
+            points[i] = [
+                [sizeXZ, -sizeY+posY, sizeXZ],
+                [0, (-sizeY*1.7)+posY, 0],
+            ];
+            Manager3D.rotateY(6.283/(pl-1), points);
+            points[i].push([sizeXZ, -sizeY+posY, sizeXZ]);
+        }
+
+        return {
+            rotateX : function(theta){
+                Manager3D.rotateX(theta);
+            },
+            rotateY : function(theta){
+                Manager3D.rotateY(theta);
+            },
+            rotateZ : function(theta){
+                Manager3D.rotateZ(theta);
+            },
+            draw : function(){
+                //desenha o cilindro de cor laranja (transparente).
+                //desenha todos os retangulos
+                for (var i=0; i<pl; i++){
+                    Manager3D.draw(points[i], color);
+                }
+            }
+        }
+    }
+
     //corpo do boitatá
-    var rocketBody = function(sizeXZ, sizeY){
+    var rocketBody = function(sizeXZ, sizeY, posY, color){
         
         //MÁGICA. NÃO TOQUE. NÃO OLHE. NÃO TENTE ENTENDER
-
-        var points = [ ];
-        var rotate = new Model3DManager(points);
-        var pl = 16; //numero de poligonos
+        
+        var pl = 13; //numero de poligonos
+        var points = [];
+        var Manager3D = new Model3DManager(points);
 
         //fazer um cilindro com pontos (lembrando que y cresce de cima para
         //baixo)
-        for(var i=0; i<(pl/2)+1; i++){
-            points.push([sizeXZ, -sizeY, sizeXZ]);
-            points.push([sizeXZ, sizeY, sizeXZ]);
-            rotate.rotateY((6.283/pl)*2, points);
+        for(var i=0; i<pl; i++){
+            points[i] = [
+                [sizeXZ, -sizeY+posY, sizeXZ],
+                [sizeXZ, sizeY+posY, sizeXZ]
+            ];
+            Manager3D.rotateY(6.283/(pl-1), points);
+            points[i].push(
+                [sizeXZ, sizeY+posY, sizeXZ],
+                [sizeXZ, -sizeY+posY, sizeXZ]
+            );
         }
         //ponto para ser o bico da coifa do foguete
         points.push([0, sizeY*1.45, 0]);
 
         return {
             rotateX : function(theta){
-                rotate.rotateX(theta);
+                Manager3D.rotateX(theta);
             },
             rotateY : function(theta){
-                rotate.rotateY(theta);
+                Manager3D.rotateY(theta);
             },
             rotateZ : function(theta){
-                rotate.rotateZ(theta);
+                Manager3D.rotateZ(theta);
             },
             draw : function(){
                 //desenha o cilindro de cor laranja (transparente).
-                
-                var fov = 750;
-                
                 //desenha todos os retangulos
-                for (var i=0; i<pl-1; i=i+2){
-                    ctx.fillStyle = '#cc8d06'; //fov/(fov+points[i][2]);
-                    ctx.beginPath();
-                    ctx.moveTo(points[i][0]*fov/(fov+points[i][2]), points[i][1]*fov/(fov+points[i][2]));
-                    ctx.lineTo(points[i+1][0]*fov/(fov+points[i+1][2]), points[i+1][1]*fov/(fov+points[i+1][2]));
-                    ctx.lineTo(points[i+3][0]*fov/(fov+points[i+3][2]), points[i+3][1]*fov/(fov+points[i+3][2]));
-                    ctx.lineTo(points[i+2][0]*fov/(fov+points[i+2][2]), points[i+2][1]*fov/(fov+points[i+2][2]));
-                    ctx.closePath();
-                    ctx.fill();
-                }
-                for(var i=0; i<pl-1; i=i+2){ //coifa
-                    ctx.fillStyle = '#000000';
-                    ctx.beginPath();
-                    ctx.moveTo(points[i+1][0]*fov/(fov+points[i+1][2]), points[i+1][1]*fov/(fov+points[i+1][2]));
-                    ctx.lineTo(points[points.length-1][0]*fov/(fov+points[points.length-1][2]), points[points.length-1][1]*fov/(fov+points[points.length-1][2]));
-                    ctx.lineTo(points[i+3][0]*fov/(fov+points[i+3][2]), points[i+3][1]*fov/(fov+points[i+3][2]));
-                    ctx.closePath();
-                    ctx.fill();
+                for (var i=0; i<pl; i++){
+                    Manager3D.draw(points[i], color);
                 }
             }
         }
     }
 
-    var rocketFins = function(sizeXZ, sizeY){
+    var rocketFins = function(sizeXZ, sizeY, posY, color){
 
         var points = [ ];
-        var rotate = new Model3DManager(points);
-        var nOf = 4; //numero de empenas
+        var Manager3D = new Model3DManager(points);
+        var nOf = 5; //numero de empenas
 
         for(var i=0; i<nOf; i++){
-            
-            //sempre jogar 1 ponto a mais do que será plotado
-            points.push([sizeXZ, -sizeY*0.65, sizeXZ]);
-            points.push([sizeXZ, -sizeY*0.95, sizeXZ]);
-            points.push([sizeXZ*3, -sizeY*0.9, sizeXZ*3]);
-            points.push([sizeXZ*3, -sizeY*0.75, sizeXZ*3]);
-            rotate.rotateY(6.283/nOf, points);
+            points[i] = [
+                [sizeXZ, -sizeY+posY, sizeXZ],
+                [sizeXZ, -sizeY*1.35+posY, sizeXZ],
+                [sizeXZ*3, -sizeY*1.25+posY, sizeXZ*3],
+                [sizeXZ*3, -sizeY*1.1+posY, sizeXZ*3]
+            ];
+            Manager3D.rotateY(6.283/(nOf-1), points);
         }
 
         return {
             rotateX : function(theta){
-                rotate.rotateX(theta);
+                Manager3D.rotateX(theta);
             },
             rotateY : function(theta){
-                rotate.rotateY(theta);
+                Manager3D.rotateY(theta);
             },
             rotateZ : function(theta){
-                rotate.rotateZ(theta);
+                Manager3D.rotateZ(theta);
             },
             draw : function(){
-
-				//FOV
-				var fov = 750;
-			
-                ctx.fillStyle = '#000000';
-
                 for (var i=0; i<nOf; i++){
-                    ctx.beginPath();
-                    ctx.moveTo(points[i*nOf][0]*fov/(fov+points[i*nOf][2]), points[i*nOf][1]*fov/(fov+points[i*nOf][2]));
-                    ctx.lineTo(points[(i*nOf)+1][0]*fov/(fov+points[(i*nOf)+1][2]), points[(i*nOf)+1][1]*fov/(fov+points[(i*nOf)+1][2]));
-                    ctx.lineTo(points[(i*nOf)+2][0]*fov/(fov+points[(i*nOf)+2][2]), points[(i*nOf)+2][1]*fov/(fov+points[(i*nOf)+2][2]));
-                    ctx.lineTo(points[(i*nOf)+3][0]*fov/(fov+points[(i*nOf)+3][2]), points[(i*nOf)+3][1]*fov/(fov+points[(i*nOf)+3][2]));
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.fill();
+                    Manager3D.draw(points[i], color);
                 }
             }
         }
@@ -170,8 +201,10 @@ var rocket = function(sizeX, sizeY, sizeZ){
 
     //guardar o modelo
     var rocketModel = [
-        new rocketBody(sizeX, sizeY),
-        new rocketFins(sizeX, sizeY)
+        new rocketBody(sizeX, sizeY, 0, "#ea9f15"),
+        new rocketBody(sizeX, sizeY*0.15, sizeY*1.15, "#000000"),
+        new rocketCoifa(sizeX, sizeY*0.7, -sizeY*0.3 , "#000000"),
+        new rocketFins(sizeX, sizeY*0.7, sizeY*1.95 , "#000000")
     ];
 
     return {
