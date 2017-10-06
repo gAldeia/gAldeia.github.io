@@ -49,7 +49,7 @@ function loadHandler(inputData){
 	
 	for (var i=0; i<allTextLines.length; i++){
 	
-		var data = allTextLines[i].split(' ');
+		var data = allTextLines[i].split(/\ |,/);
 		var tarr = [];
 		
 		for (var j=0; j<data.length; j++){
@@ -63,6 +63,7 @@ function loadHandler(inputData){
 				tarr.push(aux);
 		}
 		if (tarr.length>0) {
+			console.log(tarr);
 			lines.push(tarr);
 			if (lines[0].length != tarr.length){
 				lines = [ ];

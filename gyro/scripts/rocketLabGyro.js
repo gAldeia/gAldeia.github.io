@@ -120,7 +120,6 @@ var rocket = function(sizeX, sizeY, sizeZ){
         }
     }
 
-    //corpo do boitatá
     var rocketBody = function(sizeXZ, sizeY, posY, color){
         
         //MÁGICA. NÃO TOQUE. NÃO OLHE. NÃO TENTE ENTENDER
@@ -262,13 +261,12 @@ function setup_gyro(){
 	ctx = canvas.getContext("2d");
 	ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    ctx.globalAlpha = 0.8;
+    ctx.globalAlpha = 0.9;
     ctx.translate(ctx.canvas.width/2,ctx.canvas.height/2);
 
     //rotacionar pois o canvas é invertido e o boitata é criado de ponta
     //cabeça
     var boitata = new rocket(15, 225, 15);
-    boitata.rotate(3.14159, 0, 0);
 
     clearInterval(animation);
 
