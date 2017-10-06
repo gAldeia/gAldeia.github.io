@@ -63,7 +63,6 @@ function loadHandler(inputData){
 				tarr.push(aux);
 		}
 		if (tarr.length>0) {
-			console.log(tarr);
 			lines.push(tarr);
 			if (lines[0].length != tarr.length){
 				lines = [ ];
