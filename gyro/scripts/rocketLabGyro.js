@@ -72,6 +72,7 @@ var rocket = function(sizeX, sizeY, sizeZ){
                 fov = 750;
 
                 ctx.fillStyle = color;
+                ctx.strokeStyle = color;
 
                 ctx.beginPath();
                 ctx.moveTo(points[0][0]*fov/(fov+points[0][2]), points[0][1]*fov/(fov+points[0][2]));
@@ -80,7 +81,26 @@ var rocket = function(sizeX, sizeY, sizeZ){
                     ctx.lineTo(points[i][0]*fov/(fov+points[i][2]), points[i][1]*fov/(fov+points[i][2]));
                 }
                 ctx.closePath();
+                ctx.stroke();
                 ctx.fill();
+            },
+
+            furtherPosZ : function(points){
+
+                //retorna a média 
+
+                var furtherZ = 0;
+                var aux;
+
+                for (var i=0; i<points.length; i++){
+                    aux = 0;
+                    for(var j=0; j<points[i].length; j++){
+                        aux += points[i][j][2];
+                    }
+                    furtherZ +=aux/points[i].length;
+                }
+                console.log(furtherZ/points.length);
+                return furtherZ/points.length;
             }
         }
     }    
@@ -109,6 +129,9 @@ var rocket = function(sizeX, sizeY, sizeZ){
             },
             rotateZ : function(theta){
                 Manager3D.rotateZ(theta);
+            },
+            furtherPosZ : function(){
+                return Manager3D.furtherPosZ(points);
             },
             draw : function(){
                 //desenha o cilindro de cor laranja (transparente).
@@ -154,6 +177,9 @@ var rocket = function(sizeX, sizeY, sizeZ){
             rotateZ : function(theta){
                 Manager3D.rotateZ(theta);
             },
+            furtherPosZ : function(){
+                return Manager3D.furtherPosZ(points);
+            },
             draw : function(){
                 //desenha o cilindro de cor laranja (transparente).
                 //desenha todos os retangulos
@@ -190,6 +216,9 @@ var rocket = function(sizeX, sizeY, sizeZ){
             rotateZ : function(theta){
                 Manager3D.rotateZ(theta);
             },
+            furtherPosZ : function(){
+                return Manager3D.furtherPosZ(points);
+            },
             draw : function(){
                 for (var i=0; i<nOf; i++){
                     Manager3D.draw(points[i], color);
@@ -200,17 +229,27 @@ var rocket = function(sizeX, sizeY, sizeZ){
 
     //guardar o modelo
     var rocketModel = [
+        new rocketCoifa(sizeX, sizeY*0.7, -sizeY*0.3 , "#000000"),
         new rocketBody(sizeX, sizeY, 0, "#ea9f15"),
         new rocketBody(sizeX, sizeY*0.15, sizeY*1.15, "#000000"),
-        new rocketCoifa(sizeX, sizeY*0.7, -sizeY*0.3 , "#000000"),
         new rocketFins(sizeX, sizeY*0.7, sizeY*1.95 , "#000000")
     ];
 
     return {
         draw : function(){
-            for (var i=0; i<rocketModel.length; i++){
-                rocketModel[i].draw(); //desenha cada componente
+            if (rocketModel[0].furtherPosZ() >=sizeX){
+                for (var i=0; i<rocketModel.length; i++){
+                    rocketModel[i].draw(); //desenha cada componente
+                }
+                console.log("1");
             }
+            else{
+                for (var i=rocketModel.length-1; i>=0; i--){
+                    rocketModel[i].draw(); //desenha cada componente
+                }
+                console.log("2");
+            }
+
         },
         rotate : function(xRad, yRad, zRad){
             //distribui a rotação para cada componente
@@ -261,7 +300,7 @@ function setup_gyro(){
 	ctx = canvas.getContext("2d");
 	ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    ctx.globalAlpha = 0.9;
+    //ctx.globalAlpha = 0.9;
     ctx.translate(ctx.canvas.width/2,ctx.canvas.height/2);
 
     //rotacionar pois o canvas é invertido e o boitata é criado de ponta
