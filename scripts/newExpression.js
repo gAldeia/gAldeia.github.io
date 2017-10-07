@@ -131,13 +131,6 @@ var MiniExpression = function(numberOfVariables, exponentRange){
             if (index>=size)
                 return 0;
             exponents[index] += value;
-        },
-
-        decreaseExp : function(index, value){
-            //out of range
-            if (index>=size)
-            return 0;
-        exponents[index] -=value;
         }
     };
 };
@@ -293,7 +286,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                     //mente, influenciando no calculo. ISSO SERÁ ARRUMADO!    
 
                     //diminui 1 no original e calcula
-                    equation[i].decreaseExp(j, 2);
+                    equation[i].increaseExp(j, -2);
                     this.evaluate(inputPoints);
                     if (mse < previousMse){
                         bestExp--;
@@ -370,7 +363,7 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
             //na pop inteira.
             findBestExpression();
             theBest.localSearch(inputPoints, numberOfOperators);
-            theBest.evaluate(inputPoints);
+            //theBest.evaluate(inputPoints); acho que isso está redundante!!!
         }
     };
 };
@@ -433,7 +426,7 @@ function run_ITLS(){
     document.getElementById("results").innerHTML="<p>População criada. O melhor da primeira pop:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
 
-    for(var i=0; i<3; i++){
+    for(var i=0; i<4; i++){
         myPop.localSearchBestExpression(inputPoints, 7);
         document.getElementById("results").innerHTML+="<p>Local search numero "+i+":</p>";
         document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";

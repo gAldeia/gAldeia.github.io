@@ -16,11 +16,6 @@
 	<title>Regressão Simbólica - Ferramente Online</title>
 
 	<style>
-		canvas {
-			width: 100%;
-			height: 100%;
-			outline: 1px solid black;
-		}
 		.jumbotron{
 			background: url("./images/bg.png") repeat center center fixed;
 			border-bottom: 3px solid #fff;
@@ -106,7 +101,6 @@
 
 			<section id="about">
 				<div class="page-header">
-
 					<div class="alert alert-info">
 						<p class="text-justify"><strong>Quadro de avisos</strong><br> O site ainda está em desenvolvimento. Podem acontecer problemas durante a execução de algumas operações. Críticas e sugestões são bem vindas. Informações de contato no final da página.</p>
 					</div>
@@ -121,24 +115,20 @@
 
 			<section id="guide">
 				<div class="page-header">
-
 					<h2>Como utilizar a ferramenta online</h2>
 
 					<div class="row">
 						<div class="col-lg-4">
-
 							<h4>Digite os dados</h4>
 
 							<p class="text-justify">Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão <strong>.csv</strong>.</p>
 						</div>
 						<div class="col-lg-4">
-
 							<h4>Execute o algoritmo</h4>
 
 							<p class="text-justify">Com os dados digitados, basta apenas executar o algoritmo.</p>
 						</div>
 						<div class="col-lg-4">
-
 							<h4>Analise o resultado</h4>
 
 							<p class="text-justify">Após finalizar todo o processamento, o site irá exibir os resultados.</p>
@@ -149,21 +139,18 @@
 
 			<section id="input">
 				<div class="page-header">
-
 					<h2>Entrada de dados</h2>
 
 					<p class="text-justify">Digite os dados aqui ou carregue um arquivo do seu computador:</p>
 
 					<div class="row">
 							<div class="col-lg-6">
-
 								<h4>Entrada manual de dados</h4>
 								
-								<textarea style="max-width: 100%; min-width:100%" class="form-control" rows="3" placeholder="Digite os dados aqui. Um ponto em cada linha, no seguinte esquema: f(x1, x2, ... xn), x1, x2, ..., xn" id="my-manualinput"></textarea>
+								<textarea style="max-width: 100%; min-width:100%" class="form-control" rows="3" placeholder="Digite os dados aqui. Um ponto em cada linha, no seguinte esquema: f(x1, x2, ... xn), x1, x2, ..., xn. Os números podem ser separados por vírgulas ou espaços." id="my-manualinput"></textarea>
 							</div>
 
 							<div class="col-lg-6">
-									
 								<h4>Upload de arquivo local</h4>
 
 								<span class="btn btn-default btn-file">
@@ -189,7 +176,6 @@
 
 			<section id="output">
 				<div class="page-header">
-
 					<h2>Resultados</h2>
 
 					<p class="text-justify">O que se espera é encontrar a equação que deu origem aos dados de entrada. Se os dados vieram de uma equação, espera-se encontrar a própria equação (ou uma muito próxima dela).</p>
@@ -201,24 +187,33 @@
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (não implementado ainda)</button>
 
 					<div id="results" class="page-header">
-							
 					</div>
 				</div>
 			</section>
 
 			<section id="explain">
 				<div class="page-header">
-
 					<h2>O resultado obtido foi satisfatório?</h2>
 
-					<p class="text-justify">A evolução é muito influenciada pelos melhores indivíduos das primeiras gerações. Casos infelizes onde uma expressão insatisfatória (distante da expressão que rege os dados de entrada) guie esta primeira etapa podem acontecer. Com a primeira geração sendo criada aleatóriamente, o rumo da evolução pode acabar sendo erroneamente direcionado. Se o resultado obtido não parece, a princípio, correto, tente executar o algoritmo mais uma vez. Este fator aleatório pode ter uma influência minimizada quando vários testes são realizados, ou quando a população é grande. </p>
+					<p class="text-justify">O valor do MSE é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada. Então, quanto menor o MSE, menor a soma das distâncias dos pontos de entrada com a função encontrada. Um MSE muito baixo significa que a equação está passando muito próxima dos pontos de entrada.</p>
+					<p class="text-justify">Quanto mais dispersos forem os pontos de entrada, maior a quantidade de funções que conseguem ter um MSE bom. Assim, uma função que não se comporte como o esperado mas que tenha um MSE baixo pode acabar sendo selecionada. Para uma maior precisão no resultado, deve-se digitar o máximo de pontos possíveis.</p>
+					<p class="text-justify">A busca também é influenciada pela primeira geração, que é criada aleatóriamente, mas guiada pelos melhores individuos. Podem existir casos onde um individuo não tão interessante acabe se sobressaindo diante os outros e o resultado final não seja exatamente o que se esperava. O algoritmo faz uma busca inteligente num universo de equações e seleciona a melhor opção local/global de acordo com os dados de entrada.</p>
 				</div>
 			</section>
 
 			<section id="updates">
 				<div class="page-header">
-
 					<h2>Updates (desde a origem do site):</h2>
+
+					<div class="alert alert-info">
+						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o github. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
+					</div>
+
+					<p class="text-justify"><b>07/10/2017</b></p>
+					<p class="text-justify"> - Textos e códigos revisados.</p>
+
+					<p class="text-justify"><b>03/10/2017</b></p>
+					<p class="text-justify"> - Validação da entrada do usuário.</p>
 
 					<p class="text-justify"><b>02/10/2017</b></p>
 					<p class="text-justify"> - Cálculo do coeficiente arrumado.</p>
@@ -275,10 +270,6 @@
 					<p class="text-justify"> - Novo quadro de avisos e updates no início da página</p>
 
 					<p class="text-justify"></p>
-
-					<div class="alert alert-info">
-						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o github. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
-					</div>
 				</div>
 			</section> 
 
