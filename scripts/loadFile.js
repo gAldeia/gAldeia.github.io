@@ -9,6 +9,20 @@ var lines = [];
 //e os valores serão salvos (sem separar os x-zes em uma nova dimensão:
 //[ [y, x1, x2, ...], [y, x1, x2, ...] ]
 
+//conjunto dos pontos de entrada
+inputPoints = [ ];
+
+
+// --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
+var DataPoint = function(x, y){
+	
+		//ponto de entrada. Objeto para representar melhor os pontos 
+		//digitados na entrada do programa
+	
+		this.x = x;
+		this.y = y;
+}
+
 
 //MÉTODOS DE LEITURA------------------------------------------------------------
 function csv_upload(){
@@ -65,7 +79,6 @@ function loadHandler(inputData){
 		if (tarr.length>0) {
 			lines.push(tarr);
 			if (lines[0].length != tarr.length){
-				lines = [ ];
 
 				document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Nem todas as suas linhas de entrada contém a mesma quantidade de números!</p></div>";
 
@@ -77,16 +90,14 @@ function loadHandler(inputData){
 	//avisos ao usuário
 	if (lines.length==0){
 		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar. O site só aceita arquivos de extensão .csv.</p></div>";
-		
-		lines = [ ];
 	}
 	else if (lines[0].length==1){
 		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores!</p></div>";
-		
-		lines = [ ];
 	}
 	else {
 		document.getElementById("notification").innerHTML="<div class='alert alert-success'><strong>Sucesso!</strong> Os dados foram carregados.</div>";
+
+		linesToDataPoint();
 	}
 }
 

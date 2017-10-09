@@ -1,17 +1,9 @@
-//newExpression.js
-
-//conjunto dos pontos de entrada
-inputPoints = [ ];
+//ITLS.js
 
 
-// --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
-var DataPoint = function(x, y){
-
-    //ponto de entrada
-
-    this.x = x;
-    this.y = y;
-}
+//o funcionamento desse script precisa da existência de um vetor de objetos
+//DataPoint, chamado inputPoints. Toda a criação e preparação desse vetor é
+//feita no arquivo loadFile.
 
 var MiniExpression = function(numberOfVariables, exponentRange){
 
@@ -180,7 +172,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
-                    coefficients[j] = Math.exp(300);
+                    coefficients[j] = 1;
             }
         }
     };
@@ -411,7 +403,6 @@ function getRndOp(){
 
 
 // -------------------------------------------------------------------------- //
-
 function setup(){
 	inputPoints = linesToDataPoint();
 }
@@ -431,8 +422,4 @@ function run_ITLS(){
         document.getElementById("results").innerHTML+="<p>Local search numero "+i+":</p>";
         document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
     }
-}
-
-function run_SymTree(){
-    
 }
