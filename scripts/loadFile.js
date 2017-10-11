@@ -23,6 +23,26 @@ var DataPoint = function(x, y){
 		this.y = y;
 }
 
+function linesToDataPoint(){
+	
+		//Converte os pontos lidos para DataPoint. DataPoint é uma classe
+		//da expressão genética. é apenas um rearranjo de points, porem
+		//com uma notação mais "intuitiva"
+	
+		var Points = [];
+		var aux;
+	
+		for (var i=0; i<lines.length; i++){
+			aux = [];
+	
+			for(var j=1; j<lines[i].length; j++)
+				aux.push(lines[i][j]);
+			
+			Points.push(new DataPoint(aux, lines[i][0]) );
+		}
+		return Points;
+	}
+
 
 //MÉTODOS DE LEITURA------------------------------------------------------------
 function csv_upload(){
@@ -97,26 +117,6 @@ function loadHandler(inputData){
 	else {
 		document.getElementById("notification").innerHTML="<div class='alert alert-success'><strong>Sucesso!</strong> Os dados foram carregados.</div>";
 
-		linesToDataPoint();
+		inputPoints = linesToDataPoint();
 	}
-}
-
-function linesToDataPoint(){
-
-	//Converte os pontos lidos para DataPoint. DataPoint é uma classe
-	//da expressão genética. é apenas um rearranjo de points, porem
-	//com uma notação mais "intuitiva"
-
-	var Points = [];
-	var aux;
-
-	for (var i=0; i<lines.length; i++){
-		aux = [];
-
-		for(var j=1; j<lines[i].length; j++)
-			aux.push(lines[i][j]);
-		
-		Points.push(new DataPoint(aux, lines[i][0]) );
-	}
-	return Points;
 }

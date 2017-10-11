@@ -2,8 +2,8 @@
 
 
 //o funcionamento desse script precisa da existência de um vetor de objetos
-//DataPoint, chamado inputPoints. Toda a criação e preparação desse vetor é
-//feita no arquivo loadFile.
+//do tipo DataPoint, chamado inputPoints. Toda a criação e preparação desse
+//vetor é feita no arquivo loadFile.
 
 var MiniExpression = function(numberOfVariables, exponentRange){
 
@@ -403,23 +403,29 @@ function getRndOp(){
 
 
 // -------------------------------------------------------------------------- //
-function setup(){
-	inputPoints = linesToDataPoint();
-}
 
 function run_ITLS(){
 
 	//cria uma nova população
-	var myPop = new Population(1, 2, inputPoints[0].x.length, 3);
+	var myPop = new Population(25, 2, inputPoints[0].x.length, 3);
     myPop.evaluate(inputPoints); 
 
     //imprime informação no canvas
     document.getElementById("results").innerHTML="<p>População criada. O melhor da primeira pop:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
 
-    for(var i=0; i<4; i++){
+    var previousMse;
+    var counter = 1;
+
+    //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
+
+    do {
+        previousMse = myPop.getBestExpressionMse_d();
         myPop.localSearchBestExpression(inputPoints, 7);
-        document.getElementById("results").innerHTML+="<p>Local search numero "+i+":</p>";
-        document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
-    }
+        counter++;
+
+    }while (previousMse !=myPop.getBestExpressionMse_d());
+
+    document.getElementById("results").innerHTML+="<p>O algoritmo executou "+(counter++)+" buscas locais, e o resultado foi:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
 }
