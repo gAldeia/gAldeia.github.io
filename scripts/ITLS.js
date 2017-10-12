@@ -17,7 +17,7 @@ var MiniExpression = function(numberOfVariables, exponentRange){
     var operation = getRndOp();
 
     for(var i=0; i<size; i++){
-        exponents.push(getRndInt(-exponentRange, exponentRange));
+        exponents.push(1);
     }
 
     //métodos públicos
@@ -217,7 +217,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints,  50, 0.005);
+            adjustCoefficients(inputPoints, 500, 0.25);
             calculateMse(inputPoints);
 
             return mse;
@@ -415,7 +415,7 @@ function run_ITLS(){
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>MSE: "+myPop.getBestExpressionMse_d()+"</p>";
 
     var previousMse;
-    var counter = 1;
+    var counter = 0;
 
     //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
 

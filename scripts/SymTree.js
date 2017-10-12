@@ -5,6 +5,8 @@
 //do tipo DataPoint, chamado inputPoints. Toda a criação e preparação desse
 //vetor é feita no arquivo loadFile.
 
+
+// CLASSES DA ÁRVORE--------------------------------------------------------- //
 var Term = function(exponents, operation){
 
     var variables = exponents.length;
@@ -63,33 +65,99 @@ var Term = function(exponents, operation){
                 case "log": //log 
                     return Math.log(value);
                 default:
-                    alert("PROBLEMA EM EVALUATESIMPLEFUNCTION");
+                    alert("PROBLEMA EM EVALUATETERM");
             }
         }
     }
 }
 
-var LinearExpression = function(terms, toExpand){
+var LinearExpression = function(terms, toExpand = [ ]){
 
     //construtor cria uma cópia de todos os termos passados.
 
     //variaveis privadas
     var coefficients = [ ];
-    var size = terms.length + (toExpand==undefined ? 0 : 1);
-    var myTerms = [ ];
+    var myTerms = terms.concat(toExpand);
+    var size = myTerms.length;
+    var score = 0.0;
 
     //criando todas as cópias
-    for (var i=0; i<terms.length; i++){
-        myTerms.push(new Term(terms[i].getExp(), terms[i].getOp()) );
-        coefficients.push(1.0);
-    }
-    //acrescenta o novo termo se for passado
-    if (toExpand!=undefined){
-        myTerms.push(new Term(toExpand.getExp(), toExpand.getOp()) );
+    for (var i=0; i<myTerms.length; i++){
         coefficients.push(1.0);
     }
 
+    var adjustCoefficients = function(inputPoints, numIterations, learningRate){
+        
+        //ajusta os parâmetros.
+
+        for(var i=0; i<numIterations; i++){
+
+            for(var j=0; j<size; j++){
+                var result = 0.0;
+        
+                coefficients[j]=1;
+
+                for(var k=0; k<inputPoints.length; k++){
+                    aux = myTerms[j].evaluate(inputPoints[k]);
+
+                    result += (aux*coefficients[j] - inputPoints[k].y)*aux;
+                }
+
+                result *= 2/inputPoints.length;
+
+                coefficients[j] -= learningRate*result;
+
+                //caso o coeficiente cresça tanto que vire NaN ou infinito
+                if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
+                    coefficients[j] = 1;
+            }
+        }
+    };
+
+    var calculateMAE = function(inputPoints){
+        
+        //calcula o mse.
+        var mae = 0.0;
+
+        for(var i=0; i< inputPoints.length; i++){
+            var aux = 0.0;
+
+            for(var j=0; j<size; j++){
+                aux+= coefficients[j]*myTerms[j].evaluate(inputPoints[i]);
+            }
+            mae += Math.abs(inputPoints[i].y - aux);
+        }
+        mae = mae/inputPoints.length;
+
+        if (!isFinite(mae) || isNaN(mae))
+            mae = Math.exp(300);
+
+        score = 1/ (1+ mae);
+    };
+
     return {
+        getCoefficient : function(index){
+            if (index > size -1){
+                alert ("TENTANDO ACESSAR COEFICIENTE FORA DO ARRAY");
+                return -1;
+            }
+            return coefficients[index];
+        },
+
+        popTerm : function(index){
+            if (index > size -1){
+                alert ("TENTANDO ACESSAR COEFICIENTE FORA DO ARRAY");
+                return -1;
+            }
+            myTerms.splice(index, 1);
+            coefficients.splice(index, 1);
+        },
+
+        pushTerm : function(term){
+            myTerms.push(term);
+            coefficients.push(1);
+        },
+
         getLinearExpression_d : function(){
             
             //retorna uma string da expressão
@@ -99,28 +167,91 @@ var LinearExpression = function(terms, toExpand){
                 linearExpression += coefficients[i].toFixed(2) + "*" + myTerms[i].getTerm_d() + (i<size-1? "+" : "");
 
             return linearExpression;
+        },
+
+        evaluateScore :  function(inputPoints){
+            adjustCoefficients(inputPoints,  500, 0.25);
+            calculateMAE(inputPoints);
+
+            return score;
         }
     }
 }
 
-// -------------------------------------------------------------------------- //
 
-function run_SymTree(){
-
+// MÉTODOS AUXILIARES-------------------------------------------------------- //
+function rootTerms(){
     //cria um grupinho que serve pra inicializar o root
     var terms = [ ];
-    var aux = [ ];
 
     for(var i=0; i<inputPoints[0].x.length; i++){
-        aux = [ ];
+        let aux = [ ];
         for (var j=0; j<inputPoints[0].x.length; j++)
             aux.push(i==j? 1 : 0);
         terms.push(new Term(aux, "id"));
     }
+    return terms;
+}
+
+function expand(leaf, threshold, minI, minT){
+
+}
+
+function interaction(leaf){
+
+}
+
+function inverse(leaf){
+
+}
+
+function transformation(leaf){
+
+}
+
+function greedySearch(leaf, terms){
+
+}
+
+function simplify(leaf, threshold){
+
+    //percorre uma expressão removendo todo termo de coeficiente menor
+    //que o valor de threshold
+
+    for (var i=0; i<leaf.length; i++){
+        if (leaf[i].getCoefficient[i] < threshold){
+            leaf.popTerm(i);
+        }
+    }
+}
 
 
-    var root = new LinearExpression(terms);
-    
+// MAIN---------------------------------------------------------------------- //
+function run_SymTree(){
+
+    //laço principal da SymTree
+
+    //root <- LinearExpression(x);
+    var root = new LinearExpression(rootTerms());
+
+    //leaves <- root
+    var leaves = [root];
+
+    //while criteria not met
+    while (true){
+        var nodes = [ ];
+
+        //for leaf in leaves
+        for (var i=0; i<leaves.length; i++){
+            nodes.push( expand(leaves[i]) ); //nodes U expand
+        }
+        
+        //leaves <- nodes
+        leaves = leaves.concat(nodes);
+        
+        //só para evitar laços infinitos durante o desenvolvimento
+        break;
+    }
+
     console.log(root.getLinearExpression_d());
-
 }
