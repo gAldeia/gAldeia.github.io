@@ -209,21 +209,19 @@ function vectorSum(vector1, vector2){
 
     for(var i=0; i<vector1.length; i++){
         aux.push(vector1[i]+vector2[i]);
-        console.log(i);
     }
     return aux;
 }
 
 function vectorSub(vector1, vector2){
     
-        var aux = [ ];
-    
-        for(var i=0; i<vector1.length; i++){
-            aux.push(vector1[i]-vector2[i]);
-            console.log(i);
-        }
-        return aux;
+    var aux = [ ];
+
+    for(var i=0; i<vector1.length; i++){
+        aux.push(vector1[i]-vector2[i]);
     }
+    return aux;
+}
 
 function interaction(leaf){
 
