@@ -172,7 +172,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
-                    coefficients[j] = 1;
+                    coefficients[j] = 0;
             }
         }
     };

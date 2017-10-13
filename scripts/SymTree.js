@@ -9,7 +9,6 @@
 // CLASSES DA ÁRVORE--------------------------------------------------------- //
 var Term = function(exponents, operation){
 
-    var variables = exponents.length;
     var exp = exponents;
     var op = operation;
 
@@ -19,14 +18,10 @@ var Term = function(exponents, operation){
             //retorna uma string contendo a expressão.
 
             var term = op + "(";
-            for(var i=0; i<variables; i++){
-                term += "x" + i + "^" + exp[i] + (i<variables-1? " * " : "");
+            for(var i=0; i<exponents.length; i++){
+                term += "x" + i + "^" + exp[i] + (i<exponents.length-1? " * " : "");
             }
             return term + ")";
-        },
-
-        getVariables : function(){
-            return variables;
         },
 
         getExp : function(){
@@ -43,7 +38,7 @@ var Term = function(exponents, operation){
 
             var value = 1.0;
 
-            for(var i=0; i<DataPoint.x.length; i++){
+            for(var i=0; i<exponents.length; i++){
                 value *= Math.pow(DataPoint.x[i], exp[i]);
             }
 
@@ -71,34 +66,29 @@ var Term = function(exponents, operation){
     }
 }
 
-var LinearExpression = function(terms, toExpand = [ ]){
+var LinearExpression = function(termsToUse, toExpand = [ ]){
 
     //construtor cria uma cópia de todos os termos passados.
 
     //variaveis privadas
     var coefficients = [ ];
-    var myTerms = terms.concat(toExpand);
-    var size = myTerms.length;
+    var terms = termsToUse.concat(toExpand);
     var score = 0.0;
 
-    //criando todas as cópias
-    for (var i=0; i<myTerms.length; i++){
-        coefficients.push(1.0);
-    }
-
+    //métodos internos
     var adjustCoefficients = function(inputPoints, numIterations, learningRate){
         
         //ajusta os parâmetros.
 
         for(var i=0; i<numIterations; i++){
 
-            for(var j=0; j<size; j++){
+            for(var j=0; j<terms.length; j++){
                 var result = 0.0;
         
                 coefficients[j]=1;
 
                 for(var k=0; k<inputPoints.length; k++){
-                    aux = myTerms[j].evaluate(inputPoints[k]);
+                    aux = terms[j].evaluate(inputPoints[k]);
 
                     result += (aux*coefficients[j] - inputPoints[k].y)*aux;
                 }
@@ -122,8 +112,8 @@ var LinearExpression = function(terms, toExpand = [ ]){
         for(var i=0; i< inputPoints.length; i++){
             var aux = 0.0;
 
-            for(var j=0; j<size; j++){
-                aux+= coefficients[j]*myTerms[j].evaluate(inputPoints[i]);
+            for(var j=0; j<terms.length; j++){
+                aux+= coefficients[j]*terms[j].evaluate(inputPoints[i]);
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
@@ -133,47 +123,67 @@ var LinearExpression = function(terms, toExpand = [ ]){
             mae = Math.exp(300);
 
         score = 1/ (1+ mae);
+        console.log(score);
     };
 
+    //criando todas as cópias
+    for (var i=0; i<terms.length; i++){
+        coefficients.push(1.0);
+    }
+
+    //ajuste inicial (executado no construtor)
+    adjustCoefficients(inputPoints,  500, 0.25);
+    calculateMAE(inputPoints);
+
     return {
-        getCoefficient : function(index){
-            if (index > size -1){
-                alert ("TENTANDO ACESSAR COEFICIENTE FORA DO ARRAY");
-                return -1;
-            }
-            return coefficients[index];
-        },
-
-        popTerm : function(index){
-            if (index > size -1){
-                alert ("TENTANDO ACESSAR COEFICIENTE FORA DO ARRAY");
-                return -1;
-            }
-            myTerms.splice(index, 1);
-            coefficients.splice(index, 1);
-        },
-
-        pushTerm : function(term){
-            myTerms.push(term);
-            coefficients.push(1);
-        },
-
         getLinearExpression_d : function(){
             
             //retorna uma string da expressão
 
             var linearExpression = "";
-            for(var i=0; i<size; i++)
-                linearExpression += coefficients[i].toFixed(2) + "*" + myTerms[i].getTerm_d() + (i<size-1? "+" : "");
+            for(var i=0; i<terms.length; i++)
+                linearExpression += coefficients[i].toFixed(2) + "*" + terms[i].getTerm_d() + (i<terms.length-1? "+" : "");
 
             return linearExpression;
         },
 
-        evaluateScore :  function(inputPoints){
+        evaluateScore : function(inputPoints){
             adjustCoefficients(inputPoints,  500, 0.25);
             calculateMAE(inputPoints);
 
             return score;
+        },
+
+        simplify : function(threshold){
+            
+            //percorre uma expressão removendo todo termo de coeficiente menor
+            //que o valor de threshold
+        
+            var i = -1;
+        
+            while (++i < coefficients.length){
+                if (Math.abs(coefficients[i]) <= threshold){
+                    coefficients.splice(i, 1);
+                    terms.splice(i--, 1);
+                }
+            }
+            this.evaluateScore(inputPoints);
+        },
+
+        expand : function(threshold, minI, minT){
+
+        },
+
+        getScore : function(){
+            return score;
+        },
+
+        getCoefficients : function(){
+            return coefficients;
+        },
+
+        getTerms : function(){
+            return terms;
         }
     }
 }
@@ -193,16 +203,54 @@ function rootTerms(){
     return terms;
 }
 
-function expand(leaf, threshold, minI, minT){
+function vectorSum(vector1, vector2){
 
+    var aux = [ ];
+
+    for(var i=0; i<vector1.length; i++){
+        aux.push(vector1[i]+vector2[i]);
+        console.log(i);
+    }
+    return aux;
 }
+
+function vectorSub(vector1, vector2){
+    
+        var aux = [ ];
+    
+        for(var i=0; i<vector1.length; i++){
+            aux.push(vector1[i]-vector2[i]);
+            console.log(i);
+        }
+        return aux;
+    }
 
 function interaction(leaf){
 
+    var leafTerms = leaf.getTerms();
+    var result = [ ];
+
+    for (var i=0; i<leafTerms.length; i++){
+
+        for (var j=i; j<leafTerms.length; j++){
+            result.push(new Term(vectorSum(leafTerms[i].getExp(), leafTerms[j].getExp()), leafTerms[0].getOp()) );
+        }
+    }
+    return result;
 }
 
 function inverse(leaf){
 
+    var leafTerms = leaf.getTerms();
+    var result = [ ];
+
+    for (var i=0; i<leafTerms.length; i++){
+
+        for (var j=i; j<leafTerms.length; j++){
+            result.push(new Term(vectorSub(leafTerms[i].getExp(), leafTerms[j].getExp()), leafTerms[0].getOp()) );
+        }
+    }
+    return result;
 }
 
 function transformation(leaf){
@@ -213,17 +261,7 @@ function greedySearch(leaf, terms){
 
 }
 
-function simplify(leaf, threshold){
 
-    //percorre uma expressão removendo todo termo de coeficiente menor
-    //que o valor de threshold
-
-    for (var i=0; i<leaf.length; i++){
-        if (leaf[i].getCoefficient[i] < threshold){
-            leaf.popTerm(i);
-        }
-    }
-}
 
 
 // MAIN---------------------------------------------------------------------- //
@@ -243,15 +281,17 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push( expand(leaves[i]) ); //nodes U expand
+            nodes.push( leaves[i].expand(false, false) ); //nodes U expand
         }
         
         //leaves <- nodes
         leaves = leaves.concat(nodes);
-        
+
+        console.log(root.getLinearExpression_d());
+        root.simplify(2);
+        console.log(root.getLinearExpression_d());
+        interaction(root);
         //só para evitar laços infinitos durante o desenvolvimento
         break;
     }
-
-    console.log(root.getLinearExpression_d());
 }
