@@ -25,23 +25,23 @@ var DataPoint = function(x, y){
 
 function linesToDataPoint(){
 	
-		//Converte os pontos lidos para DataPoint. DataPoint é uma classe
-		//da expressão genética. é apenas um rearranjo de points, porem
-		//com uma notação mais "intuitiva"
-	
-		var Points = [];
-		var aux;
-	
-		for (var i=0; i<lines.length; i++){
-			aux = [];
-	
-			for(var j=1; j<lines[i].length; j++)
-				aux.push(lines[i][j]);
-			
-			Points.push(new DataPoint(aux, lines[i][0]) );
-		}
-		return Points;
+	//Converte os pontos lidos para DataPoint. DataPoint é uma classe
+	//da expressão genética. é apenas um rearranjo de points, porem
+	//com uma notação mais "intuitiva"
+
+	var Points = [];
+	var aux;
+
+	for (var i=0; i<lines.length; i++){
+		aux = [];
+
+		for(var j=1; j<lines[i].length; j++)
+			aux.push(lines[i][j]);
+		
+		Points.push(new DataPoint(aux, lines[i][0]) );
 	}
+	return Points;
+}
 
 
 //MÉTODOS DE LEITURA------------------------------------------------------------
@@ -54,6 +54,12 @@ function csv_upload(){
 	var reader = new FileReader();
 	var csv = document.getElementById("my-csvinput").files[0];
 
+	if (csv==undefined){
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar. O site só aceita arquivos de extensão .csv.</p></div>";
+
+		return;
+	}
+	
 	reader.readAsText(csv);
 	reader.onload = function(event) {
 		var data = event.target.result;

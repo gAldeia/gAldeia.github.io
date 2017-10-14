@@ -7,6 +7,46 @@
 
 
 // CLASSES DA ÁRVORE--------------------------------------------------------- //
+var Operator = {
+
+    nextN : function(op, n){
+        var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
+        
+        var start = operators.indexOf(op);
+
+        return (operators[ (start+n)%operators.length ]);
+    },
+
+    solve : function(op, value){
+        switch (op){
+            case "id": //identidade
+                return value;
+            case "sin": //seno
+                return Math.sin(value);
+            case "cos": //cosseno
+                return Math.cos(value);
+            case "tan": //tangente
+                return Math.tan(value);
+            case "abs": //módulo
+                return Math.abs(value);
+            case "sqrt": //raiz quadrada
+                return value<=0? 0 : Math.sqrt(value);
+            case "exp": //exponencial
+                return Math.exp( Math.floor(value) );
+            case "log": //log 
+                return Math.log(value);
+            default:
+                alert("PROBLEMA EM SOLVE OPERATOR");
+        }
+    },
+
+    id : "id",
+
+    operators : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
+
+    length : 8
+}
+
 var Term = function(exponents, operation){
 
     var exp = exponents;
@@ -41,42 +81,22 @@ var Term = function(exponents, operation){
             for(var i=0; i<exponents.length; i++){
                 value *= Math.pow(DataPoint.x[i], exp[i]);
             }
-
-            switch (op){
-                case "id": //identidade
-                    return value;
-                case "sin": //seno
-                    return Math.sin(value);
-                case "cos": //cosseno
-                    return Math.cos(value);
-                case "tan": //tangente
-                    return Math.tan(value);
-                case "abs": //módulo
-                    return Math.abs(value);
-                case "sqrt": //raiz quadrada
-                    return value<=0? 0 : Math.sqrt(value);
-                case "exp": //exponencial
-                    return Math.exp( Math.floor(value) );
-                case "log": //log 
-                    return Math.log(value);
-                default:
-                    alert("PROBLEMA EM EVALUATETERM");
-            }
-        }
+            return Operator.solve(op, value);
+        },
     }
 }
 
-var LinearExpression = function(termsToUse, toExpand = [ ]){
+var LinearExpression = function(termsToUse){
 
     //construtor cria uma cópia de todos os termos passados.
 
     //variaveis privadas
     var coefficients = [ ];
-    var terms = termsToUse.concat(toExpand);
+    var terms = termsToUse;
     var score = 0.0;
 
     //métodos internos
-    var adjustCoefficients = function(inputPoints, numIterations, learningRate){
+    var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
         
         //ajusta os parâmetros.
 
@@ -100,6 +120,8 @@ var LinearExpression = function(termsToUse, toExpand = [ ]){
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
+                if (result <= threshold)
+                    return;
             }
         }
     };
@@ -123,7 +145,6 @@ var LinearExpression = function(termsToUse, toExpand = [ ]){
             mae = Math.exp(300);
 
         score = 1/ (1+ mae);
-        console.log(score);
     };
 
     //criando todas as cópias
@@ -132,7 +153,7 @@ var LinearExpression = function(termsToUse, toExpand = [ ]){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints,  500, 0.25);
+    adjustCoefficients(inputPoints,  2000, 0.01, 0.005);
     calculateMAE(inputPoints);
 
     return {
@@ -148,7 +169,7 @@ var LinearExpression = function(termsToUse, toExpand = [ ]){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints,  500, 0.25);
+            adjustCoefficients(inputPoints, 20000, 0.001, 0.0005);
             calculateMAE(inputPoints);
 
             return score;
@@ -170,8 +191,45 @@ var LinearExpression = function(termsToUse, toExpand = [ ]){
             this.evaluateScore(inputPoints);
         },
 
-        expand : function(threshold, minI, minT){
+        interaction : function(){
+        
+            var result = [ ];
+        
+            for (var i=0; i<terms.length; i++){
+                for (var j=i; j<terms.length; j++){
+                    result.push( new Term(vSum(terms[i].getExp(), terms[j].getExp()), "id") );
+                }
+            }
+            return result;
+        },
 
+        inverse : function(minI){
+            
+            if (!minI) return [ ];
+
+            var result = [ ];
+        
+            for (var i=0; i<terms.length; i++){
+                for (var j=i; j<terms.length; j++){
+                    result.push(new Term(vSub(terms[i].getExp(), terms[j].getExp()), "id") );
+                }
+            }
+            return result;
+        },
+
+        transformation : function(minT){
+            
+            if (!minT) return [ ];
+
+            var result = [ ];
+
+            for (var i=0; i<terms.length; i++){
+                for (var j=1; j<Operator.length; j++){
+                    result.push( new Term(terms[i].getExp(), Operator.nextN(terms[i].getOp(), j) ) );
+                }
+            }
+            
+            return result;
         },
 
         getScore : function(){
@@ -195,15 +253,17 @@ function rootTerms(){
     var terms = [ ];
 
     for(var i=0; i<inputPoints[0].x.length; i++){
-        let aux = [ ];
+        var aux = [ ];
         for (var j=0; j<inputPoints[0].x.length; j++)
             aux.push(i==j? 1 : 0);
-        terms.push(new Term(aux, "id"));
+        terms.push(new Term(aux, Operator.id ));
     }
     return terms;
 }
 
-function vectorSum(vector1, vector2){
+function vSum(vector1, vector2){
+
+    //soma vetorial
 
     var aux = [ ];
 
@@ -213,8 +273,10 @@ function vectorSum(vector1, vector2){
     return aux;
 }
 
-function vectorSub(vector1, vector2){
+function vSub(vector1, vector2){
     
+    //subtração vetorial
+
     var aux = [ ];
 
     for(var i=0; i<vector1.length; i++){
@@ -223,43 +285,52 @@ function vectorSub(vector1, vector2){
     return aux;
 }
 
-function interaction(leaf){
+function expand(leaf, threshold, minI, minT){
 
-    var leafTerms = leaf.getTerms();
-    var result = [ ];
+    console.log("entrei no expandir");
 
-    for (var i=0; i<leafTerms.length; i++){
+    //list <- interaction U inverse U transformation
+    var exp_list = leaf.interaction();
+    exp_list = exp_list.concat(leaf.inverse(minI));
+    exp_list = exp_list.concat(leaf.transformation(minT)); 
 
-        for (var j=i; j<leafTerms.length; j++){
-            result.push(new Term(vectorSum(leafTerms[i].getExp(), leafTerms[j].getExp()), leafTerms[0].getOp()) );
+    //terms <- [term e Terms if score(node + term) > score(node)]
+    var refined_exp_list = [ ];
+    for (var i=0; i<exp_list.length; i++){
+        var aux = new LinearExpression( leaf.getTerms().concat([exp_list[i]]) );
+        if (aux.getScore() > leaf.getScore()){
+            refined_exp_list.push(exp_list[i]);
         }
     }
-    return result;
-}
 
-function inverse(leaf){
+    console.log(refined_exp_list.length);
+    var children = [ ];
 
-    var leafTerms = leaf.getTerms();
-    var result = [ ];
+    //esta seria a greedy search
+    var best = leaf;
 
-    for (var i=0; i<leafTerms.length; i++){
+    while (refined_exp_list.length>0){
+        for(var i=refined_exp_list.length-1; i>=0; i--){
+            var aux = new LinearExpression( best.getTerms().concat([refined_exp_list[i]]) );
 
-        for (var j=i; j<leafTerms.length; j++){
-            result.push(new Term(vectorSub(leafTerms[i].getExp(), leafTerms[j].getExp()), leafTerms[0].getOp()) );
+            if (aux.getScore() > best.getScore()){
+                best = aux;
+                best.simplify(threshold);
+                children.push(best);
+            }
+            refined_exp_list.pop();
         }
     }
-    return result;
+
+    if (children.length>0){
+        console.log("saí do expandi, retornando filhos");
+        return children;
+    }
+    else{
+        console.log("saí do expandi, mas não retornei filhos");
+        return leaf;
+    }
 }
-
-function transformation(leaf){
-
-}
-
-function greedySearch(leaf, terms){
-
-}
-
-
 
 
 // MAIN---------------------------------------------------------------------- //
@@ -274,22 +345,29 @@ function run_SymTree(){
     var leaves = [root];
 
     //while criteria not met
-    while (true){
-        var nodes = [ ];
+    var gen=-1;
+    while (++gen<6){
+        console.log("gen");
+        console.log(leaves.length);
 
+        var nodes = [ ];
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push( leaves[i].expand(false, false) ); //nodes U expand
+            nodes = nodes.concat(expand(leaves[i], 0.1, gen>3, gen>3));
         }
-        
+
         //leaves <- nodes
         leaves = leaves.concat(nodes);
-
-        console.log(root.getLinearExpression_d());
-        root.simplify(2);
-        console.log(root.getLinearExpression_d());
-        interaction(root);
-        //só para evitar laços infinitos durante o desenvolvimento
-        break;
     }
+
+    //busca pelo melhor resultado
+    best = leaves[0];
+    
+    for (var i=1; i<leaves.length; i++){
+        if (leaves[i].getScore()>best.getScore()){
+            best = leaves[i];
+        }
+    }
+    alert(best.getLinearExpression_d());
+    alert(best.getScore());
 }

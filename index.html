@@ -177,7 +177,7 @@
 					<p class="text-justify">Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
 
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
-					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (não implementado ainda)</button>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree - em fase de testes)</button>
 
 					<div id="results" class="page-header">
 					</div>
@@ -201,6 +201,14 @@
 					<div class="alert alert-info">
 						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o github. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
 					</div>
+
+					<p class="text-justify"><b>13/10/2017</b></p>
+					<p class="text-justify"> - ITLS agora cria tamanhos diferentes de expressões numa mesma população.</p>
+					<p class="text-justify"> - Nova mensagem para o usuário quando não há arquivo enviado e tenta usar os dados de arquivo enviado.</p>
+					<p class="text-justify"> - Algoritmo principal do SymTree implementado (em fase de revisão).</p>
+					<p class="text-justify"> - Ajuste de coeficientes tem um critério de parada novo. Antes ele repetia uma quantidade fixa de iterações, mas agora ele também para quando o erro é muito pequeno (o que for válido primeiro gera a parada) Isso permite learningRates menores e mais precisão.</p>
+					<p class="text-justify"> - Algoritmo principal do SymTree implementado (em fase de revisão).</p>
+					<p class="text-justify"> - Nova classe para cuidar dos operadores em SymTree (será migrada para ITLS também).</p>
 
 					<p class="text-justify"><b>12/10/2017</b></p>
 					<p class="text-justify"> - Calculo do score criado.</p>

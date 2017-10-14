@@ -149,7 +149,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
         coefficients.push(1.0);
     }
 
-    var adjustCoefficients = function(inputPoints, numIterations, learningRate){
+    var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
 
         //ajusta os parâmetros.
 
@@ -173,6 +173,8 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 0;
+                if (result <= threshold)
+                    return;
             }
         }
     };
@@ -217,7 +219,7 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints, 500, 0.25);
+            adjustCoefficients(inputPoints, 2000, 0.01, 0.005);
             calculateMse(inputPoints);
 
             return mse;
@@ -304,6 +306,7 @@ var Population = function(populationSize, expressionSize, numberOfVariables, exp
 
     for(var i=0; i<size; i++){
         subjects.push(new Expression(expressionSize, numberOfVariables, exponentRange));
+        if (i%(populationSize/2)==0) expressionSize++;
     }
 
     //aqui chama o ajuste de coeficientes e calculo do mse
@@ -407,7 +410,7 @@ function getRndOp(){
 function run_ITLS(){
 
 	//cria uma nova população
-	var myPop = new Population(25, 2, inputPoints[0].x.length, 3);
+	var myPop = new Population(100, 1, inputPoints[0].x.length, 1);
     myPop.evaluate(inputPoints); 
 
     //imprime informação no canvas
