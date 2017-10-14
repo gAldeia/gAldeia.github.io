@@ -12,9 +12,7 @@ var Operator = {
     nextN : function(op, n){
         var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
         
-        var start = operators.indexOf(op);
-
-        return (operators[ (start+n)%operators.length ]);
+        return (operators[ (operators.indexOf(op)+n)%operators.length ]);
     },
 
     solve : function(op, value){
@@ -102,7 +100,7 @@ var LinearExpression = function(termsToUse){
 
         //"zera" os coeficientes
         for(var i=0; i<coefficients.length; i++){
-            coefficients[j]=1;
+            coefficients[i]=1;
         }
 
         for(var i=0; i<numIterations; i++){
@@ -112,7 +110,6 @@ var LinearExpression = function(termsToUse){
 
                 for(var k=0; k<inputPoints.length; k++){
                     aux = terms[j].evaluate(inputPoints[k]);
-
                     result += (aux*coefficients[j] - inputPoints[k].y)*aux;
                 }
 
@@ -158,7 +155,7 @@ var LinearExpression = function(termsToUse){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints, 1000, 0.01, 0.005);
+    adjustCoefficients(inputPoints, 1000, 0.001, 0.05);
     calculateMAE(inputPoints);
 
     return {
@@ -295,27 +292,31 @@ function expand(leaf, threshold, minI, minT){
     console.log("entrei no expandir");
 
     //list <- interaction U inverse U transformation
-    var exp_list = leaf.interaction();
+    var interaction = leaf.interaction();
+    var inverse = leaf.inverse();
+    var transf = leaf.transformation();
+    var exp_list = [ ];
+
+    exp_list = exp_list.concat(leaf.interaction());
     exp_list = exp_list.concat(leaf.inverse(minI));
     exp_list = exp_list.concat(leaf.transformation(minT)); 
 
     //terms <- [term e Terms if score(node + term) > score(node)]
     var refined_exp_list = [ ];
     for (var i=0; i<exp_list.length; i++){
-        var aux = new LinearExpression( leaf.getTerms().concat([exp_list[i]]) );
+        var auxTerms = leaf.getTerms().concat([exp_list[i]]);
+        var aux = new LinearExpression(auxTerms);
         if (aux.getScore() > leaf.getScore()){
             refined_exp_list.push(exp_list[i]);
         }
     }
 
-    console.log(refined_exp_list.length);
     var children = [ ];
 
     //remove dos elementos para o greedySearch aqueles que já estão na
     //expressão
     var toCheck = leaf.getTerms();
     for (var i=0; i<toCheck.length; i++){
-        console.log("tiro");
         var index = refined_exp_list.indexOf(toCheck[i]);
         if (index!=-1){
             refined_exp_list.slice(index, 1);
@@ -326,16 +327,16 @@ function expand(leaf, threshold, minI, minT){
     while (refined_exp_list.length>0){
         var best = leaf;
 
-        for(var i=refined_exp_list.length-1; i>=0; i--){
+        for(var i=0; i<refined_exp_list.length; i++){
             var aux = new LinearExpression( best.getTerms().concat([refined_exp_list[i]]) );
 
             if (aux.getScore() > best.getScore()){
                 best = aux;
-                best.simplify(threshold);
                 refined_exp_list.splice(i, 1);
-                children.push(best);
             }
         }
+        best.simplify(threshold);
+        children.push(best);
     }
 
     if (children.length>0){
@@ -369,7 +370,7 @@ function run_SymTree(){
         var nodes = [ ];
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes = nodes.concat(expand(leaves[i], 0.1, gen>3, gen>3));
+            nodes = nodes.concat(expand(leaves[i], 0.1, gen>1, gen>3));
         }
 
         //leaves <- nodes
