@@ -153,12 +153,15 @@ var Expression = function(expressionSize, numberOfVariables, exponentRange){
 
         //ajusta os parâmetros.
 
+        //"zera" os coeficientes
+        for(var i=0; i<coefficients.length; i++){
+            coefficients[j]=1;
+        }
+
         for(var i=0; i<numIterations; i++){
 
             for(var j=0; j<size; j++){
                 var result = 0.0;
-      
-                coefficients[j]=1;
 
                 for(var k=0; k<inputPoints.length; k++){
                     aux = equation[j].evaluate(inputPoints[k]);
@@ -410,7 +413,7 @@ function getRndOp(){
 function run_ITLS(){
 
 	//cria uma nova população
-	var myPop = new Population(100, 1, inputPoints[0].x.length, 1);
+	var myPop = new Population(200, 1, inputPoints[0].x.length, 1);
     myPop.evaluate(inputPoints); 
 
     //imprime informação no canvas

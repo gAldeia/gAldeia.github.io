@@ -100,12 +100,15 @@ var LinearExpression = function(termsToUse){
         
         //ajusta os parâmetros.
 
+        //"zera" os coeficientes
+        for(var i=0; i<coefficients.length; i++){
+            coefficients[j]=1;
+        }
+
         for(var i=0; i<numIterations; i++){
 
             for(var j=0; j<terms.length; j++){
                 var result = 0.0;
-        
-                coefficients[j]=1;
 
                 for(var k=0; k<inputPoints.length; k++){
                     aux = terms[j].evaluate(inputPoints[k]);
@@ -120,7 +123,7 @@ var LinearExpression = function(termsToUse){
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
-                if (result <= threshold)
+                if (coefficients[j] <= threshold)
                     return;
             }
         }
@@ -145,6 +148,8 @@ var LinearExpression = function(termsToUse){
             mae = Math.exp(300);
 
         score = 1/ (1+ mae);
+
+        return mae;
     };
 
     //criando todas as cópias
@@ -153,7 +158,7 @@ var LinearExpression = function(termsToUse){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints,  2000, 0.01, 0.005);
+    adjustCoefficients(inputPoints, 1000, 0.01, 0.005);
     calculateMAE(inputPoints);
 
     return {
@@ -169,7 +174,7 @@ var LinearExpression = function(termsToUse){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints, 20000, 0.001, 0.0005);
+            adjustCoefficients(inputPoints, 1000, 0.01, 0.005);
             calculateMAE(inputPoints);
 
             return score;
@@ -306,19 +311,30 @@ function expand(leaf, threshold, minI, minT){
     console.log(refined_exp_list.length);
     var children = [ ];
 
-    //esta seria a greedy search
-    var best = leaf;
+    //remove dos elementos para o greedySearch aqueles que já estão na
+    //expressão
+    var toCheck = leaf.getTerms();
+    for (var i=0; i<toCheck.length; i++){
+        console.log("tiro");
+        var index = refined_exp_list.indexOf(toCheck[i]);
+        if (index!=-1){
+            refined_exp_list.slice(index, 1);
+        }
+    }
 
+    //esta seria a greedy search
     while (refined_exp_list.length>0){
+        var best = leaf;
+
         for(var i=refined_exp_list.length-1; i>=0; i--){
             var aux = new LinearExpression( best.getTerms().concat([refined_exp_list[i]]) );
 
             if (aux.getScore() > best.getScore()){
                 best = aux;
                 best.simplify(threshold);
+                refined_exp_list.splice(i, 1);
                 children.push(best);
             }
-            refined_exp_list.pop();
         }
     }
 
