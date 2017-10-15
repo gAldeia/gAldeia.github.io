@@ -96,32 +96,43 @@ var LinearExpression = function(termsToUse){
     //métodos internos
     var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
         
-        //ajusta os parâmetros.
+        //ajusta os parâmetros, minimizando a soma quadrática dos erros
 
-        //"zera" os coeficientes
+        //coloca todos os coeficientes no mesmo valor inicial
         for(var i=0; i<coefficients.length; i++){
             coefficients[i]=1;
         }
 
+        //numero de iterações
         for(var i=0; i<numIterations; i++){
 
+            //percorre cada um dos termos que compoe a expressão
             for(var j=0; j<terms.length; j++){
+
+                //não faz o ajuste caso o coef já seja menor que o limite
+                if (coefficients[j] <= threshold) continue;
+
                 var result = 0.0;
 
                 for(var k=0; k<inputPoints.length; k++){
+
+                    //calcula o valor do termo isolado
                     aux = terms[j].evaluate(inputPoints[k]);
-                    result += (aux*coefficients[j] - inputPoints[k].y)*aux;
+
+                    //mede o quão distante este está do ponto de entrada
+                    //com o seu respectivo coeficiente.
+                    result += (aux*coefficients[j] - inputPoints[k].y)*aux*2;
                 }
 
-                result *= 2/inputPoints.length;
+                //tira a média da soma quadrática dos erros
+                result /= inputPoints.length;
 
+                //aplica o gradiente descendente 
                 coefficients[j] -= learningRate*result;
 
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
-                if (coefficients[j] <= threshold)
-                    return;
             }
         }
     };

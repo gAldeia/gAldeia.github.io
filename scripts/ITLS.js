@@ -167,22 +167,23 @@ var Expression = function(expressionSize, numberOfVariables){
         for(var i=0; i<numIterations; i++){
 
             for(var j=0; j<size; j++){
+
+                //não faz o ajuste caso o coef já seja menor que o limite
+                if (coefficients[j] <= threshold) continue;
+                
                 var result = 0.0;
 
                 for(var k=0; k<inputPoints.length; k++){
                     aux = equation[j].evaluate(inputPoints[k]);
-                    result += (aux*coefficients[j] - inputPoints[k].y)*aux;
+                    result += (aux*coefficients[j] - inputPoints[k].y)*aux*2;
                 }
-                //não sei se deveria tirar a média
-                result *= 2/inputPoints.length;
+                result /= inputPoints.length;
 
                 coefficients[j] -= learningRate*result;
 
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
-                if (coefficients[j] <= threshold)
-                    return;
             }
         }
     };
