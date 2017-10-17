@@ -106,6 +106,23 @@ var LinearExpression = function(termsToUse){
         //numero de iterações
         for(var i=0; i<numIterations; i++){
 
+            
+            for (var j=0; j<inputPoints.length; j++){
+                var result = 0.0;
+
+                for (k=0; k<terms.length; k++){
+                    result += terms[k].evaluate(inputPoints[j])*coefficients[k];
+                }
+
+                var error = result - inputPoints[j].y;
+
+                for (var k=0; k<terms.length; k++){
+                    coefficients[k] -= learningRate*terms[k].evaluate(inputPoints[j])*error;
+                }
+
+            }
+
+            /*
             //percorre cada um dos termos que compoe a expressão
             for(var j=0; j<terms.length; j++){
 
@@ -133,7 +150,7 @@ var LinearExpression = function(termsToUse){
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
-            }
+            }*/
         }
     };
 
@@ -166,7 +183,7 @@ var LinearExpression = function(termsToUse){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints, 1000, 0.001, 0.05);
+    adjustCoefficients(inputPoints, 1000, 0.001, 0.005);
     calculateMAE(inputPoints);
 
     return {
@@ -182,7 +199,7 @@ var LinearExpression = function(termsToUse){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints, 1000, 0.01, 0.005);
+            adjustCoefficients(inputPoints, 1000, 0.001, 0.005);
             calculateMAE(inputPoints);
 
             return score;
@@ -374,14 +391,14 @@ function run_SymTree(){
 
     //while criteria not met
     var gen=-1;
-    while (++gen<6){
+    while (++gen<4){
         console.log("gen");
         console.log(leaves.length);
 
         var nodes = [ ];
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes = nodes.concat(expand(leaves[i], 0.1, gen>1, gen>3));
+            nodes = nodes.concat(expand(leaves[i], 0.1, gen>1, gen>2));
         }
 
         //leaves <- nodes

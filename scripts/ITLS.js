@@ -159,13 +159,29 @@ var Expression = function(expressionSize, numberOfVariables){
 
         //ajusta os parâmetros.
 
-                //"zera" os coeficientes
+        //"zera" os coeficientes
         for(var i=0; i<coefficients.length; i++){
             coefficients[i]=1;
         }
 
         for(var i=0; i<numIterations; i++){
 
+            for (var j=0; j<inputPoints.length; j++){
+                var result = 0.0;
+
+                for (k=0; k<size; k++){
+                    result += equation[k].evaluate(inputPoints[j])*coefficients[k];
+                }
+
+                var error = result - inputPoints[j].y;
+
+                for (var k=0; k<size; k++){
+                    coefficients[k] -= learningRate*equation[k].evaluate(inputPoints[j])*error;
+                }
+
+            }
+
+            /*
             for(var j=0; j<size; j++){
 
                 //não faz o ajuste caso o coef já seja menor que o limite
@@ -184,7 +200,7 @@ var Expression = function(expressionSize, numberOfVariables){
                 //caso o coeficiente cresça tanto que vire NaN ou infinito
                 if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
                     coefficients[j] = 1;
-            }
+            }*/
         }
     };
 
