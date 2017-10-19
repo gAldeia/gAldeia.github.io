@@ -157,50 +157,48 @@ var Expression = function(expressionSize, numberOfVariables){
 
     var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
 
-        //ajusta os parâmetros.
+        //ajusta os parâmetros, minimizando a soma quadrática dos erros
+        //cada termo tem seu próprio learning rate
+        var learningRates = [ ];
+        var equationValues = [ ];
+        var prevEquationValues = [ ];
 
-        //"zera" os coeficientes
+        //coloca todos os coeficientes no mesmo valor inicial
         for(var i=0; i<coefficients.length; i++){
             coefficients[i]=1;
+            learningRates.push(0.1);
+            prevEquationValues.push(0.0);
         }
 
+        //numero de iterações
         for(var i=0; i<numIterations; i++){
 
             for (var j=0; j<inputPoints.length; j++){
                 var result = 0.0;
 
-                for (k=0; k<size; k++){
-                    result += equation[k].evaluate(inputPoints[j])*coefficients[k];
+                for (k=0; k<equation.length; k++){
+                    equationValues[k] = equation[k].evaluate(inputPoints[j])*coefficients[k];
+
+                    result += equationValues[k];
                 }
 
                 var error = result - inputPoints[j].y;
 
-                for (var k=0; k<size; k++){
-                    coefficients[k] -= learningRate*equation[k].evaluate(inputPoints[j])*error;
+                for (var k=0; k<equation.length; k++){
+
+                    //ajustes dos learningRates
+                    if (prevEquationValues[k]*equationValues[k]>0){
+                        learningRates[k]  *= 0.999;
+                    }
+                    else if (prevEquationValues[k]*equationValues[k]<0){
+                        learningRates[k]  *= 1.001;
+                    }
+
+                    coefficients[k] -= (learningRates[k]*equation[k].evaluate(inputPoints[j])*error);
                 }
 
+                prevEquationValues = equationValues;
             }
-
-            /*
-            for(var j=0; j<size; j++){
-
-                //não faz o ajuste caso o coef já seja menor que o limite
-                if (coefficients[j] <= threshold) continue;
-                
-                var result = 0.0;
-
-                for(var k=0; k<inputPoints.length; k++){
-                    aux = equation[j].evaluate(inputPoints[k]);
-                    result += (aux*coefficients[j] - inputPoints[k].y)*aux*2;
-                }
-                result /= inputPoints.length;
-
-                coefficients[j] -= learningRate*result;
-
-                //caso o coeficiente cresça tanto que vire NaN ou infinito
-                if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
-                    coefficients[j] = 1;
-            }*/
         }
     };
 
@@ -244,7 +242,7 @@ var Expression = function(expressionSize, numberOfVariables){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints, 1000, 0.001, 0.05);
+            adjustCoefficients(inputPoints, 5000, 0.001, 0.05);
             calculateMse(inputPoints);
 
             return mse;

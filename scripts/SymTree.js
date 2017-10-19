@@ -94,63 +94,50 @@ var LinearExpression = function(termsToUse){
     var score = 0.0;
 
     //métodos internos
-    var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
+    var adjustCoefficients = function(inputPoints, numIterations){
         
         //ajusta os parâmetros, minimizando a soma quadrática dos erros
+        //cada termo tem seu próprio learning rate
+        var learningRates = [ ];
+        var termsValues = [ ];
+        var prevTermsValues = [ ];
 
         //coloca todos os coeficientes no mesmo valor inicial
         for(var i=0; i<coefficients.length; i++){
             coefficients[i]=1;
+            learningRates.push(0.1);
+            prevTermsValues.push(0.0);
         }
 
         //numero de iterações
         for(var i=0; i<numIterations; i++){
 
-            
             for (var j=0; j<inputPoints.length; j++){
                 var result = 0.0;
 
                 for (k=0; k<terms.length; k++){
-                    result += terms[k].evaluate(inputPoints[j])*coefficients[k];
+                    termsValues[k] = terms[k].evaluate(inputPoints[j])*coefficients[k];
+
+                    result += termsValues[k];
                 }
 
                 var error = result - inputPoints[j].y;
 
                 for (var k=0; k<terms.length; k++){
-                    coefficients[k] -= learningRate*terms[k].evaluate(inputPoints[j])*error;
+
+                    //ajustes dos learningRates
+                    if (prevTermsValues[k]*termsValues[k]>0){
+                        learningRates[k]  *= 0.999;
+                    }
+                    else if (prevTermsValues[k]*termsValues[k]<0){
+                        learningRates[k]  *= 1.001;
+                    }
+
+                    coefficients[k] -= (learningRates[k]*terms[k].evaluate(inputPoints[j])*error);
                 }
 
+                prevTermsValues = termsValues;
             }
-
-            /*
-            //percorre cada um dos termos que compoe a expressão
-            for(var j=0; j<terms.length; j++){
-
-                //não faz o ajuste caso o coef já seja menor que o limite
-                if (coefficients[j] <= threshold) continue;
-
-                var result = 0.0;
-
-                for(var k=0; k<inputPoints.length; k++){
-
-                    //calcula o valor do termo isolado
-                    aux = terms[j].evaluate(inputPoints[k]);
-
-                    //mede o quão distante este está do ponto de entrada
-                    //com o seu respectivo coeficiente.
-                    result += (aux*coefficients[j] - inputPoints[k].y)*aux*2;
-                }
-
-                //tira a média da soma quadrática dos erros
-                result /= inputPoints.length;
-
-                //aplica o gradiente descendente 
-                coefficients[j] -= learningRate*result;
-
-                //caso o coeficiente cresça tanto que vire NaN ou infinito
-                if (isNaN(coefficients[j]) || !isFinite(coefficients[j]))
-                    coefficients[j] = 1;
-            }*/
         }
     };
 
@@ -183,7 +170,7 @@ var LinearExpression = function(termsToUse){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints, 1000, 0.001, 0.005);
+    adjustCoefficients(inputPoints,1000);
     calculateMAE(inputPoints);
 
     return {
@@ -199,7 +186,7 @@ var LinearExpression = function(termsToUse){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints, 1000, 0.001, 0.005);
+            adjustCoefficients(inputPoints, 1000);
             calculateMAE(inputPoints);
 
             return score;
@@ -317,12 +304,7 @@ function vSub(vector1, vector2){
 
 function expand(leaf, threshold, minI, minT){
 
-    console.log("entrei no expandir");
-
     //list <- interaction U inverse U transformation
-    var interaction = leaf.interaction();
-    var inverse = leaf.inverse();
-    var transf = leaf.transformation();
     var exp_list = [ ];
 
     exp_list = exp_list.concat(leaf.interaction());
@@ -332,8 +314,7 @@ function expand(leaf, threshold, minI, minT){
     //terms <- [term e Terms if score(node + term) > score(node)]
     var refined_exp_list = [ ];
     for (var i=0; i<exp_list.length; i++){
-        var auxTerms = leaf.getTerms().concat([exp_list[i]]);
-        var aux = new LinearExpression(auxTerms);
+        var aux = new LinearExpression(leaf.getTerms().concat([exp_list[i]]));
         if (aux.getScore() > leaf.getScore()){
             refined_exp_list.push(exp_list[i]);
         }
@@ -368,11 +349,9 @@ function expand(leaf, threshold, minI, minT){
     }
 
     if (children.length>0){
-        console.log("saí do expandi, retornando filhos");
         return children;
     }
     else{
-        console.log("saí do expandi, mas não retornei filhos");
         return leaf;
     }
 }
@@ -392,8 +371,6 @@ function run_SymTree(){
     //while criteria not met
     var gen=-1;
     while (++gen<4){
-        console.log("gen");
-        console.log(leaves.length);
 
         var nodes = [ ];
         //for leaf in leaves
