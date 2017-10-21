@@ -155,7 +155,7 @@ var Expression = function(expressionSize, numberOfVariables){
         coefficients.push(1.0);
     }
 
-    var adjustCoefficients = function(inputPoints, numIterations, learningRate, threshold){
+    var adjustCoefficients = function(inputPoints, numIterations){
 
         //ajusta os parâmetros, minimizando a soma quadrática dos erros
         //cada termo tem seu próprio learning rate
@@ -185,6 +185,7 @@ var Expression = function(expressionSize, numberOfVariables){
                 var error = result - inputPoints[j].y;
 
                 for (var k=0; k<equation.length; k++){
+                    coefficients[k] -= (learningRates[k]*equation[k].evaluate(inputPoints[j])*error);
 
                     //ajustes dos learningRates
                     if (prevEquationValues[k]*equationValues[k]>0){
@@ -193,8 +194,6 @@ var Expression = function(expressionSize, numberOfVariables){
                     else if (prevEquationValues[k]*equationValues[k]<0){
                         learningRates[k]  *= 1.001;
                     }
-
-                    coefficients[k] -= (learningRates[k]*equation[k].evaluate(inputPoints[j])*error);
                 }
 
                 prevEquationValues = equationValues;
@@ -242,7 +241,7 @@ var Expression = function(expressionSize, numberOfVariables){
 
             //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
 
-            adjustCoefficients(inputPoints, 5000, 0.001, 0.05);
+            adjustCoefficients(inputPoints, 1500);
             calculateMse(inputPoints);
 
             return mse;
