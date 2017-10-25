@@ -104,9 +104,9 @@ var LinearExpression = function(termsToUse){
 
         //coloca todos os coeficientes no mesmo valor inicial
         for(var i=0; i<coefficients.length; i++){
-            coefficients[i]=1;
             learningRates.push(0.1);
             prevTermsValues.push(0.0);
+            termsValues.push(0.0);
         }
 
         //numero de iterações
@@ -128,10 +128,10 @@ var LinearExpression = function(termsToUse){
 
                     //ajustes dos learningRates
                     if (prevTermsValues[k]*termsValues[k]>0){
-                        learningRates[k]  *= 0.99;
+                        learningRates[k]  *= 0.98;
                     }
                     else if (prevTermsValues[k]*termsValues[k]<0){
-                        learningRates[k]  *= 1.01;
+                        learningRates[k]  *= 1.02;
                     }
                 }
                 prevTermsValues = termsValues;
@@ -152,12 +152,15 @@ var LinearExpression = function(termsToUse){
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
-        mae = mae/inputPoints.length;
 
-        if (!isFinite(mae) || isNaN(mae))
+        if (!isFinite(mae) || isNaN(mae)){
             mae = Math.exp(300);
-
-        score = 1/ (1+ mae);
+            score = 0.0;
+        }
+        else {
+            mae = mae/inputPoints.length;
+            score = 1/ (1+ mae);
+        }
 
         return mae;
     };
@@ -168,7 +171,7 @@ var LinearExpression = function(termsToUse){
     }
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints,1500);
+    adjustCoefficients(inputPoints, 500);
     calculateMAE(inputPoints);
 
     return {
@@ -184,7 +187,7 @@ var LinearExpression = function(termsToUse){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints, 1500);
+            adjustCoefficients(inputPoints, 500);
             calculateMAE(inputPoints);
 
             return score;
@@ -301,23 +304,13 @@ function expandedList(leaf, minI, minT){
 
     var exp_list = [ ];
 
-    var aux = leaf.interaction();
-    for (var i=0; i< aux.length; i++){
-        exp_list.push(aux[i]);
-    }
-
+    exp_list.push.apply(exp_list, leaf.interaction());
+    
     if (minI){
-        aux = leaf.inverse();
-        for (var i=0; i< aux.length; i++){
-            exp_list.push(aux[i]);
-        }
+        exp_list.push.apply(exp_list, leaf.inverse());
     }
-
     if (minT){
-        aux = leaf.transformation();
-        for (var i=0; i< aux.length; i++){
-            exp_list.push(aux[i]);
-        }
+        exp_list.push.apply(exp_list, leaf.transformation());
     }
 
     return exp_list;
@@ -330,15 +323,18 @@ function expand(leaf, threshold, minI, minT){
 
     //terms <- [term e Terms if score(node + term) > score(node)]
     var refined_exp_list = [ ];
+
     for (var i=0; i<exp_list.length; i++){
-        var aux_term = new LinearExpression(leaf.getTerms().concat([exp_list[i]])); 
-        if (aux_term.getScore() >= leaf.getScore()){//score é calculado no construtor
+        var aux_terms = leaf.getTerms();
+        var aux = new LinearExpression(aux_terms.concat([exp_list[i]])); 
+        if (aux.getScore() > leaf.getScore()){//score é calculado no construtor
             refined_exp_list.push(exp_list[i]);
         }
     }
-
+    
     //remove da exp_list aqueles termos que já estão na expressão
     var toCheck = leaf.getTerms();
+
     for (var i=0; i<toCheck.length; i++){
         for(var j=refined_exp_list.length-1; j>=0; j--){
             if (toCheck[i].getTerm_d()==refined_exp_list[j].getTerm_d()){ //compara a string de cada um
@@ -351,13 +347,15 @@ function expand(leaf, threshold, minI, minT){
 
     while (refined_exp_list.length>0){
 
+
         //esta seria a greedy search
         var best = leaf;
 
         for(var i=refined_exp_list.length-1; i>=0; i--){
-            var aux = new LinearExpression( best.getTerms().concat([refined_exp_list[i]]) );
+            var aux_terms = best.getTerms();
+            var aux = new LinearExpression( aux_terms.concat([refined_exp_list[i]]) );
 
-            if (aux.getScore() >= best.getScore()){
+            if (aux.getScore() > best.getScore()){
                 best = aux;
                 refined_exp_list.splice(i, 1);
             }
@@ -365,6 +363,8 @@ function expand(leaf, threshold, minI, minT){
         
         best.simplify(threshold);
         children.push(best);
+
+         //esta seria a greedy search    
     }
 
     if (children.length>0) 
@@ -395,20 +395,16 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            aux = expand(leaves[i], 0.01, gen>1, gen>3);
-
-            for(var j=0; j<aux.length; j++){ //evitar usar concat
-                nodes.push(aux[j]);
-            }
+            nodes.push.apply(nodes, expand(leaves[i], 0.1, gen>1, gen>3));
         }
 
         //leaves <- nodes
         leaves = nodes;
 
         //busca pelo melhor resultado (critério de parada)
-        best = leaves[0];
+        var best = leaves[0];
         
-        for (var i=1; i<leaves.length; i++){
+        for (var i=0; i<leaves.length; i++){
             if (leaves[i].getScore()>best.getScore()){
                 best = leaves[i];
             }
