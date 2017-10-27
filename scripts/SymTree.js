@@ -80,7 +80,7 @@ var Term = function(exponents, operation){
                 value *= Math.pow(DataPoint.x[i], exp[i]);
             }
             return Operator.solve(op, value);
-        },
+        }
     }
 }
 
@@ -93,48 +93,85 @@ var LinearExpression = function(termsToUse){
     var terms = termsToUse;
     var score = 0.0;
 
+    //criando todas as cópias
+    for (var i=0; i<termsToUse.length; i++){
+        coefficients.push(1.0);
+    }
+
     //métodos internos
     var adjustCoefficients = function(inputPoints, numIterations){
         
+        /*RPROP - INCOMPLETO/NÃO FUNCIONANDO CORRETAMENT
+
         //ajusta os parâmetros, minimizando a soma quadrática dos erros
         //cada termo tem seu próprio learning rate
         var learningRates = [ ];
         var termsValues = [ ];
         var prevTermsValues = [ ];
 
+        var increaseFactor = 1.2;
+        var decreaseFactor = 0.5;
+
+        var iteration = -1;
+        
         //coloca todos os coeficientes no mesmo valor inicial
         for(var i=0; i<coefficients.length; i++){
-            learningRates.push(0.1);
+            learningRates.push(0.1/inputPoints.length);
             prevTermsValues.push(0.0);
             termsValues.push(0.0);
         }
 
         //numero de iterações
-        for(var i=0; i<numIterations; i++){
+        while(++iteration<numIterations){
 
-            for (var j=0; j<inputPoints.length; j++){
+            for (var i=0; i<inputPoints.length; i++){
                 var result = 0.0;
 
-                for (k=0; k<terms.length; k++){
-                    termsValues[k] = terms[k].evaluate(inputPoints[j])*coefficients[k];
+                for (j=0; j<terms.length; j++){
+                    termsValues[j] = terms[j].evaluate(inputPoints[i])*coefficients[j];
 
-                    result += termsValues[k];
+                    result += termsValues[j];
                 }
 
-                var error = result - inputPoints[j].y;
+                var error = result - inputPoints[i].y;
 
-                for (var k=0; k<terms.length; k++){
-                    coefficients[k] -= (learningRates[k]*terms[k].evaluate(inputPoints[j])*error);
-
+                for (var j=0; j<terms.length; j++){
+                    
                     //ajustes dos learningRates
-                    if (prevTermsValues[k]*termsValues[k]>0){
-                        learningRates[k]  *= 0.98;
+                    if (prevTermsValues[j]*termsValues[j]>0){
+                        learningRates[j]  *= Math.min(decreaseFactor, 100);
+                        coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
                     }
-                    else if (prevTermsValues[k]*termsValues[k]<0){
-                        learningRates[k]  *= 1.02;
+                    else if (prevTermsValues[j]*termsValues[j]<0){
+                        learningRates[j]  *= Math.max(increaseFactor, 0.0001);
+                        coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
                     }
                 }
                 prevTermsValues = termsValues;
+            }
+        }
+        */
+
+        var iteration = -1;
+        var alpha = 0.01/inputPoints.length;
+
+        //numero de iterações
+        while(++iteration<numIterations){
+
+            for (var i=0; i<inputPoints.length; i++){
+                var result = 0.0;
+
+                for (j=0; j<terms.length; j++){
+                    result += terms[j].evaluate(inputPoints[i])*coefficients[j];
+                }
+
+                var error = result - inputPoints[i].y;
+
+                for (var j=0; j<terms.length; j++){
+                    
+                    //ajustes dos learningRates
+                    coefficients[j] -= alpha*terms[j].evaluate(inputPoints[i])*error;
+                }
             }
         }
     };
@@ -152,26 +189,20 @@ var LinearExpression = function(termsToUse){
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
+        mae = mae/inputPoints.length;
 
-        if (!isFinite(mae) || isNaN(mae)){
-            mae = Math.exp(300);
-            score = 0.0;
-        }
-        else {
-            mae = mae/inputPoints.length;
+        if (isFinite(mae)){
             score = 1/ (1+ mae);
         }
-
+        else {
+            score = 0.0;
+        }
+        
         return mae;
     };
 
-    //criando todas as cópias
-    for (var i=0; i<terms.length; i++){
-        coefficients.push(1.0);
-    }
-
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints, 500);
+    adjustCoefficients(inputPoints, 10000);
     calculateMAE(inputPoints);
 
     return {
@@ -187,7 +218,7 @@ var LinearExpression = function(termsToUse){
         },
 
         evaluateScore : function(inputPoints){
-            adjustCoefficients(inputPoints, 500);
+            //adjustCoefficients(inputPoints, 10000);
             calculateMAE(inputPoints);
 
             return score;
@@ -198,14 +229,22 @@ var LinearExpression = function(termsToUse){
             //percorre uma expressão removendo todo termo de coeficiente menor
             //que o valor de threshold
         
-            var i = -1;
-        
-            while (++i < coefficients.length){
-                if (Math.abs(coefficients[i]) <= threshold){
-                    coefficients.splice(i, 1);
-                    terms.splice(i--, 1);
+            var newTerms = [ ];
+            var newCoefs = [ ];
+
+            for (var i=0; i<terms.length; i++){
+                if (Math.abs(coefficients[i]) > threshold){
+                    newTerms.push(terms[i]);
+                    newCoefs.push(coefficients[i]);
+                }
+                else{
+                    console.log("Cortei");
                 }
             }
+
+            this.terms = newTerms;
+            this.coefficients = newCoefs;
+
             this.evaluateScore(inputPoints);
         },
 
@@ -362,9 +401,7 @@ function expand(leaf, threshold, minI, minT){
         } //fim da greedy search
         
         best.simplify(threshold);
-        children.push(best);
-
-         //esta seria a greedy search    
+        children.push(best);  
     }
 
     if (children.length>0) 
@@ -395,7 +432,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.1, gen>1, gen>3));
+            nodes.push.apply(nodes, expand(leaves[i], 0.2, gen>1, gen>3));
         }
 
         //leaves <- nodes
@@ -404,7 +441,7 @@ function run_SymTree(){
         //busca pelo melhor resultado (critério de parada)
         var best = leaves[0];
         
-        for (var i=0; i<leaves.length; i++){
+        for (var i=1; i<leaves.length; i++){
             if (leaves[i].getScore()>best.getScore()){
                 best = leaves[i];
             }
