@@ -47,40 +47,38 @@ var Operator = {
 
 var Term = function(exponents, operation){
 
-    var exp = exponents;
-    var op = operation;
+    this.exp = exponents;
+    this.op = operation;
 
-    return {
-        getTerm_d : function(){
-            
-            //retorna uma string contendo a expressão.
+    this.getTerm_d = function(){
+        
+        //retorna uma string contendo a expressão.
 
-            var term = op + "(";
-            for(var i=0; i<exponents.length; i++){
-                term += "x" + i + "^" + exp[i] + (i<exponents.length-1? " * " : "");
-            }
-            return term + ")";
-        },
-
-        getExp : function(){
-            return exp;
-        },
-
-        getOp : function(){
-            return op;
-        },
-
-        evaluate : function(DataPoint){
-
-            //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
-
-            var value = 1.0;
-
-            for(var i=0; i<exponents.length; i++){
-                value *= Math.pow(DataPoint.x[i], exp[i]);
-            }
-            return Operator.solve(op, value);
+        var term = this.op + "(";
+        for(var i=0; i<this.exp.length; i++){
+            term += "x" + i + "^" + this.exp[i] + (i<this.exp.length-1? " * " : "");
         }
+        return term + ")";
+    },
+
+    this.getExp = function(){
+        return this.exp;
+    },
+
+    this.getOp = function(){
+        return this.op;
+    },
+
+    this.evaluate = function(DataPoint){
+
+        //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
+
+        var value = 1.0;
+
+        for(var i=0; i<this.exp.length; i++){
+            value *= Math.pow(DataPoint.x[i], this.exp[i]);
+        }
+        return Operator.solve(this.op, value);
     }
 }
 
@@ -88,68 +86,68 @@ var LinearExpression = function(termsToUse){
 
     //construtor cria uma cópia de todos os termos passados.
 
-    //variaveis privadas
-    var coefficients = [ ];
-    var terms = termsToUse;
-    var score = 0.0;
+    this.coefficients = [ ];
+    this.terms = termsToUse;
+    this.score = 0.0;
 
     //criando todas as cópias
-    for (var i=0; i<termsToUse.length; i++){
-        coefficients.push(1.0);
+    for (var i=0; i<this.terms.length; i++){
+        this.coefficients.push(1.0);
     }
 
     //métodos internos
-    var adjustCoefficients = function(inputPoints, numIterations){
+    this.adjustCoefficients = function(inputPoints, numIterations){
         
-        /*RPROP - INCOMPLETO/NÃO FUNCIONANDO CORRETAMENT
+        /*
+            RPROP - INCOMPLETO/NÃO FUNCIONANDO CORRETAMENT
 
-        //ajusta os parâmetros, minimizando a soma quadrática dos erros
-        //cada termo tem seu próprio learning rate
-        var learningRates = [ ];
-        var termsValues = [ ];
-        var prevTermsValues = [ ];
+            //ajusta os parâmetros, minimizando a soma quadrática dos erros
+            //cada termo tem seu próprio learning rate
+            var learningRates = [ ];
+            var termsValues = [ ];
+            var prevTermsValues = [ ];
 
-        var increaseFactor = 1.2;
-        var decreaseFactor = 0.5;
+            var increaseFactor = 1.2;
+            var decreaseFactor = 0.5;
 
-        var iteration = -1;
-        
-        //coloca todos os coeficientes no mesmo valor inicial
-        for(var i=0; i<coefficients.length; i++){
-            learningRates.push(0.1/inputPoints.length);
-            prevTermsValues.push(0.0);
-            termsValues.push(0.0);
-        }
-
-        //numero de iterações
-        while(++iteration<numIterations){
-
-            for (var i=0; i<inputPoints.length; i++){
-                var result = 0.0;
-
-                for (j=0; j<terms.length; j++){
-                    termsValues[j] = terms[j].evaluate(inputPoints[i])*coefficients[j];
-
-                    result += termsValues[j];
-                }
-
-                var error = result - inputPoints[i].y;
-
-                for (var j=0; j<terms.length; j++){
-                    
-                    //ajustes dos learningRates
-                    if (prevTermsValues[j]*termsValues[j]>0){
-                        learningRates[j]  *= Math.min(decreaseFactor, 100);
-                        coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
-                    }
-                    else if (prevTermsValues[j]*termsValues[j]<0){
-                        learningRates[j]  *= Math.max(increaseFactor, 0.0001);
-                        coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
-                    }
-                }
-                prevTermsValues = termsValues;
+            var iteration = -1;
+            
+            //coloca todos os coeficientes no mesmo valor inicial
+            for(var i=0; i<coefficients.length; i++){
+                learningRates.push(0.1/inputPoints.length);
+                prevTermsValues.push(0.0);
+                termsValues.push(0.0);
             }
-        }
+
+            //numero de iterações
+            while(++iteration<numIterations){
+
+                for (var i=0; i<inputPoints.length; i++){
+                    var result = 0.0;
+
+                    for (j=0; j<terms.length; j++){
+                        termsValues[j] = terms[j].evaluate(inputPoints[i])*coefficients[j];
+
+                        result += termsValues[j];
+                    }
+
+                    var error = result - inputPoints[i].y;
+
+                    for (var j=0; j<terms.length; j++){
+                        
+                        //ajustes dos learningRates
+                        if (prevTermsValues[j]*termsValues[j]>0){
+                            learningRates[j]  *= Math.min(decreaseFactor, 100);
+                            coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
+                        }
+                        else if (prevTermsValues[j]*termsValues[j]<0){
+                            learningRates[j]  *= Math.max(increaseFactor, 0.0001);
+                            coefficients[j] -= learningRates[j]*terms[j].evaluate(inputPoints[i])*error;
+                        }
+                    }
+                    prevTermsValues = termsValues;
+                }
+            }
         */
 
         var iteration = -1;
@@ -159,142 +157,140 @@ var LinearExpression = function(termsToUse){
         while(++iteration<numIterations){
 
             for (var i=0; i<inputPoints.length; i++){
-                var result = 0.0;
+                var guess = 0.0;
 
-                for (j=0; j<terms.length; j++){
-                    result += terms[j].evaluate(inputPoints[i])*coefficients[j];
+                for (j=0; j<this.terms.length; j++){
+                    guess += this.terms[j].evaluate(inputPoints[i])*this.coefficients[j];
                 }
 
-                var error = inputPoints[i].y - result;
+                var error = inputPoints[i].y - guess;
 
-                for (var j=0; j<terms.length; j++){
+                for (var j=0; j<this.terms.length; j++){
                     
                     //ajustes dos learningRates
-                    coefficients[j] = coefficients[j] + alpha*terms[j].evaluate(inputPoints[i])*error;
+                    this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
                 }
             }
         }
     };
 
-    var calculateMAE = function(inputPoints){
+    this.calculateMAE = function(inputPoints){
         
         //calcula o mse.
         var mae = 0.0;
 
-        for(var i=0; i< inputPoints.length; i++){
+        for(var i=0; i<inputPoints.length; i++){
             var aux = 0.0;
 
-            for(var j=0; j<terms.length; j++){
-                aux+= coefficients[j]*terms[j].evaluate(inputPoints[i]);
+            for(var j=0; j<this.terms.length; j++){
+                aux +=this. coefficients[j]*(this.terms[j].evaluate(inputPoints[i]));
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
         mae = mae/inputPoints.length;
 
         if (isFinite(mae)){
-            score = 1/ (1+ mae);
+            this.score = 1/ (1+ mae);
         }
         else {
-            score = 0.0;
+            this.score = 0.0;
         }
         
         return mae;
     };
 
     //ajuste inicial (executado no construtor)
-    adjustCoefficients(inputPoints, 10000);
-    calculateMAE(inputPoints);
+    this.adjustCoefficients(inputPoints, 10000);
+    this.calculateMAE(inputPoints);
 
-    return {
-        getLinearExpression_d : function(){
-            
-            //retorna uma string da expressão
-
-            var linearExpression = "";
-            for(var i=0; i<terms.length; i++)
-                linearExpression += coefficients[i].toFixed(2) + "*" + terms[i].getTerm_d() + (i<terms.length-1? "+" : "");
-
-            return linearExpression;
-        },
-
-        evaluateScore : function(inputPoints){
-            //adjustCoefficients(inputPoints, 10000);
-            calculateMAE(inputPoints);
-
-            return score;
-        },
-
-        simplify : function(threshold){
-            
-            //percorre uma expressão removendo todo termo de coeficiente menor
-            //que o valor de threshold
+    this.getLinearExpression_d = function(){
         
-            var newTerms = [ ];
-            var newCoefs = [ ];
+        //retorna uma string da expressão
 
-            for (var i=0; i<terms.length; i++){
-                if (Math.abs(coefficients[i]) > threshold){
-                    newTerms.push(terms[i]);
-                    newCoefs.push(coefficients[i]);
-                }
-                else{
-                    console.log("Cortei");
-                }
-            }
+        var linearExpression = "";
+        for(var i=0; i<this.terms.length; i++)
+            linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
 
-            this.terms = newTerms;
-            this.coefficients = newCoefs;
+        return linearExpression;
+    },
 
-            this.evaluateScore(inputPoints);
-        },
+    this.evaluateScore = function(inputPoints){
+        //adjustCoefficients(inputPoints, 10000);
+        this.calculateMAE(inputPoints);
 
-        interaction : function(){
+        return this.score;
+    },
+
+    this.simplify = function(threshold){
         
-            var result = [ ];
-        
-            for (var i=0; i<terms.length; i++){
-                for (var j=i; j<terms.length; j++){
-                    result.push( new Term(vSum(terms[i].getExp(), terms[j].getExp()), Operator.id) );
-                }
+        //percorre uma expressão removendo todo termo de coeficiente menor
+        //que o valor de threshold
+    
+        var newTerms = [ ];
+        var newCoefs = [ ];
+
+        for (var i=0; i<this.coefficients.length; i++){
+            if (Math.abs(this.coefficients[i]) > threshold){
+                newTerms.push(this.terms[i]);
+                newCoefs.push(this.coefficients[i]);
             }
-            return result;
-        },
-
-        inverse : function(){
-            var result = [ ];
-        
-            for (var i=0; i<terms.length; i++){
-                for (var j=i; j<terms.length; j++){
-                    result.push(new Term(vSub(terms[i].getExp(), terms[j].getExp()), Operator.id) );
-                }
+            else{
+                console.log("Cortei");
             }
-            return result;
-        },
-
-        transformation : function(){
-            
-            var result = [ ];
-
-            for (var i=0; i<terms.length; i++){
-                for (var j=1; j<Operator.length; j++){
-                    result.push( new Term(terms[i].getExp(), Operator.nextN(terms[i].getOp(), j) ) );
-                }
-            }
-            
-            return result;
-        },
-
-        getScore : function(){
-            return score;
-        },
-
-        getCoefficients : function(){
-            return coefficients;
-        },
-
-        getTerms : function(){
-            return terms;
         }
+
+        this.terms = newTerms;
+        this.coefficients = newCoefs;
+
+        this.evaluateScore(inputPoints);
+    };
+
+    this.interaction = function(){
+    
+        var result = [ ];
+    
+        for (var i=0; i<this.terms.length; i++){
+            for (var j=i; j<this.terms.length; j++){
+                result.push( new Term(vSum(this.terms[i].getExp(), this.terms[j].getExp()), Operator.id) );
+            }
+        }
+        return result;
+    };
+
+    this.inverse = function(){
+        var result = [ ];
+    
+        for (var i=0; i<this.terms.length; i++){
+            for (var j=i; j<this.terms.length; j++){
+                result.push(new Term(vSub(this.terms[i].getExp(), this.terms[j].getExp()), Operator.id) );
+            }
+        }
+        return result;
+    },
+
+    this.transformation = function(){
+        
+        var result = [ ];
+
+        for (var i=0; i<this.terms.length; i++){
+            for (var j=1; j<Operator.length; j++){
+                result.push( new Term(this.terms[i].getExp(), Operator.nextN(this.terms[i].getOp(), j) ) );
+            }
+        }
+        
+        return result;
+    },
+
+    this.getScore = function(){
+        return this.score;
+    },
+
+    this.getCoefficients = function(){
+        return this.coefficients;
+    },
+
+    this.getTerms = function(){
+        return this.terms;
     }
 }
 
@@ -424,7 +420,7 @@ function run_SymTree(){
 
     //while criteria not met
     var gen=-1;
-    var nOfGens = 6;
+    var nOfGens = 3;
 
     while (++gen<nOfGens){
 
@@ -432,7 +428,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.2, gen>1, gen>3));
+            nodes.push.apply(nodes, expand(leaves[i], 0.2, gen>1, gen>2));
         }
 
         //leaves <- nodes
