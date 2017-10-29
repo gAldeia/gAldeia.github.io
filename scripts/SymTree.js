@@ -165,12 +165,12 @@ var LinearExpression = function(termsToUse){
                     result += terms[j].evaluate(inputPoints[i])*coefficients[j];
                 }
 
-                var error = result - inputPoints[i].y;
+                var error = inputPoints[i].y - result;
 
                 for (var j=0; j<terms.length; j++){
                     
                     //ajustes dos learningRates
-                    coefficients[j] -= alpha*terms[j].evaluate(inputPoints[i])*error;
+                    coefficients[j] = coefficients[j] + alpha*terms[j].evaluate(inputPoints[i])*error;
                 }
             }
         }
