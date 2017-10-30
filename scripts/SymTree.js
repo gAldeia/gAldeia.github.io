@@ -50,6 +50,19 @@ var Term = function(exponents, operation){
     this.exp = exponents;
     this.op = operation;
 
+    this.evaluate = function(DataPoint){
+        
+        //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
+
+        var value = 1.0;
+
+        for(var i=0; i<this.exp.length; i++){
+            value *= Math.pow(DataPoint.x[i], this.exp[i]);
+        }
+        
+        return Operator.solve(this.op, value);
+    },
+
     this.getTerm_d = function(){
         
         //retorna uma string contendo a expressão.
@@ -67,18 +80,6 @@ var Term = function(exponents, operation){
 
     this.getOp = function(){
         return this.op;
-    },
-
-    this.evaluate = function(DataPoint){
-
-        //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
-
-        var value = 1.0;
-
-        for(var i=0; i<this.exp.length; i++){
-            value *= Math.pow(DataPoint.x[i], this.exp[i]);
-        }
-        return Operator.solve(this.op, value);
     }
 }
 
@@ -189,12 +190,10 @@ var LinearExpression = function(termsToUse){
         }
         mae = mae/inputPoints.length;
 
-        if (isFinite(mae)){
+        if (isFinite(mae))
             this.score = 1/ (1+ mae);
-        }
-        else {
+        else 
             this.score = 0.0;
-        }
         
         return mae;
     };
@@ -445,12 +444,12 @@ function run_SymTree(){
 
         if (best.getScore()==1){
             document.getElementById("results").innerHTML="<p>A busca encontrou uma equação que descreve perfeitamente os pontos de entrada:</p>";
-            document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score:"+best.getScore()+"<p>";
+            document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
             break;
         }
         if (gen==nOfGens-1){
             document.getElementById("results").innerHTML="<p>A busca não encontrou uma equação perfeita. A mais próxima foi:</p>";
-            document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score:"+best.getScore()+"<p>";
+            document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
         }
     }
 }
