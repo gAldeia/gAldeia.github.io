@@ -193,9 +193,14 @@
 				<div class="page-header">
 					<h2>O resultado obtido foi satisfatório?</h2>
 
-					<p class="text-justify">O valor do MSE é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada. Então, quanto menor o MSE, menor a soma das distâncias dos pontos de entrada com a função encontrada. Um MSE muito baixo significa que a equação está passando muito próxima dos pontos de entrada.</p>
-					<p class="text-justify">Quanto mais dispersos forem os pontos de entrada, maior a quantidade de funções que conseguem ter um MSE bom. Assim, uma função que não se comporte como o esperado mas que tenha um MSE baixo pode acabar sendo selecionada. Para uma maior precisão no resultado, deve-se digitar o máximo de pontos possíveis.</p>
-					<p class="text-justify">A busca também é influenciada pela primeira geração, que é criada aleatóriamente, mas guiada pelos melhores individuos. Podem existir casos onde um individuo não tão interessante acabe se sobressaindo diante os outros e o resultado final não seja exatamente o que se esperava. O algoritmo faz uma busca inteligente num universo de equações e seleciona a melhor opção local/global de acordo com os dados de entrada.</p>
+					<p class="text-justify">O score é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada (varia de 0 a 1). Quanto menor a soma das distâncias dos pontos de entrada com a função encontrada, melhor o score da equação.</p>
+
+					<p class="text-justify"><b>Algoritmo IT-LS</b></p>
+					<p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias e selecionando a melhor, e então executa uma busca local (incrementando e decrementando os expoentes e trocando os operadores dos termos), e repete o processo até que a busca local retorne um valor igual a anterior (ou seja, a busca local não consegue encontrar resultado melhor).</p>
+
+					<p class="text-justify"><b>Algoritmo SymTree</b></p>
+					<p class="text-justify">Este algoritmo faz uma busca gulosa, explorando todos os aspectos que podem mudar entre as expressões. Começando com uma equação raiz, faz combinações de expoentes e variações de operadores, sempre separando termos que quando combinados com a expressão inicial resultam numa melhoria do score. O processo é repetido até que um critério de parada seja atingido; e em cada iteração novas expressões são adicionadas ao grupo de potenciais candidatos para responder o problema.</p>
+
 				</div>
 			</section>
 
@@ -210,6 +215,7 @@
 					<p class="text-justify"><b>29/10/2017</b></p>
 					<p class="text-justify"> - Correção da regressão linear.</p>
 					<p class="text-justify"> - Correção de variáveis de classes em SymTree e IT-LS.</p>
+					<p class="text-justify"> - Mudança do texto de resultados.</p>
 
 					<p class="text-justify"><b>21/10/2017</b></p>
 					<p class="text-justify"> - SymTree agora escreve os resultados na página.</p>
