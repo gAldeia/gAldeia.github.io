@@ -233,9 +233,6 @@ var LinearExpression = function(termsToUse){
                 newTerms.push(this.terms[i]);
                 newCoefs.push(this.coefficients[i]);
             }
-            else{
-                console.log("Cortei");
-            }
         }
 
         this.terms = newTerms;
