@@ -49,76 +49,69 @@ var OP = {
     }
 }
 
-var MiniExpression = function(numberOfVariables){
+var TERM = function(exponents, operation){
 
-    //expressão pequena. recebe um dataPoint para tomar como parâmetro na hora de ajustar suas variáveis internas.
-
-    this.exponents = [ ];
-    this.operation = OP.rndOp();
-
-    for(var i=0; i<numberOfVariables; i++){
-        this.exponents.push(1);
-    }
-
-    this.getMiniExpression_d = function(){
-
-        //retorna uma string contendo a expressão.
-
-        var expression = this.operation + "(";
-        for(var i=0; i<this.exponents.length; i++){
-            expression += "x" + i + "^" + this.exponents[i] + (i<this.exponents.length-1? " * " : "");
-        }
-        return expression + ")";
-    },
+    this.exp = exponents;
+    this.op = operation;
 
     this.evaluate = function(DataPoint){
         var value = 1.0;
 
         for(var i=0; i<DataPoint.x.length; i++){
-            value *= Math.pow(DataPoint.x[i], this.exponents[i]);
+            value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
 
-        return OP.solve(this.operation, value);
+        return OP.solve(this.op, value);
     },
 
-    this.getSize = function(){
-        return this.exponents.length;
+    this.getTERM_d = function(){
+
+        //retorna uma string contendo a expressão.
+
+        var expression = this.op + "(";
+        for(var i=0; i<this.exp.length; i++){
+            expression += "x" + i + "^" + this.exp[i] + (i<this.exp.length-1? " * " : "");
+        }
+        return expression + ")";
     },
 
     this.getOp = function(){
-        return this.operation;
-    },
-
-    this.setOp = function(op){
-        this.operation = op;
-    },
-
-    this.shiftOp = function (){
-        this.operation = OP.nextN(this.operation, 1);
+        return this.op;
     },
 
     this.getExp = function(index){
-        return index>=this.exponents.length? 0 : this.exponents[index];
+        return index>=this.exp.length? 0 : this.exp[index];
+    },
+
+    this.getSize = function(){
+        return this.exp.length;
+    },
+
+    this.setOp = function(op){
+        this.op = op;
+    },
+
+    this.shiftOp = function (){
+        this.op = OP.nextN(this.op, 1);
     },
 
     this.setExp = function(index, value){
-        if (index<this.exponents.length) this.exponents[index] = value;
+        if (index<this.exp.length) this.exp[index] = value;
     },
 
     this.increaseExp = function (index, value){
-        if (index<this.exponents.length) this.exponents[index] += value;
+        if (index<this.exp.length) this.exp[index] += value;
     }
 };
 
-var Expression = function(expressionSize, numberOfVariables){
+var Expression = function(termsToUse){
 
     //expressão completa, composta por "size" expressões pequenas
     this.coefficients = [ ];
-    this.equation = [ ];
+    this.TERMS = termsToUse;
     this.score = 0;
 
-    for (var i=0; i<expressionSize; i++){
-        this.equation.push(new MiniExpression(numberOfVariables));
+    for (var i=0; i<this.TERMS.length; i++){
         this.coefficients.push(1.0);
     }
 
@@ -126,6 +119,7 @@ var Expression = function(expressionSize, numberOfVariables){
 
         var iteration = -1;
         var alpha = 0.01/inputPoints.length;
+        var prevError = 0;
 
         //numero de iterações
         while(++iteration<numIterations){
@@ -133,17 +127,29 @@ var Expression = function(expressionSize, numberOfVariables){
             for (var i=0; i<inputPoints.length; i++){
                 var guess = 0.0;
 
-                for (j=0; j<this.equation.length; j++){
-                    guess += this.equation[j].evaluate(inputPoints[i])*this.coefficients[j];
+                for (j=0; j<this.TERMS.length; j++){
+                    guess += this.TERMS[j].evaluate(inputPoints[i])*this.coefficients[j];
                 }
 
                 var error = inputPoints[i].y - guess;
 
-                for (var j=0; j<this.equation.length; j++){
+                for (var j=0; j<this.TERMS.length; j++){
                     
                     //ajustes dos learningRates
-                    this.coefficients[j] += alpha*this.equation[j].evaluate(inputPoints[i])*error;
+                    this.coefficients[j] += alpha*this.TERMS[j].evaluate(inputPoints[i])*error;
                 }
+
+                if ( Math.abs(prevError-error)<0.0001)
+                    return;
+                else
+                    prevError = error;
+            }
+        }
+
+        //limpando os nan
+        for(var i=0; i<this.coefficients.length; i++){
+            if (isNaN(this.coefficients[i])){
+                this.coefficients[i] = 0.0;
             }
         }
     };
@@ -156,7 +162,7 @@ var Expression = function(expressionSize, numberOfVariables){
             var aux = 0.0;
 
             for(var j=0; j<this.coefficients.length; j++){
-                aux+= this.coefficients[j]*this.equation[j].evaluate(inputPoints[i]);
+                aux+= this.coefficients[j]*this.TERMS[j].evaluate(inputPoints[i]);
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
@@ -176,7 +182,7 @@ var Expression = function(expressionSize, numberOfVariables){
 
         var expression = "";
         for(var i=0; i<this.coefficients.length; i++){
-            expression += this.coefficients[i].toFixed(2) + "*" + this.equation[i].getMiniExpression_d() + (i<this.size-1? "+" : "");
+            expression += this.coefficients[i].toFixed(2) + "*" + this.TERMS[i].getTERM_d() + (i<this.size-1? "+" : "");
         }
 
         return expression;
@@ -196,59 +202,62 @@ var Expression = function(expressionSize, numberOfVariables){
         return this.score;
     },
 
-    this.localSearch = function(inputPoints, numberOfOperators){
+    this.localSearch = function(inputPoints){
 
         //local search nos operadores:
         //faz um shift entre os operadores (8 operadores no total)
 
+        
+
         //percorre todas as mini expressões
-        for (var i=0; i<this.coefficients.length; i++){
+        for (var i=0; i<this.TERMS.length; i++){
 
             var previousScore = this.score; //valor anterior
-            var bestOp = this.equation[i].getOp(); //operador
+            var bestOp = this.TERMS[i].getOp(); //operador
             var bestExp; //expoente
 
             //é só uma operação por miniexpressão, mas a pesquisa deve
             //abrangir todos os operadores possíveis
-            for(var j=0; j<numberOfOperators; j++){
+            for(var j=0; j<OP.length; j++){
                 //percorre cada um dos operadores buscando um novo melhor
-                this.equation[i].shiftOp();
+                this.TERMS[i].shiftOp();
                 this.evaluate(inputPoints);
 
                 if (this.score > previousScore){
-                    bestOp = this.equation[i].getOp();
+                    bestOp = this.TERMS[i].getOp();
                     previousScore = this.score;
                 }
             }
             
             //atualiza o mse do local search para efetuar nos expoentes
-            this.equation[i].setOp(bestOp);
+            this.TERMS[i].setOp(bestOp);
             this.evaluate(inputPoints);
             previousScore = this.score;
 
             //local search entre os exp (são vários exp por cada mini
             //expressão:
-            for (var j=0; j<this.equation[0].getSize(); j++){
+            for (var j=0; j<this.TERMS[0].getSize(); j++){
 
-                bestExp = this.equation[i].getExp(j);
+                bestExp = this.TERMS[i].getExp(j);
 
                 //aumenta 1 no original e calcula
-                this.equation[i].increaseExp(j, 1);
+                this.TERMS[i].increaseExp(j, 1);
                 this.evaluate(inputPoints);
                 if (this.score > previousScore){
-                    bestExp = this.equation[i].getExp(j);
+                    bestExp = this.TERMS[i].getExp(j);
                     previousScore = this.score;
                 }
 
                 //diminui 1 no original e calcula
-                this.equation[i].increaseExp(j, -2);
+                this.TERMS[i].increaseExp(j, -2);
                 this.evaluate(inputPoints);
+
                 if (this.score > previousScore){
-                    bestExp = this.equation[i].getExp(j);
+                    bestExp = this.TERMS[i].getExp(j);
                     previousScore = this.score;
                 }
 
-                this.equation[i].setExp(j, bestExp);
+                this.TERMS[i].setExp(j, bestExp);
                 this.evaluate(inputPoints);
             }
         }
@@ -263,7 +272,7 @@ var Population = function(populationSize, expressionSize, numberOfVariables){
     this.size = populationSize;
 
     for(var i=0; i<this.size; i++){
-        this.subjects.push(new Expression(expressionSize, numberOfVariables));
+        this.subjects.push(new Expression(rndTerms(expressionSize)));
         if (i==(this.size/2)) expressionSize++;
     }
 
@@ -284,7 +293,6 @@ var Population = function(populationSize, expressionSize, numberOfVariables){
     };
 
     this.getBestExpression_d = function(){
-        this.findBestExpression();
         return this.theBest.getExpression_d();
     },
 
@@ -301,44 +309,72 @@ var Population = function(populationSize, expressionSize, numberOfVariables){
         }
     },
 
-    this.localSearch = function(inputPoints, numberOfOperators){
+    this.localSearch = function(inputPoints){
         for(var i=0; i<this.size; i++){
-            this.subjects[i].localSearch(inputPoints, numberOfOperators);
+            this.subjects[i].localSearch(inputPoints);
             this.subjects[i].evaluate(inputPoints);
         }
     },
 
-    this.localSearchBestExpression = function(inputPoints, numberOfOperators){
+    this.localSearchBestExpression = function(inputPoints){
 
         //executa o local search, mas só no melhor indivíduo, e não
         //na pop inteira.
-        this.findBestExpression();
-        this.theBest.localSearch(inputPoints, numberOfOperators);
+        this.theBest.localSearch(inputPoints);
     }
 };
 
 
+// MÉTODOS AUXILIARES---------------------------------------------------------------- //
+
+function rndTerms(howMany){
+
+    //conjunto de termos (que são conjuntos de expoentes)
+
+    var terms = [ ];
+
+    for (var i=0; i<howMany; i++){
+        var aux = [ ];
+        for (var i=0; i< inputPoints[0].x.length; i++){
+            aux.push( Math.floor(Math.random()*4) );
+        }
+        terms.push(new TERM(aux, OP.rndOp()));
+    }
+
+    return terms;
+}
 // -------------------------------------------------------------------------- //
 
 function run_ITLS(){
+
+    if (inputPoints[0]==undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
 
 	//cria uma nova população
 	var myPop = new Population(20, 1, inputPoints[0].x.length);
     myPop.evaluate(inputPoints); 
 
+    myPop.findBestExpression();
+
     //imprime informação no canvas
-    document.getElementById("results").innerHTML="<p>População criada. O melhor da primeira pop:</p>";
+    document.getElementById("results").innerHTML="<p>População criada. A melhor expressão inicial:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
 
-    var lastMSE;
+    if (myPop.getBestExpressionScore_d()>=0.999999){
+        return;
+    }
+
+    var prevScore;
     var counter = 0;
 
     //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
 
     do {
-        lastMSE = myPop.getBestExpressionScore_d();
+        prevScore = myPop.getBestExpressionScore_d();
         myPop.localSearchBestExpression(inputPoints, 7);
-    }while (lastMSE !=myPop.getBestExpressionScore_d() || counter++>75);
+    }while (prevScore !=myPop.getBestExpressionScore_d() || counter++>75);
 
     document.getElementById("results").innerHTML+="<p>O algoritmo executou "+(counter++)+" buscas locais, e o resultado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";

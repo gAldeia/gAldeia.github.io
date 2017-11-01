@@ -180,9 +180,7 @@
 
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
-
-					<div class="progress" id="loading">
-					</div>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="">Algoritmo IT-ES (Interaction Transformation Evolution Strategies - NÃO IMPLEMENTADO)</button>
 
 					<div id="results" class="page-header">
 					</div>
@@ -211,6 +209,12 @@
 					<div class="alert alert-info">
 						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a>. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
 					</div>
+
+					<p class="text-justify"><b>01/11/2017</b></p>
+					<p class="text-justify"> - Revisão do código da página, do IT-LS e do SymTree.</p>
+					<p class="text-justify"> - Critério de parada para regressão linear nos dois algoritmos.</p>
+					<p class="text-justify"> - operação de transformação em expressões do SymTree habilitada.</p>
+					<p class="text-justify"> - Mensagem de erro caso não tenha entrada e o usuário tente executar o algoritmo.</p>
 
 					<p class="text-justify"><b>29/10/2017</b></p>
 					<p class="text-justify"> - Correção da regressão linear.</p>
@@ -333,7 +337,7 @@
 
 	<!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/loadFile.js></script>
-	<script type="text/javascript" src=./scripts/ITLS.js></script>
+	<script type="text/javascript" src=./scripts/new-ITLS.js></script>
 	<script type="text/javascript" src=./scripts/SymTree.js></script>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

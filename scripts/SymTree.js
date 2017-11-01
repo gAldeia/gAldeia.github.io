@@ -153,6 +153,7 @@ var LinearExpression = function(termsToUse){
 
         var iteration = -1;
         var alpha = 0.01/inputPoints.length;
+        var prevError = 0;
 
         //numero de iterações
         while(++iteration<numIterations){
@@ -171,6 +172,18 @@ var LinearExpression = function(termsToUse){
                     //ajustes dos learningRates
                     this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
                 }
+
+                if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
+                    return;
+                else
+                    prevError = error;
+            }
+        }
+
+        //limpando os nan
+        for(var i=0; i<this.coefficients.length; i++){
+            if (isNaN(this.coefficients[i])){
+                this.coefficients[i] = 0.0;
             }
         }
     };
@@ -408,6 +421,11 @@ function run_SymTree(){
 
     //laço principal da SymTree
 
+    if (inputPoints[0]==undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
     //root <- LinearExpression(x);
     var root = new LinearExpression(rootTerms());
 
@@ -416,7 +434,7 @@ function run_SymTree(){
 
     //while criteria not met
     var gen=-1;
-    var nOfGens = 3;
+    var nOfGens = 5;
 
     while (++gen<nOfGens){
 
@@ -424,7 +442,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.0001, gen>1, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>1, gen>2));
         }
 
         //leaves <- nodes
@@ -439,7 +457,7 @@ function run_SymTree(){
             }
         }
 
-        if (best.getScore()==1){
+        if (best.getScore()>0.999999){
             document.getElementById("results").innerHTML="<p>A busca encontrou uma equação que descreve perfeitamente os pontos de entrada:</p>";
             document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
             break;
