@@ -1,4 +1,4 @@
-//ITLS.js
+//new-ITLS.js
 
 
 //o funcionamento desse script precisa da existência de um vetor de objetos
@@ -7,15 +7,11 @@
 
 
 // CLASSES DA ÁRVORE--------------------------------------------------------- //
-var OP = {
-    
-    operators : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
-    
-    length : 8,
+var Operator = {
 
     nextN : function(op, n){
         var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
-    
+        
         return (operators[ (operators.indexOf(op)+n)%operators.length ]);
     },
 
@@ -46,75 +42,71 @@ var OP = {
             default:
                 alert("PROBLEMA EM SOLVE OPERATOR");
         }
-    }
+    },
+
+    id : "id",
+
+    operators : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
+
+    length : 8
 }
 
-var TERM = function(exponents, operation){
+var Term = function(exponents, operation){
 
     this.exp = exponents;
     this.op = operation;
 
     this.evaluate = function(DataPoint){
+        
+        //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
+
         var value = 1.0;
 
-        for(var i=0; i<DataPoint.x.length; i++){
+        for(var i=0; i<this.exp.length; i++){
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
-
-        return OP.solve(this.op, value);
+        
+        return Operator.solve(this.op, value);
     },
 
-    this.getTERM_d = function(){
-
+    this.getTerm_d = function(){
+        
         //retorna uma string contendo a expressão.
 
-        var expression = this.op + "(";
+        var term = this.op + "(";
         for(var i=0; i<this.exp.length; i++){
-            expression += "x" + i + "^" + this.exp[i] + (i<this.exp.length-1? " * " : "");
+            term += "x" + i + "^" + this.exp[i] + (i<this.exp.length-1? " * " : "");
         }
-        return expression + ")";
+        return term + ")";
+    },
+
+    this.getExp = function(){
+        return this.exp;
     },
 
     this.getOp = function(){
         return this.op;
     },
 
-    this.getExp = function(index){
-        return index>=this.exp.length? 0 : this.exp[index];
-    },
-
     this.getSize = function(){
         return this.exp.length;
-    },
-
-    this.setOp = function(op){
-        this.op = op;
-    },
-
-    this.shiftOp = function (){
-        this.op = OP.nextN(this.op, 1);
-    },
-
-    this.setExp = function(index, value){
-        if (index<this.exp.length) this.exp[index] = value;
-    },
-
-    this.increaseExp = function (index, value){
-        if (index<this.exp.length) this.exp[index] += value;
     }
-};
+}
 
-var Expression = function(termsToUse){
+var LinearExpression = function(termsToUse){
 
-    //expressão completa, composta por "size" expressões pequenas
+    //construtor cria uma cópia de todos os termos passados.
+
     this.coefficients = [ ];
-    this.TERMS = termsToUse;
-    this.score = 0;
+    this.terms = termsToUse;
+    this.score = 0.0;
 
-    for (var i=0; i<this.TERMS.length; i++){
+    //criando todas as cópias
+    for (var i=0; i<this.terms.length; i++){
         this.coefficients.push(1.0);
     }
 
+    //métodos internos
     this.adjustCoefficients = function(inputPoints, numIterations){
 
         var iteration = -1;
@@ -127,19 +119,19 @@ var Expression = function(termsToUse){
             for (var i=0; i<inputPoints.length; i++){
                 var guess = 0.0;
 
-                for (j=0; j<this.TERMS.length; j++){
-                    guess += this.TERMS[j].evaluate(inputPoints[i])*this.coefficients[j];
+                for (j=0; j<this.terms.length; j++){
+                    guess += this.terms[j].evaluate(inputPoints[i])*this.coefficients[j];
                 }
 
                 var error = inputPoints[i].y - guess;
 
-                for (var j=0; j<this.TERMS.length; j++){
+                for (var j=0; j<this.terms.length; j++){
                     
                     //ajustes dos learningRates
-                    this.coefficients[j] += alpha*this.TERMS[j].evaluate(inputPoints[i])*error;
+                    this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
                 }
 
-                if ( Math.abs(prevError-error)<0.0001)
+                if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
                     return;
                 else
                     prevError = error;
@@ -148,21 +140,22 @@ var Expression = function(termsToUse){
 
         //limpando os nan
         for(var i=0; i<this.coefficients.length; i++){
-            if (isNaN(this.coefficients[i])){
-                this.coefficients[i] = 0.0;
+            if (!isFinite(this.coefficients[i])){
+                this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
             }
         }
     };
 
     this.calculateMAE = function(inputPoints){
-
+        
+        //calcula o mse.
         var mae = 0.0;
 
-        for(var i=0; i< inputPoints.length; i++){
+        for(var i=0; i<inputPoints.length; i++){
             var aux = 0.0;
 
-            for(var j=0; j<this.coefficients.length; j++){
-                aux+= this.coefficients[j]*this.TERMS[j].evaluate(inputPoints[i]);
+            for(var j=0; j<this.terms.length; j++){
+                aux +=this. coefficients[j]*(this.terms[j].evaluate(inputPoints[i]));
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
@@ -176,124 +169,93 @@ var Expression = function(termsToUse){
         return mae;
     };
 
-    this.getExpression_d = function(){
+    //ajuste inicial (executado no construtor)
+    this.adjustCoefficients(inputPoints, 10000);
+    this.calculateMAE(inputPoints);
 
+    this.getLinearExpression_d = function(){
+        
         //retorna uma string da expressão
 
-        var expression = "";
-        for(var i=0; i<this.coefficients.length; i++){
-            expression += this.coefficients[i].toFixed(2) + "*" + this.TERMS[i].getTERM_d() + (i<this.size-1? "+" : "");
-        }
+        var linearExpression = "";
+        for(var i=0; i<this.terms.length; i++)
+            linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
 
-        return expression;
+        return linearExpression;
     },
 
-    this.getScore = function(){
-        return this.score;
-    },
-
-    this.evaluate = function(inputPoints){
-
-        //para avaliar é preciso ajustar os coeficientes e calcular o novo mse.
-
-        this.adjustCoefficients(inputPoints, 10000);
+    this.evaluateScore = function(inputPoints){
+        //adjustCoefficients(inputPoints, 10000);
         this.calculateMAE(inputPoints);
 
         return this.score;
     },
 
-    this.localSearch = function(inputPoints){
-
-        //local search nos operadores:
-        //faz um shift entre os operadores (8 operadores no total)
-
+    this.simplify = function(threshold){
         
+        //percorre uma expressão removendo todo termo de coeficiente menor
+        //que o valor de threshold
+    
+        var newTerms = [ ];
+        var newCoefs = [ ];
 
-        //percorre todas as mini expressões
-        for (var i=0; i<this.TERMS.length; i++){
-
-            var previousScore = this.score; //valor anterior
-            var bestOp = this.TERMS[i].getOp(); //operador
-            var bestExp; //expoente
-
-            //é só uma operação por miniexpressão, mas a pesquisa deve
-            //abrangir todos os operadores possíveis
-            for(var j=0; j<OP.length; j++){
-                //percorre cada um dos operadores buscando um novo melhor
-                this.TERMS[i].shiftOp();
-                this.evaluate(inputPoints);
-
-                if (this.score > previousScore){
-                    bestOp = this.TERMS[i].getOp();
-                    previousScore = this.score;
-                }
-            }
-            
-            //atualiza o mse do local search para efetuar nos expoentes
-            this.TERMS[i].setOp(bestOp);
-            this.evaluate(inputPoints);
-            previousScore = this.score;
-
-            //local search entre os exp (são vários exp por cada mini
-            //expressão:
-            for (var j=0; j<this.TERMS[0].getSize(); j++){
-
-                bestExp = this.TERMS[i].getExp(j);
-
-                //aumenta 1 no original e calcula
-                this.TERMS[i].increaseExp(j, 1);
-                this.evaluate(inputPoints);
-                if (this.score > previousScore){
-                    bestExp = this.TERMS[i].getExp(j);
-                    previousScore = this.score;
-                }
-
-                //diminui 1 no original e calcula
-                this.TERMS[i].increaseExp(j, -2);
-                this.evaluate(inputPoints);
-
-                if (this.score > previousScore){
-                    bestExp = this.TERMS[i].getExp(j);
-                    previousScore = this.score;
-                }
-
-                this.TERMS[i].setExp(j, bestExp);
-                this.evaluate(inputPoints);
+        for (var i=0; i<this.coefficients.length; i++){
+            if (Math.abs(this.coefficients[i]) > threshold){
+                newTerms.push(this.terms[i]);
+                newCoefs.push(this.coefficients[i]);
             }
         }
-    }
-};
 
-var Population = function(populationSize, expressionSize, numberOfVariables){
+        this.terms = newTerms;
+        this.coefficients = newCoefs;
+
+        this.evaluateScore(inputPoints);
+    };
+
+    this.getScore = function(){
+        return this.score;
+    },
+
+    this.getCoefficients = function(){
+        return this.coefficients;
+    },
+
+    this.getTerms = function(){
+        return this.terms;
+    }
+}
+
+var Population = function(populationSize, expressionSize){
 
     //"gerenciadora" da população
 
     this.subjects = [ ];
     this.size = populationSize;
 
-    for(var i=0; i<this.size; i++){
-        this.subjects.push(new Expression(rndTerms(expressionSize)));
-        if (i==(this.size/2)) expressionSize++;
+    for(var i=1; i<=this.size; i++){
+        this.subjects.push( new LinearExpression( rndTerms(expressionSize) ) );
+        if (i%(this.size/5)==0) expressionSize++;
     }
 
     //aqui chama o ajuste de coeficientes e calculo do mse
+    //AGORA ISSO É FEITO NO CONSTRUTOR
+    /*
     for(var i=0; i<this.size; i++){
         this.subjects[i].evaluate(inputPoints);
-    }
+    }*/
 
     this.theBest = this.subjects[0];
 
     this.findBestExpression = function(){
-        //pega a melhor expressão da pop (a com o menor mse)
-        
         for(var i=0; i<this.size; i++){
             if(this.subjects[i].getScore() > this.theBest.getScore())
                 this.theBest = this.subjects[i];
         }
+        return this.theBest;
     };
 
     this.getBestExpression_d = function(){
-        return this.theBest.getExpression_d();
+        return this.theBest.getLinearExpression_d();
     },
 
     this.getBestExpressionScore_d = function(){
@@ -305,22 +267,90 @@ var Population = function(populationSize, expressionSize, numberOfVariables){
         //chama os métodos de todos os individuos
 
         for(var i=0; i<this.size; i++){
-            this.subjects[i].evaluate(inputPoints);
+            this.subjects[i].evaluateScore(inputPoints);
         }
     },
 
     this.localSearch = function(inputPoints){
-        for(var i=0; i<this.size; i++){
-            this.subjects[i].localSearch(inputPoints);
-            this.subjects[i].evaluate(inputPoints);
+
+        var bestExpression = this.findBestExpression();
+        var bestExpressionTerms = bestExpression.getTerms();
+        var candidates = [ ];
+
+        //garante que se não houver melhorias
+        //com a busca local, ainda existirá uma expressão para retornar
+        candidates.push(bestExpression); 
+
+        //percorre termo a termo fazendo todas as mudanças possíveis no operador
+        //de cada um e guarda as expressões de melhor score para comparar no
+        //final.
+        for (var i=0; i<bestExpressionTerms.length; i++){
+            var auxTerms = bestExpressionTerms;
+
+            for (var j=1; j<=Operator.length; j++){
+                auxTerms[i].op = Operator.nextN(bestExpressionTerms[i].getOp(), j);
+
+                var operatorSearch = new LinearExpression(auxTerms);
+
+                if (operatorSearch.getScore() > bestExpression.getScore()){
+                    candidates.push(operatorSearch);
+                }
+            }
         }
+
+        //retorna o melhor do local search (se não houver melhor, retorna 
+        //a melhor expressão da pop)
+        var bestLocalSearch = candidates[0];
+
+        for(var i=1; i<candidates.length; i++){
+            if (candidates[i].getScore()>bestLocalSearch.getScore()){
+                bestLocalSearch = candidates[i];
+            }
+        }
+
+        return bestLocalSearch;
+/*
+        //local search entre os exp (são vários exp por cada mini
+        //expressão:
+
+        for (var j=0; j<this.TERMS[0].getSize(); j++){
+
+            bestExp = this.TERMS[i].getExp(j);
+
+            //aumenta 1 no original e calcula
+            this.TERMS[i].increaseExp(j, 1);
+            this.evaluate(inputPoints);
+            if (this.score > previousScore){
+                bestExp = this.TERMS[i].getExp(j);
+                previousScore = this.score;
+            }
+
+            //diminui 1 no original e calcula
+            this.TERMS[i].increaseExp(j, -2);
+            this.evaluate(inputPoints);
+
+            if (this.score > previousScore){
+                bestExp = this.TERMS[i].getExp(j);
+                previousScore = this.score;
+            }
+
+            this.TERMS[i].setExp(j, bestExp);
+            this.evaluate(inputPoints);
+        }
+    }
+}
+*/
     },
 
     this.localSearchBestExpression = function(inputPoints){
 
+        this.theBest = this.localSearch(inputPoints);
+
         //executa o local search, mas só no melhor indivíduo, e não
         //na pop inteira.
+        /*
         this.theBest.localSearch(inputPoints);
+        */
     }
 };
 
@@ -335,10 +365,10 @@ function rndTerms(howMany){
 
     for (var i=0; i<howMany; i++){
         var aux = [ ];
-        for (var i=0; i< inputPoints[0].x.length; i++){
+        for (var j=0; j< inputPoints[0].x.length; j++){
             aux.push( Math.floor(Math.random()*4) );
         }
-        terms.push(new TERM(aux, OP.rndOp()));
+        terms.push(new Term(aux, Operator.rndOp()) );
     }
 
     return terms;
@@ -346,14 +376,14 @@ function rndTerms(howMany){
 // -------------------------------------------------------------------------- //
 
 function run_ITLS(){
-
+    
     if (inputPoints[0]==undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
 
 	//cria uma nova população
-	var myPop = new Population(20, 1, inputPoints[0].x.length);
+	var myPop = new Population(50, 1);
     myPop.evaluate(inputPoints); 
 
     myPop.findBestExpression();

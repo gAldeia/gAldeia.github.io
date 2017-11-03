@@ -14,6 +14,11 @@ var Operator = {
         
         return (operators[ (operators.indexOf(op)+n)%operators.length ]);
     },
+    rndOp : function(){
+        var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
+        
+        return (operators[Math.floor(Math.random() * (0 - 7 + 1)) + 7]);
+    },
 
     solve : function(op, value){
         switch (op){
@@ -80,6 +85,10 @@ var Term = function(exponents, operation){
 
     this.getOp = function(){
         return this.op;
+    },
+
+    this.getSize = function(){
+        return this.exp.length;
     }
 }
 
@@ -182,8 +191,8 @@ var LinearExpression = function(termsToUse){
 
         //limpando os nan
         for(var i=0; i<this.coefficients.length; i++){
-            if (isNaN(this.coefficients[i])){
-                this.coefficients[i] = 0.0;
+            if (!isFinite(this.coefficients[i])){
+                this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
             }
         }
     };
@@ -254,42 +263,6 @@ var LinearExpression = function(termsToUse){
         this.evaluateScore(inputPoints);
     };
 
-    this.interaction = function(){
-    
-        var result = [ ];
-    
-        for (var i=0; i<this.terms.length; i++){
-            for (var j=i; j<this.terms.length; j++){
-                result.push( new Term(vSum(this.terms[i].getExp(), this.terms[j].getExp()), Operator.id) );
-            }
-        }
-        return result;
-    };
-
-    this.inverse = function(){
-        var result = [ ];
-    
-        for (var i=0; i<this.terms.length; i++){
-            for (var j=i; j<this.terms.length; j++){
-                result.push(new Term(vSub(this.terms[i].getExp(), this.terms[j].getExp()), Operator.id) );
-            }
-        }
-        return result;
-    },
-
-    this.transformation = function(){
-        
-        var result = [ ];
-
-        for (var i=0; i<this.terms.length; i++){
-            for (var j=1; j<Operator.length; j++){
-                result.push( new Term(this.terms[i].getExp(), Operator.nextN(this.terms[i].getOp(), j) ) );
-            }
-        }
-        
-        return result;
-    },
-
     this.getScore = function(){
         return this.score;
     },
@@ -342,19 +315,56 @@ function vSub(vector1, vector2){
     return aux;
 }
 
+
+function interaction(leaf){
+
+    var result = [ ];
+
+    for (var i=0; i<leaf.terms.length; i++){
+        for (var j=i; j<leaf.terms.length; j++){
+            result.push( new Term(vSum(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
+        }
+    }
+    return result;
+}
+
+function inverse(leaf){
+    var result = [ ];
+
+    for (var i=0; i<leaf.terms.length; i++){
+        for (var j=i; j<leaf.terms.length; j++){
+            result.push(new Term(vSub(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
+        }
+    }
+    return result;
+}
+
+function transformation(leaf){
+    
+    var result = [ ];
+
+    for (var i=0; i<leaf.terms.length; i++){
+        for (var j=1; j<Operator.length; j++){
+            result.push( new Term(leaf.terms[i].getExp(), Operator.nextN(leaf.terms[i].getOp(), j) ) );
+        }
+    }
+    
+    return result;
+}
+
 function expandedList(leaf, minI, minT){
 
     //expande todas as operações (sem usar o concat).
 
     var exp_list = [ ];
 
-    exp_list.push.apply(exp_list, leaf.interaction());
+    exp_list.push.apply(exp_list, interaction(leaf));
     
     if (minI){
-        exp_list.push.apply(exp_list, leaf.inverse());
+        exp_list.push.apply(exp_list, inverse(leaf));
     }
     if (minT){
-        exp_list.push.apply(exp_list, leaf.transformation());
+        exp_list.push.apply(exp_list, transformation(leaf));
     }
 
     return exp_list;
