@@ -298,6 +298,34 @@ var Population = function(populationSize, expressionSize){
             }
         }
 
+        /*
+        console.log(candidates.length);
+        var expCandidates = [ ];
+
+        for(var i=0; i<candidates.length; i++){ //percorre cada candidato
+            for (var j=0; j<candidates[i].terms.length; j++){ //percorre cada termo 
+                for (var k=0; k<candidates[i].terms[j].exp.length; k++){ //percorre cada exp
+                    expCandidates.push(new LinearExpression(candidates[i].getTerms()));
+
+                    if (expCandidates[expCandidates.length-1].getScore()>0.99){
+                        return expCandidates[expCandidates.length-1];
+                    }
+
+                    candidates[i].terms[j].exp[k] +=1;
+                    expCandidates.push(new LinearExpression(candidates[i].getTerms()));
+                    if (expCandidates[expCandidates.length-1].getScore()>0.99){
+                        return expCandidates[expCandidates.length-1];
+                    }
+
+                    candidates[i].terms[j].exp[k] -=2;
+                    expCandidates.push( new LinearExpression(candidates[i].getTerms()));
+                    if (expCandidates[expCandidates.length-1].getScore()>0.99){
+                        return expCandidates[expCandidates.length-1];
+                    }
+                }
+            }
+        }*/
+
         //retorna o melhor do local search (se não houver melhor, retorna 
         //a melhor expressão da pop)
         var bestLocalSearch = candidates[0];
@@ -307,39 +335,8 @@ var Population = function(populationSize, expressionSize){
                 bestLocalSearch = candidates[i];
             }
         }
-
+        
         return bestLocalSearch;
-/*
-        //local search entre os exp (são vários exp por cada mini
-        //expressão:
-
-        for (var j=0; j<this.TERMS[0].getSize(); j++){
-
-            bestExp = this.TERMS[i].getExp(j);
-
-            //aumenta 1 no original e calcula
-            this.TERMS[i].increaseExp(j, 1);
-            this.evaluate(inputPoints);
-            if (this.score > previousScore){
-                bestExp = this.TERMS[i].getExp(j);
-                previousScore = this.score;
-            }
-
-            //diminui 1 no original e calcula
-            this.TERMS[i].increaseExp(j, -2);
-            this.evaluate(inputPoints);
-
-            if (this.score > previousScore){
-                bestExp = this.TERMS[i].getExp(j);
-                previousScore = this.score;
-            }
-
-            this.TERMS[i].setExp(j, bestExp);
-            this.evaluate(inputPoints);
-        }
-    }
-}
-*/
     },
 
     this.localSearchBestExpression = function(inputPoints){
@@ -383,7 +380,7 @@ function run_ITLS(){
     }
 
 	//cria uma nova população
-	var myPop = new Population(50, 1);
+	var myPop = new Population(10, 1);
     myPop.evaluate(inputPoints); 
 
     myPop.findBestExpression();
@@ -402,9 +399,10 @@ function run_ITLS(){
     //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
 
     do {
+        myPop.findBestExpression();
         prevScore = myPop.getBestExpressionScore_d();
-        myPop.localSearchBestExpression(inputPoints, 7);
-    }while (prevScore !=myPop.getBestExpressionScore_d() || counter++>75);
+        myPop.localSearchBestExpression(inputPoints);
+    }while (prevScore !=myPop.getBestExpressionScore_d() || counter++>5);
 
     document.getElementById("results").innerHTML+="<p>O algoritmo executou "+(counter++)+" buscas locais, e o resultado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";

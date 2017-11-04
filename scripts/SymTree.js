@@ -452,7 +452,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>1, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>0, gen>2));
         }
 
         //leaves <- nodes
@@ -467,7 +467,7 @@ function run_SymTree(){
             }
         }
 
-        if (best.getScore()>0.999999){
+        if (best.getScore()>0.999){
             document.getElementById("results").innerHTML="<p>A busca encontrou uma equação que descreve perfeitamente os pontos de entrada:</p>";
             document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
             break;
