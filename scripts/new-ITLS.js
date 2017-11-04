@@ -380,7 +380,7 @@ function run_ITLS(){
     }
 
 	//cria uma nova população
-	var myPop = new Population(10, 1);
+	var myPop = new Population(100, 1);
     myPop.evaluate(inputPoints); 
 
     myPop.findBestExpression();
