@@ -1,13 +1,16 @@
-//SymTree.js
-
+//SymbolicRegression.js
 
 //o funcionamento desse script precisa da existência de um vetor de objetos
 //do tipo DataPoint, chamado inputPoints. Toda a criação e preparação desse
 //vetor é feita no arquivo loadFile.
 
+//todos os algoritmos (IT-LS, SymTree e IT-ES) são baseados na estrutura de 
+//dados IT, e as 3 classes implementadas aqui são utilizadas por todos os
+//algoritmos.
 
-// CLASSES DA ÁRVORE--------------------------------------------------------- //
-var Operator = {
+
+// --CLASSES DA REGRESSÃO SIMBÓLICA------------------------------------------ //
+var OP = {
 
     ops : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
 
@@ -16,33 +19,34 @@ var Operator = {
     id : "id",
 
     nextN : function(op, n){
-        return Operator.ops[ (Operator.ops.indexOf(op)+n)%Operator.length ];
+        return OP.ops[(OP.ops.indexOf(op)+n)%OP.length];
     },
     
     rndOp : function(){
-        return Operator.ops[Math.floor(Math.random() * (-7 + 1)) + 7];
+        return OP.ops[Math.floor(Math.random() * (-7 + 1)) + 7];
     },
 
     solve : function(op, value){
         switch (op){
-            case "id": //identidade
+            case "id":
                 return value;
-            case "sin": //seno
+            case "sin":
                 return Math.sin(value);
-            case "cos": //cosseno
+            case "cos":
                 return Math.cos(value);
-            case "tan": //tangente
+            case "tan":
                 return Math.tan(value);
-            case "abs": //módulo
+            case "abs":
                 return Math.abs(value);
-            case "sqrt": //raiz quadrada
+            case "sqrt":
                 return value<=0? 0 : Math.sqrt(value);
-            case "exp": //exponencial
+            case "exp":
                 return Math.exp( Math.floor(value) );
-            case "log": //log 
+            case "log":
                 return Math.log(value);
             default:
-                alert("PROBLEMA EM SOLVE OPERATOR");
+                alert("PROBLEMA EM SOLVE OP");
+                return 0;
         }
     }
 }
@@ -59,7 +63,7 @@ var Term = function(exponents, operation){
         for(let i=0; i<this.exp.length; i++){
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
-        return Operator.solve(this.op, value);
+        return OP.solve(this.op, value);
     },
 
     this.getTerm_d = function(){
@@ -286,7 +290,7 @@ var LinearExpression = function(termsToUse){
 }
 
 
-// MÉTODOS AUXILIARES-------------------------------------------------------- //
+// --MÉTODOS AUXILIARES------------------------------------------------------ //
 function rootTerms(){
     //cria um grupinho que serve pra inicializar o root
     let terms = [ ];
@@ -295,7 +299,7 @@ function rootTerms(){
         let aux = [ ];
         for (let j=0; j<inputPoints[0].x.length; j++)
             aux.push(i==j? 1 : 0);
-        terms.push(new Term(aux, Operator.id ));
+        terms.push(new Term(aux, OP.id ));
     }
     return terms;
 }
@@ -309,7 +313,7 @@ function rndTerms(howMany){
         for (let j=0; j< inputPoints[0].x.length; j++){
             aux.push( Math.floor(Math.random()*4) -2);
         }
-        terms.push(new Term(aux, Operator.rndOp()) );
+        terms.push(new Term(aux, OP.rndOp()) );
     }
     return terms;
 }
@@ -335,13 +339,18 @@ function vSub(vector1, vector2){
 }
 
 
+// --SYMTREE----------------------------------------------------------------- //
+var SymTree = function(){
+    //
+}
+
 function interaction(leaf){
 
     let result = [ ];
 
     for (let i=0; i<leaf.terms.length; i++){
         for (let j=i; j<leaf.terms.length; j++){
-            result.push( new Term(vSum(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
+            result.push( new Term(vSum(leaf.terms[i].getExp(), leaf.terms[j].getExp()), OP.id) );
         }
     }
     return result;
@@ -352,7 +361,7 @@ function inverse(leaf){
 
     for (let i=0; i<leaf.terms.length; i++){
         for (let j=i; j<leaf.terms.length; j++){
-            result.push(new Term(vSub(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
+            result.push(new Term(vSub(leaf.terms[i].getExp(), leaf.terms[j].getExp()), OP.id) );
         }
     }
     return result;
@@ -363,8 +372,8 @@ function transformation(leaf){
     let result = [ ];
 
     for (let i=0; i<leaf.terms.length; i++){
-        for (let j=1; j<Operator.length; j++){
-            result.push( new Term(leaf.terms[i].getExp(), Operator.nextN(leaf.terms[i].getOp(), j) ) );
+        for (let j=1; j<OP.length; j++){
+            result.push( new Term(leaf.terms[i].getExp(), OP.nextN(leaf.terms[i].getOp(), j) ) );
         }
     }
     
@@ -444,15 +453,17 @@ function expand(leaf, threshold, minI, minT){
         return [leaf];
 }
 
-var Population = function(populationSize, expressionSize){
+
+// --IT-LS------------------------------------------------------------------- //
+var IT_LS = function(populationSize, expressionSize){
 
     //"gerenciadora" da população
 
     this.subjects = [ ];
     this.size = populationSize;
     this.bestExpression = new LinearExpression(rndTerms(expressionSize));
-
     this.subjects.push(this.bestExpression);
+
     for(let i=1; i<this.size; i++){
         this.subjects.push( new LinearExpression(rndTerms(expressionSize)) );
         
@@ -473,27 +484,26 @@ var Population = function(populationSize, expressionSize){
 
     this.localSearch = function(inputPoints){
 
-        let bestExpressionTerms = this.bestExpression.getTerms();
         let candidates = [ ];
+        let expCandidates = [ ];
 
         //percorre termo a termo fazendo todas as mudanças possíveis no operador
         //de cada um e guarda as expressões de melhor score para comparar no
         //final.
+        let bestExpressionTerms = this.bestExpression.getTerms();
+
         for (let i=0; i<bestExpressionTerms.length; i++){
-            let auxTerms = bestExpressionTerms;
+            let auxTerms = this.bestExpression.getTerms();
 
-            for (let j=1; j<=Operator.length; j++){
-                auxTerms[i].op = Operator.nextN(bestExpressionTerms[i].getOp(), j);
+            for (let j=1; j<=OP.length; j++){
+                auxTerms[i].op = OP.nextN(bestExpressionTerms[i].getOp(), j);
 
-                var operatorSearch = new LinearExpression(auxTerms);
+                let OPSearch = new LinearExpression(auxTerms);
 
-                if (operatorSearch.getScore() > this.bestExpression.getScore()){
-                    candidates.push(operatorSearch);
-                }
+                if (OPSearch.getScore() > this.bestExpression.getScore())
+                    candidates.push(OPSearch);
             }
         }
-
-        let expCandidates = [ ];
 
         for(let i=0; i<candidates.length; i++){ //percorre cada candidato
             for (let j=0; j<candidates[i].terms.length; j++){ //percorre cada termo 
@@ -522,16 +532,78 @@ var Population = function(populationSize, expressionSize){
                 expCandidates[i].simplify(0.01);
                 if (expCandidates[i].getScore()>bestLocalSearch.getScore()){
                     bestLocalSearch = expCandidates[i];
-                    console.log("troquei"); 
                 }
             }
-
             this.bestExpression = bestLocalSearch;
         }
     }
 };
 
-// -------------------------------------------------------------------------- //
+
+// --IT-ES------------------------------------------------------------------- //
+    /*
+    Para um número de iterações:
+        Faça torneio para pegar l pais (com repetição)
+        Aplique mutação nesses l indivíduos gerando l filhos
+        Faça seleção por torneio para selecionar m filhos que
+    substituirão os pais
+
+    No nosso caso a mutação é:
+
+    - sorteie com p% de chances se vc irá alterar um expoente ou uma função
+    - sorteie o expoente/função a ser alterada
+    - se for expoente, sorteie um número entre -2 e +2 para alterar, se
+    for função sorteie uma função excluindo a atual*/
+
+var IT_ES = function(populationSize, expressionSize){
+
+    this.subjects = [ ];
+    this.parents = [ ];
+    this.child = [ ];
+    this.size = populationSize;
+
+    for(let i=1; i<this.size; i++){
+        this.subjects.push( new LinearExpression(rndTerms(expressionSize)) );
+        
+        if (i%(this.size/5)==0)
+            expressionSize++;
+    }
+
+    this.tournamentSelection = function(howMany){
+
+        let Parents = [ ];
+
+        for(let i=0; i<howMany; i++){
+            //torneio
+            //"push" no vencedor
+            Parents.push(undefined);
+        }
+
+        this.parents = Parents;
+    },
+
+    this.childTournamentSelection = function(){
+        let Child = [ ];
+
+        for(let i=0; i<this.populationSize; i++){
+            //torneio
+            //"push" no vencedor
+        }
+        this.child = Child;
+    }
+
+    this.mutateParents = function(mutationRate){
+        for (let i=0; i<this.parents.length; i++){
+            if (Math.random() < mutationRate){
+                //faz a mutação
+
+            }
+        }
+    }
+}
+
+
+// --MÉTODOS "MAIN" DE CADA UM DOS ALGORITMOS-------------------------------- //
 function run_ITLS(){
     
     if (inputPoints[0]==undefined){
@@ -539,36 +611,25 @@ function run_ITLS(){
         return;
     }
 
-    //cria uma nova população (já calcula o score de todas no construtor e já
-    //separa a melhor expressão que será sempre utilizada na busca local)
-    var myPop = new Population(100, 1);
-
-    //imprime informação no canvas
-    document.getElementById("results").innerHTML="<p>População criada. A melhor expressão inicial:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
-
-    if (myPop.getBestExpressionScore_d()>=0.999){
-        return;
-    }
+    var myPop = new IT_LS(100, 1);
 
     var prevScore;
+    var maxIterations = 25;
     var counter = 0;
 
-    //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
+    document.getElementById("results").innerHTML="<p>População criada. A melhor expressão inicial:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
 
     do {
         prevScore = myPop.getBestExpressionScore_d();
         myPop.localSearch(inputPoints);
-    }while (prevScore != myPop.getBestExpressionScore_d() && (++counter)<25);
+    }while (prevScore != myPop.getBestExpressionScore_d() && counter++ < maxIterations);
 
     document.getElementById("results").innerHTML+="<p>O algoritmo executou "+(++counter)+" buscas locais, e o resultado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
 }
 
-// MAIN---------------------------------------------------------------------- //
 function run_SymTree(){
-
-    //laço principal da SymTree
 
     if (inputPoints[0]==undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
@@ -615,5 +676,28 @@ function run_SymTree(){
             document.getElementById("results").innerHTML="<p>A busca não encontrou uma equação perfeita. A mais próxima foi:</p>";
             document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
         }
+    }
+}
+
+function run_ITES(){
+    if (inputPoints[0]==undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
+    let ITESpopSize = 100;
+
+    myPop = new IT_ES(ITESpopSize, 1);
+
+    let counter = -1;
+    let numIterations = 25;
+    let nOfParents = 50;
+    let rate = 0.2;
+
+    while(++counter<numIterations){ // || criteria not met
+        myPop.tournamentSelection(nOfParents);
+        myPop.mutateParents(rate);
+        myPop.childTournamentSelection();
+        //pegar a melhor opção
     }
 }

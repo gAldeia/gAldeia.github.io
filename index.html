@@ -180,7 +180,7 @@
 
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
-					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="">Algoritmo IT-ES (Interaction Transformation Evolution Strategies - NÃO IMPLEMENTADO)</button>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITES()">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
 
 					<div id="results" class="page-header">
 					</div>
@@ -212,6 +212,7 @@
 
 					<p class="text-justify"><b>05/11/2017</b></p>
 					<p class="text-justify"> - Busca local agora percorre também expoentes.</p>
+					<p class="text-justify"> - Início da implementação do IT-ES.</p>
 					<p class="text-justify"> - Todos os métodos get que envolvem arrays agora retornam novas cópias de todos os objetos (antes era retornado a referência para o array, e o método de busca local acabava não funcionando caso não houvesse melhorias na busca local).</p>
 
 					<p class="text-justify"><b>04/11/2017</b></p>
@@ -350,7 +351,7 @@
 
 	<!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/loadFile.js></script>
-	<script type="text/javascript" src=./scripts/unificado.js></script>
+	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
 	<!--script type="text/javascript" src=./scripts/new-ITLS.js></script>
 	<script type="text/javascript" src=./scripts/SymTree.js></script-->
 
