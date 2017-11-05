@@ -9,16 +9,18 @@
 // CLASSES DA ÁRVORE--------------------------------------------------------- //
 var Operator = {
 
+    ops : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
+
+    length : 8,
+
+    id : "id",
+
     nextN : function(op, n){
-        var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
-        
-        return (operators[ (operators.indexOf(op)+n)%operators.length ]);
+        return Operator.ops[ (Operator.ops.indexOf(op)+n)%Operator.length ];
     },
     
     rndOp : function(){
-        var operators = ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"];
-        
-        return (operators[Math.floor(Math.random() * (0 - 7 + 1)) + 7]);
+        return Operator.ops[Math.floor(Math.random() * (-7 + 1)) + 7];
     },
 
     solve : function(op, value){
@@ -42,13 +44,7 @@ var Operator = {
             default:
                 alert("PROBLEMA EM SOLVE OPERATOR");
         }
-    },
-
-    id : "id",
-
-    operators : ["id", "sin", "cos", "tan", "abs", "sqrt", "exp", "log"],
-
-    length : 8
+    }
 }
 
 var Term = function(exponents, operation){
@@ -57,31 +53,30 @@ var Term = function(exponents, operation){
     this.op = operation;
 
     this.evaluate = function(DataPoint){
-        
         //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
 
-        var value = 1.0;
-
-        for(var i=0; i<this.exp.length; i++){
+        let value = 1.0;
+        for(let i=0; i<this.exp.length; i++){
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
-        
         return Operator.solve(this.op, value);
     },
 
     this.getTerm_d = function(){
-        
         //retorna uma string contendo a expressão.
 
-        var term = this.op + "(";
-        for(var i=0; i<this.exp.length; i++){
+        let term = this.op + "(";
+        for(let i=0; i<this.exp.length; i++){
             term += "x" + i + "^" + this.exp[i] + (i<this.exp.length-1? " * " : "");
         }
         return term + ")";
     },
 
     this.getExp = function(){
-        return this.exp;
+        let copy = [ ];
+        for(let i=0; i<this.exp.length; i++)
+            copy.push(this.exp[i]);
+        return copy;
     },
 
     this.getOp = function(){
@@ -90,23 +85,30 @@ var Term = function(exponents, operation){
 
     this.getSize = function(){
         return this.exp.length;
+    },
+
+    this.isNull = function(){ //verifica se todos os expoentes são zero
+        for (let i=0; i<this.exp.length; i++){
+            if (this.exp[i]!=0) return false;
+        }
+        return true;
+    },
+
+    this.copy = function(){
+        return new Term(this.getExp(), this.op);
     }
 }
 
 var LinearExpression = function(termsToUse){
 
-    //construtor cria uma cópia de todos os termos passados.
-
     this.coefficients = [ ];
     this.terms = termsToUse;
     this.score = 0.0;
 
-    //criando todas as cópias
-    for (var i=0; i<this.terms.length; i++){
+    for (let i=0; i<this.terms.length; i++){ //inicializa todos os coeficientes
         this.coefficients.push(1.0);
     }
 
-    //métodos internos
     this.adjustCoefficients = function(inputPoints, numIterations){
         
         /*
@@ -161,37 +163,37 @@ var LinearExpression = function(termsToUse){
             }
         */
 
-        var iteration = -1;
-        var alpha = 0.01/inputPoints.length;
-        var prevError = 0;
+        let iteration = -1;
+        let alpha = 0.01/inputPoints.length;
+        let prevError = 0;
+
+        numIterations /= inputPoints.length;
 
         //numero de iterações
         while(++iteration<numIterations){
+            for (let i=0; i<inputPoints.length; i++){
+                let guess = 0.0;
 
-            for (var i=0; i<inputPoints.length; i++){
-                var guess = 0.0;
-
-                for (j=0; j<this.terms.length; j++){
+                for (let j=0; j<this.terms.length; j++){
                     guess += this.terms[j].evaluate(inputPoints[i])*this.coefficients[j];
                 }
 
-                var error = inputPoints[i].y - guess;
+                let error = inputPoints[i].y - guess;
 
-                for (var j=0; j<this.terms.length; j++){
-                    
+                if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
+                    iteration = numIterations;
+                else
+                    prevError = error;
+
+                for (let j=0; j<this.terms.length; j++){
                     //ajustes dos learningRates
                     this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
                 }
-
-                if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
-                    return;
-                else
-                    prevError = error;
             }
         }
 
         //limpando os nan
-        for(var i=0; i<this.coefficients.length; i++){
+        for(let i=0; i<this.coefficients.length; i++){
             if (!isFinite(this.coefficients[i])){
                 this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
             }
@@ -199,22 +201,21 @@ var LinearExpression = function(termsToUse){
     };
 
     this.calculateMAE = function(inputPoints){
-        
-        //calcula o mse.
-        var mae = 0.0;
+        //calcula o mae.
+        let mae = 0.0;
 
-        for(var i=0; i<inputPoints.length; i++){
-            var aux = 0.0;
+        for(let i=0; i<inputPoints.length; i++){
+            let aux = 0.0;
 
-            for(var j=0; j<this.terms.length; j++){
-                aux +=this. coefficients[j]*(this.terms[j].evaluate(inputPoints[i]));
+            for(let j=0; j<this.terms.length; j++){
+                aux += this.coefficients[j]*this.terms[j].evaluate(inputPoints[i]);
             }
             mae += Math.abs(inputPoints[i].y - aux);
         }
         mae = mae/inputPoints.length;
 
         if (isFinite(mae))
-            this.score = 1/ (1+ mae);
+            this.score = 1/(1+mae);
         else 
             this.score = 0.0;
         
@@ -229,15 +230,14 @@ var LinearExpression = function(termsToUse){
         
         //retorna uma string da expressão
 
-        var linearExpression = "";
-        for(var i=0; i<this.terms.length; i++)
+        let linearExpression = "";
+        for(let i=0; i<this.terms.length; i++)
             linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
 
         return linearExpression;
     },
 
     this.evaluateScore = function(inputPoints){
-        //adjustCoefficients(inputPoints, 10000);
         this.calculateMAE(inputPoints);
 
         return this.score;
@@ -248,11 +248,11 @@ var LinearExpression = function(termsToUse){
         //percorre uma expressão removendo todo termo de coeficiente menor
         //que o valor de threshold
     
-        var newTerms = [ ];
-        var newCoefs = [ ];
+        let newTerms = [ ];
+        let newCoefs = [ ];
 
-        for (var i=0; i<this.coefficients.length; i++){
-            if (Math.abs(this.coefficients[i]) > threshold){
+        for (let i=0; i<this.terms.length; i++){
+            if (Math.abs(this.coefficients[i]) > threshold && !this.terms[i].isNull()){
                 newTerms.push(this.terms[i]);
                 newCoefs.push(this.coefficients[i]);
             }
@@ -269,11 +269,19 @@ var LinearExpression = function(termsToUse){
     },
 
     this.getCoefficients = function(){
-        return this.coefficients;
+        let copy = [ ];
+        for (let i=0; i<this.coefficients.length; i++){
+            copy.push(this.coefficients[i]);
+        }
+        return copy;
     },
 
     this.getTerms = function(){
-        return this.terms;
+        let copy = [ ];
+        for (let i=0; i<this.terms.length; i++){
+            copy.push(this.terms[i].copy());
+        }
+        return copy;
     }
 }
 
@@ -281,36 +289,46 @@ var LinearExpression = function(termsToUse){
 // MÉTODOS AUXILIARES-------------------------------------------------------- //
 function rootTerms(){
     //cria um grupinho que serve pra inicializar o root
-    var terms = [ ];
+    let terms = [ ];
 
-    for(var i=0; i<inputPoints[0].x.length; i++){
-        var aux = [ ];
-        for (var j=0; j<inputPoints[0].x.length; j++)
+    for(let i=0; i<inputPoints[0].x.length; i++){
+        let aux = [ ];
+        for (let j=0; j<inputPoints[0].x.length; j++)
             aux.push(i==j? 1 : 0);
         terms.push(new Term(aux, Operator.id ));
     }
     return terms;
 }
 
+function rndTerms(howMany){
+    //conjunto de termos (que são conjuntos de expoentes)
+    let terms = [ ];
+
+    for (let i=0; i<howMany; i++){
+        let aux = [ ];
+        for (let j=0; j< inputPoints[0].x.length; j++){
+            aux.push( Math.floor(Math.random()*4) -2);
+        }
+        terms.push(new Term(aux, Operator.rndOp()) );
+    }
+    return terms;
+}
+
 function vSum(vector1, vector2){
-
     //soma vetorial
+    let aux = [ ];
 
-    var aux = [ ];
-
-    for(var i=0; i<vector1.length; i++){
+    for(let i=0; i<vector1.length; i++){
         aux.push(vector1[i]+vector2[i]);
     }
     return aux;
 }
 
 function vSub(vector1, vector2){
-    
     //subtração vetorial
+    let aux = [ ];
 
-    var aux = [ ];
-
-    for(var i=0; i<vector1.length; i++){
+    for(let i=0; i<vector1.length; i++){
         aux.push(vector1[i]-vector2[i]);
     }
     return aux;
@@ -319,10 +337,10 @@ function vSub(vector1, vector2){
 
 function interaction(leaf){
 
-    var result = [ ];
+    let result = [ ];
 
-    for (var i=0; i<leaf.terms.length; i++){
-        for (var j=i; j<leaf.terms.length; j++){
+    for (let i=0; i<leaf.terms.length; i++){
+        for (let j=i; j<leaf.terms.length; j++){
             result.push( new Term(vSum(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
         }
     }
@@ -330,10 +348,10 @@ function interaction(leaf){
 }
 
 function inverse(leaf){
-    var result = [ ];
+    let result = [ ];
 
-    for (var i=0; i<leaf.terms.length; i++){
-        for (var j=i; j<leaf.terms.length; j++){
+    for (let i=0; i<leaf.terms.length; i++){
+        for (let j=i; j<leaf.terms.length; j++){
             result.push(new Term(vSub(leaf.terms[i].getExp(), leaf.terms[j].getExp()), Operator.id) );
         }
     }
@@ -342,10 +360,10 @@ function inverse(leaf){
 
 function transformation(leaf){
     
-    var result = [ ];
+    let result = [ ];
 
-    for (var i=0; i<leaf.terms.length; i++){
-        for (var j=1; j<Operator.length; j++){
+    for (let i=0; i<leaf.terms.length; i++){
+        for (let j=1; j<Operator.length; j++){
             result.push( new Term(leaf.terms[i].getExp(), Operator.nextN(leaf.terms[i].getOp(), j) ) );
         }
     }
@@ -357,7 +375,7 @@ function expandedList(leaf, minI, minT){
 
     //expande todas as operações (sem usar o concat).
 
-    var exp_list = [ ];
+    let exp_list = [ ];
 
     exp_list.push.apply(exp_list, interaction(leaf));
     
@@ -426,6 +444,126 @@ function expand(leaf, threshold, minI, minT){
         return [leaf];
 }
 
+var Population = function(populationSize, expressionSize){
+
+    //"gerenciadora" da população
+
+    this.subjects = [ ];
+    this.size = populationSize;
+    this.bestExpression = new LinearExpression(rndTerms(expressionSize));
+
+    this.subjects.push(this.bestExpression);
+    for(let i=1; i<this.size; i++){
+        this.subjects.push( new LinearExpression(rndTerms(expressionSize)) );
+        
+        if (i%(this.size/5)==0)
+            expressionSize++;
+
+        if(this.subjects[i].getScore() > this.bestExpression.getScore())
+            this.bestExpression = this.subjects[i];
+    }
+
+    this.getBestExpression_d = function(){
+        return this.bestExpression.getLinearExpression_d();
+    },
+
+    this.getBestExpressionScore_d = function(){
+        return this.bestExpression.getScore();
+    },
+
+    this.localSearch = function(inputPoints){
+
+        let bestExpressionTerms = this.bestExpression.getTerms();
+        let candidates = [ ];
+
+        //percorre termo a termo fazendo todas as mudanças possíveis no operador
+        //de cada um e guarda as expressões de melhor score para comparar no
+        //final.
+        for (let i=0; i<bestExpressionTerms.length; i++){
+            let auxTerms = bestExpressionTerms;
+
+            for (let j=1; j<=Operator.length; j++){
+                auxTerms[i].op = Operator.nextN(bestExpressionTerms[i].getOp(), j);
+
+                var operatorSearch = new LinearExpression(auxTerms);
+
+                if (operatorSearch.getScore() > this.bestExpression.getScore()){
+                    candidates.push(operatorSearch);
+                }
+            }
+        }
+
+        let expCandidates = [ ];
+
+        for(let i=0; i<candidates.length; i++){ //percorre cada candidato
+            for (let j=0; j<candidates[i].terms.length; j++){ //percorre cada termo 
+                for (let k=0; k<candidates[i].terms[j].exp.length; k++){ //percorre cada exp
+                    expCandidates.push(new LinearExpression(candidates[i].getTerms()));
+
+                    //limite máximo do expoente
+                    if (candidates[i].terms[j].exp[k]<5){
+                        candidates[i].terms[j].exp[k] +=1;
+                        expCandidates.push(new LinearExpression(candidates[i].getTerms()));
+                    }
+
+                    //limite mínimo do expoente
+                    if (candidates[i].terms[j].exp[k]>-5){
+                        candidates[i].terms[j].exp[k] -=2;
+                        expCandidates.push( new LinearExpression(candidates[i].getTerms()));
+                    }
+                }
+            }
+        }
+
+        if (expCandidates.length>0){
+            let bestLocalSearch = this.bestExpression;
+
+            for(let i=0; i<expCandidates.length; i++){
+                expCandidates[i].simplify(0.01);
+                if (expCandidates[i].getScore()>bestLocalSearch.getScore()){
+                    bestLocalSearch = expCandidates[i];
+                    console.log("troquei"); 
+                }
+            }
+
+            this.bestExpression = bestLocalSearch;
+        }
+    }
+};
+
+// -------------------------------------------------------------------------- //
+function run_ITLS(){
+    
+    if (inputPoints[0]==undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
+    //cria uma nova população (já calcula o score de todas no construtor e já
+    //separa a melhor expressão que será sempre utilizada na busca local)
+    var myPop = new Population(100, 1);
+
+    //imprime informação no canvas
+    document.getElementById("results").innerHTML="<p>População criada. A melhor expressão inicial:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
+
+    if (myPop.getBestExpressionScore_d()>=0.999){
+        return;
+    }
+
+    var prevScore;
+    var counter = 0;
+
+    //O algoritmo só para quando uma busca local nova não modificar o valor do MSE.
+
+    do {
+        prevScore = myPop.getBestExpressionScore_d();
+        myPop.localSearch(inputPoints);
+    }while (prevScore != myPop.getBestExpressionScore_d() && (++counter)<25);
+
+    document.getElementById("results").innerHTML+="<p>O algoritmo executou "+(++counter)+" buscas locais, e o resultado foi:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
+}
 
 // MAIN---------------------------------------------------------------------- //
 function run_SymTree(){
@@ -461,8 +599,8 @@ function run_SymTree(){
 
         //busca pelo melhor resultado (critério de parada)
         var best = leaves[0];
-        
-        for (var i=1; i<leaves.length; i++){
+
+        for (var i=0; i<leaves.length; i++){
             if (leaves[i].getScore()>best.getScore()){
                 best = leaves[i];
             }

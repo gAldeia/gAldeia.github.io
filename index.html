@@ -210,6 +210,15 @@
 						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a>. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
 					</div>
 
+					<p class="text-justify"><b>05/11/2017</b></p>
+					<p class="text-justify"> - Busca local agora percorre também expoentes.</p>
+					<p class="text-justify"> - Todos os métodos get que envolvem arrays agora retornam novas cópias de todos os objetos (antes era retornado a referência para o array, e o método de busca local acabava não funcionando caso não houvesse melhorias na busca local).</p>
+
+					<p class="text-justify"><b>04/11/2017</b></p>
+					<p class="text-justify"> - Correção da busca local de operadores em IT-LS.</p>
+					<p class="text-justify"> - (quase) todas as variáveis agora são declaradas com "let". Isso faz com que não existam no escopo da função, e sim no escopo de bloco (evita erros principalmente em laços for).</p>
+					<p class="text-justify"> - Método simplify agora anula também termos onde os expoentes são todos zero.</p>
+
 					<p class="text-justify"><b>03/11/2017</b></p>
 					<p class="text-justify"> - Progresso na unificação das classes dos códigos.</p>
 					<p class="text-justify"> - novo IT-LS faz busca local nos operadores (faltam os expoentes).</p>
@@ -341,8 +350,9 @@
 
 	<!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/loadFile.js></script>
-	<script type="text/javascript" src=./scripts/new-ITLS.js></script>
-	<script type="text/javascript" src=./scripts/SymTree.js></script>
+	<script type="text/javascript" src=./scripts/unificado.js></script>
+	<!--script type="text/javascript" src=./scripts/new-ITLS.js></script>
+	<script type="text/javascript" src=./scripts/SymTree.js></script-->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
