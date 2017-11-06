@@ -652,7 +652,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>0, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.1, gen>0, gen>2));
         }
 
         //leaves <- nodes
