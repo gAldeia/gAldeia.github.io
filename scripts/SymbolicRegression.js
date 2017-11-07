@@ -238,7 +238,7 @@ var LinearExpression = function(termsToUse){
     };
 
     //ajuste inicial (executado no construtor)
-    this.adjustCoefficients(inputPoints, 10000);
+    this.adjustCoefficients(inputPoints, 5000);
     this.calculateMAE(inputPoints);
 
     this.getLinearExpression_d = function(){
@@ -569,8 +569,10 @@ var IT_LS = function(populationSize, expressionSize){
 var IT_ES = function(populationSize, expressionSize){
 
     this.subjects = [ ];
+
     this.parents = [ ];
     this.child = [ ];
+
     this.size = populationSize;
 
     for(let i=1; i<this.size; i++){
@@ -581,26 +583,34 @@ var IT_ES = function(populationSize, expressionSize){
     }
 
     this.tournamentSelection = function(howMany){
-
-        let Parents = [ ];
+        this.parents = [ ];
 
         for(let i=0; i<howMany; i++){
-            //torneio
-            //"push" no vencedor
-            Parents.push(undefined);
-        }
+            let index1 = Math.floor( Math.random()*(this.subjects.length-1) );
+            let index2 = Math.floor( Math.random()*(this.subjects.length-1) );
+            console.log(index1);
+            console.log(index2);
 
-        this.parents = Parents;
+            let winner = this.subjects[index1].getScore() > this.subjects[index2].getScore() ? this.subjects[index1] : this.subjects[index2];
+            console.log("parent selected");
+            this.parents.push(winner);
+        }
     },
 
     this.childTournamentSelection = function(){
-        let Child = [ ];
+        this.child = [ ];
 
-        for(let i=0; i<this.populationSize; i++){
-            //torneio
-            //"push" no vencedor
+        console.log("inside");
+        for(let i=0; i<this.size; i++){
+            let index1 = Math.floor( Math.random()*(this.parents.length-1) );
+            let index2 = Math.floor( Math.random()*(this.parents.length-1) );
+            console.log(index1);
+            console.log(index2);
+
+            let winner = this.parents[index1].getScore() > this.parents[index2].getScore() ? this.parents[index1] : this.parents[index2];
+            console.log("child selected");
+            this.child.push(winner);
         }
-        this.child = Child;
     }
 
     this.mutateParents = function(mutationRate){
@@ -622,7 +632,7 @@ function run_ITLS(){
         return;
     }
 
-    var myPop = new IT_LS(100, 1);
+    var myPop = new IT_LS(200, 1);
 
     var prevScore;
     var maxIterations = 25;
@@ -701,7 +711,7 @@ function run_ITES(){
     myPop = new IT_ES(ITESpopSize, 1);
 
     let counter = -1;
-    let numIterations = 25;
+    let numIterations = 2;
     let nOfParents = 50;
     let rate = 0.2;
 
