@@ -106,11 +106,22 @@ var Term = function(exponents, operation){
 var LinearExpression = function(termsToUse){
 
     this.coefficients = [ ];
-    this.terms = termsToUse;
+    this.terms = [ ];
     this.score = 0.0;
 
-    for (let i=0; i<this.terms.length; i++){ //inicializa todos os coeficientes
-        this.coefficients.push(1.0);
+    for (let i=0; i<termsToUse.length; i++){
+        let push = true;
+
+        for(let j=0; j<this.terms.length; j++){
+            if (termsToUse[i].getTerm_d()==this.terms[j].getTerm_d()){
+                push = false;
+                break;
+            }
+        }
+        if (push){
+            this.terms.push(termsToUse[i]);
+            this.coefficients.push(1.0);
+        }
     }
 
     this.adjustCoefficients = function(inputPoints, numIterations){
@@ -652,7 +663,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (var i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.1, gen>0, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>1, gen>2));
         }
 
         //leaves <- nodes
