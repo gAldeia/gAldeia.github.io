@@ -552,20 +552,6 @@ var IT_LS = function(populationSize, expressionSize){
 
 
 // --IT-ES------------------------------------------------------------------- //
-    /*
-    Para um número de iterações:
-        Faça torneio para pegar l pais (com repetição)
-        Aplique mutação nesses l indivíduos gerando l filhos
-        Faça seleção por torneio para selecionar m filhos que
-    substituirão os pais
-
-    No nosso caso a mutação é:
-
-    - sorteie com p% de chances se vc irá alterar um expoente ou uma função
-    - sorteie o expoente/função a ser alterada
-    - se for expoente, sorteie um número entre -2 e +2 para alterar, se
-    for função sorteie uma função excluindo a atual*/
-
 var IT_ES = function(populationSize, expressionSize){
 
     this.subjects = [ ];
@@ -614,12 +600,24 @@ var IT_ES = function(populationSize, expressionSize){
     }
 
     this.mutateParents = function(mutationRate){
+        let mutatedParents = [ ];
+
         for (let i=0; i<this.parents.length; i++){
             if (Math.random() < mutationRate){
-                //faz a mutação
+                
+                /*
+                - sorteie com p% de chances se vc irá alterar um expoente ou uma função
+                - sorteie o expoente/função a ser al  terada
+                - se for expoente, sorteie um número entre -2 e +2 para alterar, se
+                for função sorteie uma função excluindo a atual
+                */
+
 
             }
+            mutatedParents.push(this.parents[i]);
         }
+
+        this.parents = mutatedParents;
     }
 }
 
@@ -658,21 +656,21 @@ function run_SymTree(){
     }
 
     //root <- LinearExpression(x);
-    var root = new LinearExpression(rootTerms());
+    let root = new LinearExpression(rootTerms());
 
     //leaves <- root
-    var leaves = [root];
+    let leaves = [root];
 
     //while criteria not met
-    var gen=-1;
-    var nOfGens = 5;
+    let gen=-1;
+    let nOfGens = 5;
 
     while (++gen<nOfGens){
 
-        var nodes = [ ];
+        let nodes = [ ];
 
         //for leaf in leaves
-        for (var i=0; i<leaves.length; i++){
+        for (let i=0; i<leaves.length; i++){
             nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>1, gen>2));
         }
 
@@ -680,9 +678,9 @@ function run_SymTree(){
         leaves = nodes;
 
         //busca pelo melhor resultado (critério de parada)
-        var best = leaves[0];
+        let best = leaves[0];
 
-        for (var i=0; i<leaves.length; i++){
+        for (let i=0; i<leaves.length; i++){
             if (leaves[i].getScore()>best.getScore()){
                 best = leaves[i];
             }
