@@ -113,20 +113,20 @@ var LinearExpression = function(termsToUse){
         let push = true;
 
         for(let j=0; j<this.terms.length; j++){
-            if (termsToUse[i].getTerm_d()==this.terms[j].getTerm_d()){
+            if (termsToUse[i].getTerm_d()===this.terms[j].getTerm_d()){
                 push = false;
                 break;
             }
         }
         if (push){
             this.terms.push(termsToUse[i]);
-            this.coefficients.push(1.0);
+            this.coefficients.push(0.0);
         }
     }
 
     this.adjustCoefficients = function(inputPoints, numIterations){
         
-        /*
+        /* ISSO NÃO FUNCIONA (E CONSEQUENTEMENTE GERA PROBLEMAS)
             RPROP - INCOMPLETO/NÃO FUNCIONANDO CORRETAMENT
 
             //ajusta os parâmetros, minimizando a soma quadrática dos erros
@@ -195,10 +195,12 @@ var LinearExpression = function(termsToUse){
 
                 let error = inputPoints[i].y - guess;
 
+                /* ISSO GERA PROBLEMAS
                 if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
                     iteration = numIterations;
                 else
                     prevError = error;
+                */
 
                 for (let j=0; j<this.terms.length; j++){
                     //ajustes dos learningRates
@@ -207,12 +209,14 @@ var LinearExpression = function(termsToUse){
             }
         }
 
+        /* ISSO GERA PROBLEMAS
         //limpando os nan
         for(let i=0; i<this.coefficients.length; i++){
             if (!isFinite(this.coefficients[i])){
                 this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
             }
         }
+        */
     };
 
     this.calculateMAE = function(inputPoints){
@@ -238,7 +242,7 @@ var LinearExpression = function(termsToUse){
     };
 
     //ajuste inicial (executado no construtor)
-    this.adjustCoefficients(inputPoints, 5000);
+    this.adjustCoefficients(inputPoints, 15000);
     this.calculateMAE(inputPoints);
 
     this.getLinearExpression_d = function(){
@@ -253,6 +257,7 @@ var LinearExpression = function(termsToUse){
     },
 
     this.evaluateScore = function(inputPoints){
+        this.adjustCoefficients(inputPoints, 15000);
         this.calculateMAE(inputPoints);
 
         return this.score;
@@ -310,7 +315,7 @@ function rootTerms(){
         let aux = [ ];
         for (let j=0; j<inputPoints[0].x.length; j++)
             aux.push(i==j? 1 : 0);
-        terms.push(new Term(aux, OP.id ));
+        terms.push(new Term(aux, OP.id) );
     }
     return terms;
 }
@@ -425,6 +430,7 @@ function expand(leaf, threshold, minI, minT){
         }
     }
     
+    /* FICOU REDUNDANTE JÁ QUE A COMPARAÇÃO É FEITA NO CONSTRUTOR DO TERMO
     //remove da exp_list aqueles termos que já estão na expressão
     var toCheck = leaf.getTerms();
 
@@ -435,6 +441,7 @@ function expand(leaf, threshold, minI, minT){
             }
         }
     }
+    */
 
     var children = [ ];
 
@@ -671,7 +678,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (let i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>1, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>2, gen>3));
         }
 
         //leaves <- nodes
@@ -686,7 +693,7 @@ function run_SymTree(){
             }
         }
 
-        if (best.getScore()>0.999){
+        if (best.getScore()==1){
             document.getElementById("results").innerHTML="<p>A busca encontrou uma equação que descreve perfeitamente os pontos de entrada:</p>";
             document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
             break;
