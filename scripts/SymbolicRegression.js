@@ -76,6 +76,19 @@ var Term = function(exponents, operation){
         return term + ")";
     },
 
+    this.mutateOp = function(){
+        this.op = OP.rndOp();
+    },
+
+    this.mutateExp = function(){
+        let index = Math.floor( Math.random()*(this.exp.length-1) );
+
+        let toAdd = Math.floor( Math.random()*(3) -1 );
+
+        if (this.exp[index] + toAdd>0)
+            this.exp[index] += toAdd;
+    }
+
     this.getExp = function(){
         let copy = [ ];
         for(let i=0; i<this.exp.length; i++)
@@ -209,14 +222,12 @@ var LinearExpression = function(termsToUse){
             }
         }
 
-        /* ISSO GERA PROBLEMAS
         //limpando os nan
         for(let i=0; i<this.coefficients.length; i++){
             if (!isFinite(this.coefficients[i])){
                 this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
             }
         }
-        */
     };
 
     this.calculateMAE = function(inputPoints){
@@ -239,11 +250,16 @@ var LinearExpression = function(termsToUse){
             this.score = 0.0;
         
         return mae;
-    };
+    },
 
-    //ajuste inicial (executado no construtor)
-    this.adjustCoefficients(inputPoints, 15000);
-    this.calculateMAE(inputPoints);
+    this.evaluateScore = function(inputPoints){
+        this.adjustCoefficients(inputPoints, 15000);
+        this.calculateMAE(inputPoints);
+
+        return this.score;
+    },
+
+    this.evaluateScore(inputPoints);
 
     this.getLinearExpression_d = function(){
         
@@ -254,13 +270,6 @@ var LinearExpression = function(termsToUse){
             linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
 
         return linearExpression;
-    },
-
-    this.evaluateScore = function(inputPoints){
-        this.adjustCoefficients(inputPoints, 15000);
-        this.calculateMAE(inputPoints);
-
-        return this.score;
     },
 
     this.simplify = function(threshold){
@@ -357,7 +366,7 @@ function vSub(vector1, vector2){
 
 // --SYMTREE----------------------------------------------------------------- //
 var SymTree = function(){
-    //
+    //transformar symtree num objeto para ter um "namespace"
 }
 
 function interaction(leaf){
@@ -485,7 +494,7 @@ var IT_LS = function(populationSize, expressionSize){
     for(let i=1; i<this.size; i++){
         this.subjects.push( new LinearExpression(rndTerms(expressionSize)) );
         
-        if (i%(this.size/5)==0)
+        if (i%(this.size/4)==0)
             expressionSize++;
 
         if(this.subjects[i].getScore() > this.bestExpression.getScore())
@@ -562,16 +571,14 @@ var IT_LS = function(populationSize, expressionSize){
 var IT_ES = function(populationSize, expressionSize){
 
     this.subjects = [ ];
-
     this.parents = [ ];
-    this.child = [ ];
 
     this.size = populationSize;
 
-    for(let i=1; i<this.size; i++){
+    for(let i=1; i<=this.size; i++){
         this.subjects.push( new LinearExpression(rndTerms(expressionSize)) );
         
-        if (i%(this.size/5)==0)
+        if (i%(this.size/3)==0)
             expressionSize++;
     }
 
@@ -579,52 +586,66 @@ var IT_ES = function(populationSize, expressionSize){
         this.parents = [ ];
 
         for(let i=0; i<howMany; i++){
-            let index1 = Math.floor( Math.random()*(this.subjects.length-1) );
-            let index2 = Math.floor( Math.random()*(this.subjects.length-1) );
-            console.log(index1);
-            console.log(index2);
+            let winner = this.subjects[Math.floor( Math.random()*(this.subjects.length-1) )];
 
-            let winner = this.subjects[index1].getScore() > this.subjects[index2].getScore() ? this.subjects[index1] : this.subjects[index2];
-            console.log("parent selected");
+            for(let j=0; j<5; j++){ //5 disputas por torneio
+                let index = Math.floor( Math.random()*(this.subjects.length-1) );
+
+                winner = winner.getScore() > this.subjects[index].getScore() ? winner : this.subjects[index];
+            }
             this.parents.push(winner);
+        }
+    },
+    
+    this.mutateParents = function(mutationRate){
+        for (let i=0; i<this.parents.length; i++){
+            if (Math.random() < mutationRate){
+                let index = Math.floor( Math.random()*(this.parents[i].terms.length-1) );
+
+                if (Math.random()>0.5){//vai mutar o op
+                    this.parents[i].terms[index].mutateOp();
+                }
+                else{
+                    this.parents[i].terms[index].mutateExp();
+                }
+                this.parents[i].evaluateScore(inputPoints);
+            }
         }
     },
 
     this.childTournamentSelection = function(){
-        this.child = [ ];
+        //faz a seleção e já coloca em subjects. deve sempre existir uma alter-
+        //nancia entre o parent selection e o child selection, nunca pulando um
+        //dos métodos.
 
-        console.log("inside");
+        this.subjects = [ ];
+
         for(let i=0; i<this.size; i++){
-            let index1 = Math.floor( Math.random()*(this.parents.length-1) );
-            let index2 = Math.floor( Math.random()*(this.parents.length-1) );
-            console.log(index1);
-            console.log(index2);
+            let winner = this.parents[Math.floor( Math.random()*(this.parents.length-1) )];
 
-            let winner = this.parents[index1].getScore() > this.parents[index2].getScore() ? this.parents[index1] : this.parents[index2];
-            console.log("child selected");
-            this.child.push(winner);
-        }
-    }
-
-    this.mutateParents = function(mutationRate){
-        let mutatedParents = [ ];
-
-        for (let i=0; i<this.parents.length; i++){
-            if (Math.random() < mutationRate){
-                
-                /*
-                - sorteie com p% de chances se vc irá alterar um expoente ou uma função
-                - sorteie o expoente/função a ser al  terada
-                - se for expoente, sorteie um número entre -2 e +2 para alterar, se
-                for função sorteie uma função excluindo a atual
-                */
-
-
+            for(let j=0; j<5; j++){
+                let index = Math.floor( Math.random()*(this.parents.length-1) );
+                winner = winner.getScore() > this.parents[index].getScore() ? winner : this.parents[index];
             }
-            mutatedParents.push(this.parents[i]);
+            this.subjects.push(winner);
         }
+    },
 
-        this.parents = mutatedParents;
+    this.iterate = function(nOfParents, mutRate){
+        this.tournamentSelection(nOfParents);
+        this.mutateParents(mutRate);
+        this.childTournamentSelection();
+    },
+
+    this.getBestExpression_d = function(){
+        let bestExpression = this.subjects[0];
+
+        for (let i=1; i<this.subjects.length; i++){
+            if ( this.subjects[i].getScore()>bestExpression.getScore() ){
+                bestExpression = this.subjects[i];
+            }
+        }
+        return bestExpression;
     }
 }
 
@@ -678,7 +699,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (let i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>2, gen>3));
+            nodes.push.apply(nodes, expand(leaves[i], 0.05, gen>2, gen>2));
         }
 
         //leaves <- nodes
@@ -711,19 +732,22 @@ function run_ITES(){
         return;
     }
 
-    let ITESpopSize = 100;
+    let ITESpopSize = 150;
 
     myPop = new IT_ES(ITESpopSize, 1);
 
     let counter = -1;
-    let numIterations = 2;
-    let nOfParents = 50;
-    let rate = 0.2;
+    let numIterations = 5;
+    let nOfParents = 75;
+    let rate = 0.1;
+
+    let bestExpression;
 
     while(++counter<numIterations){ // || criteria not met
-        myPop.tournamentSelection(nOfParents);
-        myPop.mutateParents(rate);
-        myPop.childTournamentSelection();
-        //pegar a melhor opção
+        myPop.iterate(nOfParents, rate);
+        bestExpression = myPop.getBestExpression_d();
     }
+
+    document.getElementById("results").innerHTML="<p>A busca encontrou a equação:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ bestExpression.getLinearExpression_d()+ "</p><p>Score: "+bestExpression.getScore()+"<p>";
 }

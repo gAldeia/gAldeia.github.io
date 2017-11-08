@@ -1,0 +1,474 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<title>Analisador: Giroscópio</title>
+
+	<style>
+		canvas {
+			width: 100%;
+			height: 100%;
+			/*outline: 1px solid black;*/
+		}
+		.body-background {
+			background: url("./images/main-bg.png") repeat center center fixed;
+		}
+		body {
+			padding-top: 70px;
+		}
+		.well{
+			border-radius: 24px 24px 24px 24px;
+			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
+		}
+		table, th, td {
+			border: 1px solid black;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+<body class="body-background" onload="setup_gyro()">
+	
+	<!--Cabeçalho da página-->
+	<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+		<div class="container">
+			<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+			</button>
+				<a class="navbar-brand" href="./index.html"><u><strong>Regressão</strong> Simbólica</u></a>
+			</div><!--logo do site-->
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a href="./index.html">Site principal</a></li>
+					<li><a href="#testes">Tabelas de dados para testes</a></li>
+					<li><a href="#contact-us">Contato</a></li>
+				</ul><!--Lista de opções-->
+			</div><!--menu-->
+		</div><!--container-->
+	</nav><!--navbar-->
+
+	<div class="container body-content">
+		<div class="well">
+			<div class="page-header" id="testes">
+				<h2>Tabelas de dados para testes</h2><hr>
+
+				<p class="text-justify">Aqui temos algumas linhas de entradas criadas por funções, usadas para testar os algoritmos:</p>
+
+				<div class="row">
+					<div class="col-lg-3"> <!--f(x)=x^2)-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x)</th>
+								<th>x</th>
+								</tr>
+		
+								<tr>
+								<td>0</td>
+								<td>0</td>
+								</tr>
+		
+								<tr>
+									<td>1</td>
+									<td>1</td>
+								</tr>
+		
+								<tr>
+									<td>4</td>
+									<td>2</td>
+								</tr>
+		
+								<tr>
+									<td>9</td>
+									<td>3</td>
+								</tr>
+		
+								<tr>
+									<td>16</td>
+									<td>4</td>
+								</tr>
+		
+								<tr>
+									<td>25</td>
+									<td>5</td>
+								</tr>
+		
+								<tr>
+									<td>36</td>
+									<td>6</td>
+								</tr>
+		
+								<tr>
+									<td>49</td>
+									<td>7</td>
+								</tr>
+		
+								<tr>
+									<td>64</td>
+									<td>8</td>
+								</tr>
+		
+								<caption class="text-center">f(x) = x^2</caption>
+							</table>
+						</p>
+					</div>
+					<div class="col-lg-3"><!--f(x)=sqrt(x)-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x)</th>
+								<th>x</th>
+								</tr>
+		
+								<tr>
+								<td>0</td>
+								<td>0</td>
+								</tr>
+		
+								<tr>
+									<td>1</td>
+									<td>1</td>
+								</tr>
+		
+								<tr>
+									<td>2</td>
+									<td>4</td>
+								</tr>
+		
+								<tr>
+									<td>3</td>
+									<td>9</td>
+								</tr>
+		
+								<tr>
+									<td>4</td>
+									<td>16</td>
+								</tr>
+		
+								<tr>
+									<td>5</td>
+									<td>25</td>
+								</tr>
+		
+								<tr>
+									<td>6</td>
+									<td>36</td>
+								</tr>
+		
+								<tr>
+									<td>7</td>
+									<td>49</td>
+								</tr>
+		
+								<tr>
+									<td>8</td>
+									<td>64</td>
+								</tr>
+		
+								<caption class="text-center">f(x) = x^(1/2)</caption>
+							</table>
+						</p>
+					</div>
+					<div class="col-lg-3"><!--f(x)=sen(x)-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x)</th>
+								<th>x</th>
+								</tr>
+		
+								<tr>
+								<td>0</td>
+								<td>0</td>
+								</tr>
+		
+								<tr>
+									<td>0.8414</td>
+									<td>1</td>
+								</tr>
+		
+								<tr>
+									<td>0.9092</td>
+									<td>2</td>
+								</tr>
+		
+								<tr>
+									<td>0.1411</td>
+									<td>3</td>
+								</tr>
+		
+								<tr>
+									<td>-0.7568</td>
+									<td>4</td>
+								</tr>
+		
+								<tr>
+									<td>-0.9589</td>
+									<td>5</td>
+								</tr>
+		
+								<tr>
+									<td>-0.2794</td>
+									<td>6</td>
+								</tr>
+		
+								<tr>
+									<td>0.6569</td>
+									<td>7</td>
+								</tr>
+		
+								<tr>
+									<td>0.9893</td>
+									<td>8</td>
+								</tr>
+		
+								<caption class="text-center">f(x) = sen(x)</caption>
+							</table>
+						</p>
+					</div>
+					<div class="col-lg-3"><!--f(x)=x1 + x2^2-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x1, x2)</th>
+								<th>x1</th>
+								<th>x2</th>
+								</tr>
+		
+								<tr>
+									<td>5</td>
+									<td>2</td>
+									<td>1</td>
+								</tr>
+
+								<tr>
+									<td>6</td>
+									<td>2</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>7</td>
+									<td>2</td>
+									<td>3</td>
+								</tr>
+
+								<tr>
+									<td>16</td>
+									<td>4</td>
+									<td>0</td>
+								</tr>
+
+								<tr>
+									<td>27</td>
+									<td>5</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>1</td>
+									<td>0</td>
+									<td>1</td>
+								</tr>
+								
+								<tr>
+									<td>2</td>
+									<td>0</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>4</td>
+									<td>2</td>
+									<td>0</td>
+								</tr>
+
+								<tr>
+									<td>4</td>
+									<td>0</td>
+									<td>4</td>
+								</tr>
+								
+								<caption class="text-center">f(x)= x1 + x2^2</caption>
+							</table>
+						</p>
+					</div>
+					<div class="col-lg-3"><!--f(x)=x1*x2-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x1, x2)</th>
+								<th>x1</th>
+								<th>x2</th>
+								</tr>
+		
+								<tr>
+									<td>2</td>
+									<td>2</td>
+									<td>1</td>
+								</tr>
+
+								<tr>
+									<td>3</td>
+									<td>3</td>
+									<td>1</td>
+								</tr>
+
+								<tr>
+									<td>8</td>
+									<td>4</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>10</td>
+									<td>5</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>18</td>
+									<td>6</td>
+									<td>3</td>
+								</tr>
+
+								<tr>
+									<td>21</td>
+									<td>7</td>
+									<td>3</td>
+								</tr>
+								
+								<tr>
+									<td>32</td>
+									<td>8</td>
+									<td>4</td>
+								</tr>
+
+								<tr>
+									<td>36</td>
+									<td>9</td>
+									<td>4</td>
+								</tr>
+
+								<tr>
+									<td>50</td>
+									<td>10</td>
+									<td>5</td>
+								</tr>
+								
+								<caption class="text-center">f(x)= x1*x2</caption>
+							</table>
+						</p>
+					</div>
+					<div class="col-lg-3"><!--f(x)=sen(x1) + x2^2-->
+						<p>
+							<table style="width: 150px">
+								<tr>
+								<th>f(x1, x2)</th>
+								<th>x1</th>
+								<th>x2</th>
+								</tr>
+		
+								<tr>
+									<td>4.8414</td>
+									<td>1</td>
+									<td>2</td>
+								</tr>
+
+								<tr>
+									<td>9.8414</td>
+									<td>1</td>
+									<td>3</td>
+								</tr>
+
+								<tr>
+									<td>16.9092</td>
+									<td>2</td>
+									<td>4</td>
+								</tr>
+
+								<tr>
+									<td>25.9092</td>
+									<td>2</td>
+									<td>5</td>
+								</tr>
+
+								<tr>
+									<td>36.1411</td>
+									<td>3</td>
+									<td>6</td>
+								</tr>
+
+								<tr>
+									<td>49.1411</td>
+									<td>3</td>
+									<td>7</td>
+								</tr>
+								
+								<tr>
+									<td>63.2431</td>
+									<td>4</td>
+									<td>8</td>
+								</tr>
+
+								<tr>
+									<td>80.2431</td>
+									<td>4</td>
+									<td>9</td>
+								</tr>
+
+								<tr>
+									<td>99.0410</td>
+									<td>5</td>
+									<td>10</td>
+								</tr>
+								
+								<caption class="text-center"><strong>f(x)= sen(x1) + x2^2</strong></caption>
+							</table>
+						</p>
+					</div>
+				</div>
+
+				<br>
+				<div class="alert alert-info">
+					<p class="text-justify"><strong>Obs:</strong></p>
+					
+					<p class="text-justify">A página principal aceita separações por vírgulas, tabulações e espaços em branco, e ignora qualquer entrada que não seja um número.</p>
+
+					<p class="text-justify">funções trigonométricas usam radianos.</p>
+
+					<p class="text-justify">O padrão numérico utilizado é o americado, com casas decimais separadas por ponto.</p>
+				</div>
+
+			</div>
+
+			<div class="page-header text-center" id="contact-us">
+
+				<h2>Contato</h2>
+
+				<p>Dúvidas, críticas ou sugestões?</p> 
+				<p>Contate o desenvolvedor pelo email: guilherme.aldeia@aluno.ufabc.edu.br</p> 
+				<p>Além disso, veja os <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">algoritmos</a> desenvolvidos durante os estudos do projeto!</p>
+
+			</div>
+		</div>
+	</div>
+
+    <script type="text/javascript" src=./scripts/loadFile.js></script>
+    <script type="text/javascript" src=./scripts/rocketLabGyro.js></script>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+
+</html>
