@@ -36,7 +36,7 @@
 
 </head>
 
-<body class="body-background" onload="setup_gyro()">
+<body class="body-background">
 	
 	<!--Cabeçalho da página-->
 	<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
@@ -59,7 +59,7 @@
 	<div class="container body-content">
 		<div class="well">
 			<div class="page-header" id="testes">
-				<h2>Tabelas de dados para testes</h2><hr>
+				<h2>Tabelas de dados para testes</h2>
 
 				<p class="text-justify">Aqui temos algumas linhas de entradas criadas por funções, usadas para testar os algoritmos:</p>
 
@@ -442,12 +442,36 @@
 				<div class="alert alert-info">
 					<p class="text-justify"><strong>Obs:</strong></p>
 					
-					<p class="text-justify">A página principal aceita separações por vírgulas, tabulações e espaços em branco, e ignora qualquer entrada que não seja um número.</p>
+					<p class="text-justify">- A página principal aceita separações por vírgulas, tabulações e espaços em branco, e ignora qualquer entrada que não seja um número.</p>
 
-					<p class="text-justify">funções trigonométricas usam radianos.</p>
+					<p class="text-justify">- funções trigonométricas usam radianos.</p>
 
-					<p class="text-justify">O padrão numérico utilizado é o americado, com casas decimais separadas por ponto.</p>
+					<p class="text-justify">- O padrão numérico utilizado é o americano, com casas decimais separadas por ponto.</p>
 				</div>
+
+			</div>
+
+			<div class="page-header" id="testes">
+				<h2>Gerador de dados <small>(à partir de expressões)</small></h2>
+
+				<p class="text-justify">Ao usar o gerador lembre de sempre definir um índice para as variáveis, começando do 1 (x1, x2, x3, ...). O range vai de 1 a 40 (de 2 em 2), e ele suporta expressões com até 10 variáveis. O gerador segue a sintaxe do javaScript, e as funções matemáticas devem ser usadas de acordo com a classe de funções Math (ex: Math.sin(x2) + Math.sqrt(x1) * Math.abs(x3)). Para evitar NaN e infinitos, a contagem começa sempre no 1.</p>
+
+				<div class="row">
+					<div class="col-lg-3">
+						<textarea style="max-width: 100%; min-width:100%" class="form-control" rows="3" placeholder="Digite uma função aqui (usando sintaxe do javascript). EX: Math.sin(x1) + x2" id="expressionInput"></textarea>
+					</div>
+
+					<div class="col-lg-3">
+						<button type="button" class="btn btn-primary btn-lg btn-block" onclick="generateLines()">Criar tabela</button>
+						<br>
+						<input type="range" min="1" max="40" value="10" class="slider" step="2" id="range">
+
+					</div>
+
+					<div class="col-lg-3" id="expressionOutput">
+		
+					</div>
+				</div><br>
 
 			</div>
 
@@ -463,8 +487,7 @@
 		</div>
 	</div>
 
-    <script type="text/javascript" src=./scripts/loadFile.js></script>
-    <script type="text/javascript" src=./scripts/rocketLabGyro.js></script>
+	<script type="text/javascript" src=./scripts/Generator.js></script>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>

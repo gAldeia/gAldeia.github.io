@@ -117,17 +117,17 @@
 
 					<div class="row">
 						<div class="col-lg-4">
-							<h4>Digite os dados</h4>
+							<h4>1 - Digite os dados</h4>
 
 							<p class="text-justify">Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão <strong>.csv</strong>.</p>
 						</div>
 						<div class="col-lg-4">
-							<h4>Execute o algoritmo</h4>
+							<h4>2 - Execute o algoritmo</h4>
 
 							<p class="text-justify">Com os dados digitados, basta apenas executar o algoritmo.</p>
 						</div>
 						<div class="col-lg-4">
-							<h4>Analise o resultado</h4>
+							<h4>3 - Analise o resultado</h4>
 
 							<p class="text-justify">Após finalizar todo o processamento, o site irá exibir os resultados.</p>
 						</div>
@@ -181,8 +181,8 @@
 					<p class="text-justify">O que se espera é encontrar a equação que deu origem aos dados de entrada. Se os dados vieram de uma equação, espera-se encontrar a própria equação (ou uma muito próxima dela).</p>
 					<p class="text-justify">Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
 
-					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
 					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITES()">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
 
 					<div id="results" class="page-header">
@@ -202,6 +202,9 @@
 					<p class="text-justify"><b>Algoritmo SymTree</b></p>
 					<p class="text-justify">Este algoritmo faz uma busca gulosa, explorando todos os aspectos que podem mudar entre as expressões. Começando com uma equação raiz, faz combinações de expoentes e variações de operadores, sempre separando termos que quando combinados com a expressão inicial resultam numa melhoria do score. O processo é repetido até que um critério de parada seja atingido; e em cada iteração novas expressões são adicionadas ao grupo de potenciais candidatos para responder o problema.</p>
 
+					<p class="text-justify"><b>Algoritmo IT-ES</b></p>
+					<p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias e selecionando a melhor, e então executa estratégias baseadas na programação genética (mutação e seleção por torneio) para ir refinando a população e buscando uma melhoria num numero pré definido de iterações.</p>
+
 				</div>
 			</section>
 
@@ -212,6 +215,9 @@
 					<div class="alert alert-info">
 						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a>. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
 					</div>
+
+					<p class="text-justify"><b>09/11/2017</b></p>
+					<p class="text-justify"> - Gerador de dados simples na página de exemplos.</p>
 
 					<p class="text-justify"><b>08/11/2017</b></p>
 					<p class="text-justify"> - IT-ES implementado.</p>
@@ -360,7 +366,7 @@
 	</div>
 
 	<!-- scripts dos algoritmos de regressão simbólica-->
-	<script type="text/javascript" src=./scripts/loadFile.js></script>
+	<script type="text/javascript" src=./scripts/LoadFile.js></script>
 	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
 	<!--script type="text/javascript" src=./scripts/new-ITLS.js></script>
 	<script type="text/javascript" src=./scripts/SymTree.js></script-->
