@@ -1,6 +1,16 @@
 //Generator.js
 
 
+function noise(){
+    if (document.getElementById("noise").checked){
+        if (Math.random()>0.5)
+            return Math.random()*0.3;
+        else
+            return -Math.random()*0.3;
+    }
+    return 0;
+}
+
 function Eval(range, nOfVars){
     let display = "<table style='width: 300px'><tr><th>f(x)</th>";
 
@@ -17,7 +27,8 @@ function Eval(range, nOfVars){
             exp = exp.split("x"+j).join(i);
             lines+="<td>"+i+"</td>";
         }
-        display+="<tr><td>"+eval(exp)+"</td>"+lines+"</tr>";
+        let result = eval(exp)+noise();
+        display+="<tr><td>"+result+"</td>"+lines+"</tr>";
     }
     document.getElementById("expressionOutput").innerHTML=display+"</table>";
 }

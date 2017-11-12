@@ -27,28 +27,25 @@ var OP = {
     },
 
     solve : function(op, value){
-        switch (op){
-            case "id":
+            if (op==="id")
                 return value;
-            case "sin":
+            else if (op==="sin")
                 return Math.sin(value);
-            case "cos":
+            else if (op==="cos")
                 return Math.cos(value);
-            case "tan":
+            else if (op==="tan")
                 return Math.tan(value);
-            case "abs":
+            else if (op==="abs")
                 return Math.abs(value);
-            case "sqrt":
-                return value<=0? 0 : Math.sqrt(value);
-            case "exp":
+            else if (op==="sqrt")
+                return value<0? 0 : Math.sqrt(value);
+            else if (op==="exp")
                 return Math.exp( Math.floor(value) );
-            case "log":
-                return Math.log(value);
-            default:
-                alert("PROBLEMA EM SOLVE OP");
-                return 0;
+            else if (op==="log")
+                return value<=0? 0 : Math.log(value);
+            alert("PROBLEMA EM SOLVE OP");
+            return 0;
         }
-    }
 }
 
 var Term = function(exponents, operation){
@@ -60,7 +57,7 @@ var Term = function(exponents, operation){
         //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
 
         let value = 1.0;
-        for(let i=0; i<this.exp.length; i++){
+        for(let i=0; i<DataPoint.x.length; i++){
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
         return OP.solve(this.op, value);
@@ -131,11 +128,24 @@ var LinearExpression = function(termsToUse){
                 break;
             }
         }
-        if (push){
-            this.terms.push(termsToUse[i]);
+        if (push && !termsToUse[i].isNull()){
+            this.terms.push(termsToUse[i].copy());
             this.coefficients.push(0.0);
         }
     }
+    if (this.terms.length==0)
+        this.terms = rootTerms();
+
+    this.getLinearExpression_d = function(){
+        
+        //retorna uma string da expressão
+
+        let linearExpression = "";
+        for(let i=0; i<this.terms.length; i++)
+            linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
+
+        return linearExpression;
+    },
 
     this.adjustCoefficients = function(inputPoints, numIterations){
         
@@ -203,32 +213,44 @@ var LinearExpression = function(termsToUse){
                 let guess = 0.0;
 
                 for (let j=0; j<this.terms.length; j++){
-                    guess += this.terms[j].evaluate(inputPoints[i])*this.coefficients[j];
+                    guess += this.coefficients[j]*this.terms[j].evaluate(inputPoints[i]);
                 }
 
-                let error = inputPoints[i].y - guess;
+                let error = guess - inputPoints[i].y;
 
-                /* ISSO GERA PROBLEMAS
-                if ( Math.abs(prevError-error)<0.0001 ) //critério de parada
+                if ( Math.abs(prevError-error)<0.001 ){//critério de parada
                     iteration = numIterations;
+                    break;
+                }
                 else
                     prevError = error;
-                */
 
+                ///*
                 for (let j=0; j<this.terms.length; j++){
                     //ajustes dos learningRates
-                    this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
+                    this.coefficients[j] -= alpha*this.terms[j].evaluate(inputPoints[i])*error;
+                    if (this.coefficients[j]>10000)
+                        console.log("nao foi");
                 }
+                //*/
+                /*
+                for (let j=0; j<this.terms.length; j++){
+                    //ajustes dos learningRates
+                    let update = this.coefficients[j] - alpha*this.terms[j].evaluate(inputPoints[i])*error;
+                    if (update >0.1*alpha)
+                        update -= 0.1*alpha;
+                    else if (update < -0.1*alpha)
+                        update += 0.1*alpha;
+                    else
+                        update = 0.0;
+                    this.coefficients[j] = update;
+                    if (this.coefficients[j]>10000)
+                        console.log("n foi");
+                }
+                */
             }
         }
-
-        //limpando os nan
-        for(let i=0; i<this.coefficients.length; i++){
-            if (!isFinite(this.coefficients[i])){
-                this.coefficients[i] = 0.0; //se não é finito o numero provavelmente explodiu, então zerando-o eu faço com que seja cortado no simplify
-            }
-        }
-    };
+    },
 
     this.calculateMAE = function(inputPoints){
         //calcula o mae.
@@ -261,17 +283,6 @@ var LinearExpression = function(termsToUse){
 
     this.evaluateScore(inputPoints);
 
-    this.getLinearExpression_d = function(){
-        
-        //retorna uma string da expressão
-
-        let linearExpression = "";
-        for(let i=0; i<this.terms.length; i++)
-            linearExpression += this.coefficients[i].toFixed(2) + "*" + this.terms[i].getTerm_d() + (i<this.terms.length-1? "+" : "");
-
-        return linearExpression;
-    },
-
     this.simplify = function(threshold){
         
         //percorre uma expressão removendo todo termo de coeficiente menor
@@ -281,7 +292,7 @@ var LinearExpression = function(termsToUse){
         let newCoefs = [ ];
 
         for (let i=0; i<this.terms.length; i++){
-            if (Math.abs(this.coefficients[i]) > threshold && !this.terms[i].isNull()){
+            if (Math.abs(this.coefficients[i]) > threshold){
                 newTerms.push(this.terms[i]);
                 newCoefs.push(this.coefficients[i]);
             }
@@ -588,7 +599,7 @@ var IT_ES = function(populationSize, expressionSize){
         for(let i=0; i<howMany; i++){
             let winner = this.subjects[Math.floor( Math.random()*(this.subjects.length-1) )];
 
-            for(let j=0; j<5; j++){ //5 disputas por torneio
+            for(let j=0; j<10; j++){ //5 disputas por torneio
                 let index = Math.floor( Math.random()*(this.subjects.length-1) );
 
                 winner = winner.getScore() > this.subjects[index].getScore() ? winner : this.subjects[index];
@@ -598,6 +609,8 @@ var IT_ES = function(populationSize, expressionSize){
     },
     
     this.mutateParents = function(mutationRate){
+        let auxParents = [ ];
+
         for (let i=0; i<this.parents.length; i++){
             if (Math.random() < mutationRate){
                 let index = Math.floor( Math.random()*(this.parents[i].terms.length-1) );
@@ -608,9 +621,13 @@ var IT_ES = function(populationSize, expressionSize){
                 else{
                     this.parents[i].terms[index].mutateExp();
                 }
-                this.parents[i].evaluateScore(inputPoints);
+                //é preciso descartar um mutacionado pois recalcular e reajustar
+                //tudo gera muitos erros no JS. é melhor criar outro e deixar que o 
+                //construtor cuide dos problemas.
             }
+            auxParents.push(new LinearExpression(this.parents[i].getTerms()));
         }
+        this.parents = auxParents;
     },
 
     this.childTournamentSelection = function(){
@@ -623,7 +640,7 @@ var IT_ES = function(populationSize, expressionSize){
         for(let i=0; i<this.size; i++){
             let winner = this.parents[Math.floor( Math.random()*(this.parents.length-1) )];
 
-            for(let j=0; j<5; j++){
+            for(let j=0; j<10; j++){
                 let index = Math.floor( Math.random()*(this.parents.length-1) );
                 winner = winner.getScore() > this.parents[index].getScore() ? winner : this.parents[index];
             }
@@ -691,7 +708,7 @@ function run_SymTree(){
 
     //while criteria not met
     let gen=-1;
-    let nOfGens = 5;
+    let nOfGens = 3;
 
     while (++gen<nOfGens){
 
@@ -699,7 +716,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (let i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.05, gen>2, gen>2));
+            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>=0, gen>0));
         }
 
         //leaves <- nodes
@@ -737,9 +754,9 @@ function run_ITES(){
     myPop = new IT_ES(ITESpopSize, 1);
 
     let counter = -1;
-    let numIterations = 5;
+    let numIterations = 8;
     let nOfParents = 75;
-    let rate = 0.1;
+    let rate = 0.09;
 
     let bestExpression;
 

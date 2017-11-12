@@ -447,6 +447,8 @@
 					<p class="text-justify">- funções trigonométricas usam radianos.</p>
 
 					<p class="text-justify">- O padrão numérico utilizado é o americano, com casas decimais separadas por ponto.</p>
+
+					<p class="text-justify">- O ruído adiciona um erro de até 0.3 nos dados aleatóriamente.</p>
 				</div>
 
 			</div>
@@ -465,7 +467,8 @@
 						<button type="button" class="btn btn-primary btn-lg btn-block" onclick="generateLines()">Criar tabela</button>
 						<br>
 						<input type="range" min="1" max="40" value="10" class="slider" step="2" id="range">
-
+						<input type="checkbox" id="noise" value="true">
+						<label for="noise">Ruído nos dados?</label>
 					</div>
 
 					<div class="col-lg-3" id="expressionOutput">
