@@ -57,7 +57,7 @@ var Term = function(exponents, operation){
         //recebe um ponto (DataPoint) e calcula o valor da função para os dados valores de x
 
         let value = 1.0;
-        for(let i=0; i<DataPoint.x.length; i++){
+        for(let i=0; i<this.exp.length; i++){
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
         }
         return OP.solve(this.op, value);
@@ -122,19 +122,15 @@ var LinearExpression = function(termsToUse){
     for (let i=0; i<termsToUse.length; i++){
         let push = true;
 
-        for(let j=0; j<this.terms.length; j++){
-            if (termsToUse[i].getTerm_d()===this.terms[j].getTerm_d()){
+        for(let j=0; (j<this.terms.length) && push; j++){
+            if (termsToUse[i].getTerm_d()===this.terms[j].getTerm_d())
                 push = false;
-                break;
-            }
         }
-        if (push && !termsToUse[i].isNull()){
+        if (push){
             this.terms.push(termsToUse[i].copy());
-            this.coefficients.push(0.0);
+            this.coefficients.push(0.1);
         }
     }
-    if (this.terms.length==0)
-        this.terms = rootTerms();
 
     this.getLinearExpression_d = function(){
         
@@ -202,35 +198,35 @@ var LinearExpression = function(termsToUse){
         */
 
         let iteration = -1;
-        let alpha = 0.01/inputPoints.length;
-        let prevError = 0;
+        let alpha = 0.001;
+        let tolerance = 0.0002;
 
-        numIterations /= inputPoints.length;
+        //numIterations /= inputPoints.length;
 
         //numero de iterações
         while(++iteration<numIterations){
             for (let i=0; i<inputPoints.length; i++){
                 let guess = 0.0;
 
-                for (let j=0; j<this.terms.length; j++){
+                for (let j=0; j<this.coefficients.length; j++){
                     guess += this.coefficients[j]*this.terms[j].evaluate(inputPoints[i]);
                 }
 
-                let error = guess - inputPoints[i].y;
+                let error = inputPoints[i].y - guess;
 
-                if ( Math.abs(prevError-error)<0.001 ){//critério de parada
-                    iteration = numIterations;
-                    break;
+                if ( Math.abs(error)<tolerance ){//critério de parada
+                    return;
                 }
-                else
-                    prevError = error;
-
                 ///*
-                for (let j=0; j<this.terms.length; j++){
+                
+                for (let j=this.terms.length-1; j>=0; j--){
                     //ajustes dos learningRates
-                    this.coefficients[j] -= alpha*this.terms[j].evaluate(inputPoints[i])*error;
-                    if (this.coefficients[j]>10000)
+                    this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
+                    if (Math.abs(this.coefficients[j]>1000)){
                         console.log("nao foi");
+                        this.coefficients.splice(j, 1);
+                        this.terms.splice(j, 1);
+                    }
                 }
                 //*/
                 /*
@@ -275,7 +271,7 @@ var LinearExpression = function(termsToUse){
     },
 
     this.evaluateScore = function(inputPoints){
-        this.adjustCoefficients(inputPoints, 15000);
+        this.adjustCoefficients(inputPoints, 5000);
         this.calculateMAE(inputPoints);
 
         return this.score;
@@ -292,8 +288,8 @@ var LinearExpression = function(termsToUse){
         let newCoefs = [ ];
 
         for (let i=0; i<this.terms.length; i++){
-            if (Math.abs(this.coefficients[i]) > threshold){
-                newTerms.push(this.terms[i]);
+            if (Math.abs(this.coefficients[i]) > threshold && !this.terms[i].isNull()){
+                newTerms.push(this.terms[i].copy());
                 newCoefs.push(this.coefficients[i]);
             }
         }
@@ -437,52 +433,38 @@ function expandedList(leaf, minI, minT){
 function expand(leaf, threshold, minI, minT){
 
     //list <- interaction U inverse U transformation
-    var exp_list = expandedList(leaf, minI, minT);
+    let exp_list = expandedList(leaf, minI, minT);
 
     //terms <- [term e Terms if score(node + term) > score(node)]
-    var refined_exp_list = [ ];
+    let refined_exp_list = [ ];
 
-    for (var i=0; i<exp_list.length; i++){
-        var aux_terms = leaf.getTerms();
-        var aux = new LinearExpression(aux_terms.concat([exp_list[i]])); 
+    for (let i=0; i<exp_list.length; i++){
+        let aux_terms = leaf.getTerms();
+        let aux = new LinearExpression(aux_terms.concat([exp_list[i]])); 
         if (aux.getScore() > leaf.getScore()){//score é calculado no construtor
             refined_exp_list.push(exp_list[i]);
         }
     }
-    
-    /* FICOU REDUNDANTE JÁ QUE A COMPARAÇÃO É FEITA NO CONSTRUTOR DO TERMO
-    //remove da exp_list aqueles termos que já estão na expressão
-    var toCheck = leaf.getTerms();
 
-    for (var i=0; i<toCheck.length; i++){
-        for(var j=refined_exp_list.length-1; j>=0; j--){
-            if (toCheck[i].getTerm_d()==refined_exp_list[j].getTerm_d()){ //compara a string de cada um
-                refined_exp_list.slice(j, 1);
-            }
-        }
-    }
-    */
-
-    var children = [ ];
+    let children = [ ];
 
     while (refined_exp_list.length>0){
 
-
         //esta seria a greedy search
-        var best = leaf;
+        let best = leaf;
 
-        for(var i=refined_exp_list.length-1; i>=0; i--){
-            var aux_terms = best.getTerms();
-            var aux = new LinearExpression( aux_terms.concat([refined_exp_list[i]]) );
+        for(let i=refined_exp_list.length-1; i>=0; i--){
+            let aux_terms = best.getTerms();
+            aux_terms = aux_terms.concat([refined_exp_list[i]]);
+            let aux = new LinearExpression( aux_terms );
 
             if (aux.getScore() > best.getScore()){
                 best = aux;
                 refined_exp_list.splice(i, 1);
             }
-        } //fim da greedy search
-        
+        } //fim da greedy search 
         best.simplify(threshold);
-        children.push(best);  
+        children.push(best);
     }
 
     if (children.length>0) 
@@ -670,7 +652,7 @@ var IT_ES = function(populationSize, expressionSize){
 // --MÉTODOS "MAIN" DE CADA UM DOS ALGORITMOS-------------------------------- //
 function run_ITLS(){
     
-    if (inputPoints[0]==undefined){
+    if (inputPoints[0]===undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
@@ -695,7 +677,7 @@ function run_ITLS(){
 
 function run_SymTree(){
 
-    if (inputPoints[0]==undefined){
+    if (inputPoints[0]===undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
@@ -716,7 +698,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (let i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.01, gen>=0, gen>0));
+            nodes.push.apply(nodes, expand(leaves[i], 0.09, gen>=0, gen>0));
         }
 
         //leaves <- nodes
@@ -744,7 +726,7 @@ function run_SymTree(){
 }
 
 function run_ITES(){
-    if (inputPoints[0]==undefined){
+    if (inputPoints[0]===undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
