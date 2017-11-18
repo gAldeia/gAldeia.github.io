@@ -9,16 +9,6 @@
 //coeficientes são vinculados com os termos, já que cada termpo sempre terá um coeficiente
 //ERROS são notificados com console.error. para debugar, usar console.log
 //coisas pendentes são marcadas com "TODO". para ver o que falta, fazer igual com o "maybe"
-let inputPoints = [ ];
-
-
-
-inputPoints.push(new DataPoint([1, 2], 4.8414));
-inputPoints.push(new DataPoint([1, 3], 9.8414));
-inputPoints.push(new DataPoint([2, 4], 16.9092));
-inputPoints.push(new DataPoint([2, 5], 25.9092));
-inputPoints.push(new DataPoint([3, 6], 36.1411));
-inputPoints.push(new DataPoint([3, 7], 49.1411));
 
 
 //--CLASSES DA REGRESSÃO:-----------------------------------------------------//
@@ -327,7 +317,7 @@ class LE{
             this.terms = TermManager.rootTerms();
         }
 
-        LR.improvedGradientDescent(this, inputPoints, 5000);
+        LR.improvedGradientDescent(this, inputPoints, 10000);
         this.evaluate(inputPoints);        
     };
     copy(){
@@ -399,7 +389,7 @@ class IT_ES{
                 else{
                     this.parents[i].terms[index].mutateExp();
                 }
-                LR.improvedGradientDescent(this.parents[i], inputPoints, 5000);
+                LR.improvedGradientDescent(this.parents[i], inputPoints, 10000);
                 this.parents[i].evaluate(inputPoints);
             }
         }
@@ -633,15 +623,46 @@ class SymTree{
 
 //--FUNÇÃO DE TESTE-----------------------------------------------------------//
 (function(){
-    //colocar aqui tudo que quiser testar
 
     console.log("starting test...");
- 
-    let SYMTREE = new SymTree(10, 0.1, 10, 0);
-    //let ITLS = new IT_LS(150, 1, 3, 25);
-    //let ITES = new IT_ES(150, 1, 3, 0.07, 45, 25);
 
-    console.info(SYMTREE.printMe() + ". score: " + SYMTREE.score);
-    //console.info(ITLS.printMe() + ". score: " + ITLS.score);
-    //console.info(ITES.printMe() + ". score: " + ITES.score);
+    //colocar aqui tudo que quiser testar
+
+    console.log("done");
 })();
+
+function run_ITLS(){
+    if (inputPoints[0]===undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
+    let expression = new IT_LS(150, 1, 3, 25);
+
+    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+}
+
+function run_SymTree(){
+    if (inputPoints[0]===undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
+    let expression = new SymTree(10, 0.01, 10, 3);
+
+    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+}
+
+function run_ITES(){
+    if (inputPoints[0]===undefined){
+        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        return;
+    }
+
+    let expression = new IT_ES(150, 1, 3, 0.07, 45, 25);
+
+    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+}
