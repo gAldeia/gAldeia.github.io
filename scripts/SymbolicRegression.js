@@ -23,29 +23,29 @@ var OP = {
     },
     
     rndOp : function(){
-        return OP.ops[Math.floor(Math.random() * (-7 + 1)) + 7];
+        return OP.ops[Math.floor(Math.random() * (-8 + 1)) + 7];
     },
 
     solve : function(op, value){
-            if (op==="id")
-                return value;
-            else if (op==="sin")
-                return Math.sin(value);
-            else if (op==="cos")
-                return Math.cos(value);
-            else if (op==="tan")
-                return Math.tan(value);
-            else if (op==="abs")
-                return Math.abs(value);
-            else if (op==="sqrt")
-                return value<0? 0 : Math.sqrt(value);
-            else if (op==="exp")
-                return Math.exp( Math.floor(value) );
-            else if (op==="log")
-                return value<=0? 0 : Math.log(value);
-            alert("PROBLEMA EM SOLVE OP");
-            return 0;
-        }
+        if (op==="id")
+            return value;
+        else if (op==="sin")
+            return Math.sin(value);
+        else if (op==="cos")
+            return Math.cos(value);
+        else if (op==="tan")
+            return Math.tan(value);
+        else if (op==="abs")
+            return Math.abs(value);
+        else if (op==="sqrt")
+            return value<0? 0 : Math.sqrt(value);
+        else if (op==="exp")
+            return Math.exp( Math.floor(value) );
+        else if (op==="log")
+            return value<=0? 0 : Math.log(value);
+        alert("PROBLEMA EM SOLVE OP");
+        return 0;
+    }
 }
 
 var Term = function(exponents, operation){
@@ -122,10 +122,11 @@ var LinearExpression = function(termsToUse){
     for (let i=0; i<termsToUse.length; i++){
         let push = true;
 
+        /*
         for(let j=0; (j<this.terms.length) && push; j++){
             if (termsToUse[i].getTerm_d()===this.terms[j].getTerm_d())
                 push = false;
-        }
+        }*/
         if (push){
             this.terms.push(termsToUse[i].copy());
             this.coefficients.push(0.1);
@@ -150,17 +151,17 @@ var LinearExpression = function(termsToUse){
 
             //ajusta os parâmetros, minimizando a soma quadrática dos erros
             //cada termo tem seu próprio learning rate
-            var learningRates = [ ];
-            var termsValues = [ ];
-            var prevTermsValues = [ ];
+            let learningRates = [ ];
+            let termsValues = [ ];
+            let prevTermsValues = [ ];
 
-            var increaseFactor = 1.2;
-            var decreaseFactor = 0.5;
+            let increaseFactor = 1.2;
+            let decreaseFactor = 0.5;
 
-            var iteration = -1;
+            let iteration = -1;
             
             //coloca todos os coeficientes no mesmo valor inicial
-            for(var i=0; i<coefficients.length; i++){
+            for(let i=0; i<coefficients.length; i++){
                 learningRates.push(0.1/inputPoints.length);
                 prevTermsValues.push(0.0);
                 termsValues.push(0.0);
@@ -169,8 +170,8 @@ var LinearExpression = function(termsToUse){
             //numero de iterações
             while(++iteration<numIterations){
 
-                for (var i=0; i<inputPoints.length; i++){
-                    var result = 0.0;
+                for (let i=0; i<inputPoints.length; i++){
+                    let result = 0.0;
 
                     for (j=0; j<terms.length; j++){
                         termsValues[j] = terms[j].evaluate(inputPoints[i])*coefficients[j];
@@ -178,9 +179,9 @@ var LinearExpression = function(termsToUse){
                         result += termsValues[j];
                     }
 
-                    var error = result - inputPoints[i].y;
+                    let error = result - inputPoints[i].y;
 
-                    for (var j=0; j<terms.length; j++){
+                    for (let j=0; j<terms.length; j++){
                         
                         //ajustes dos learningRates
                         if (prevTermsValues[j]*termsValues[j]>0){
@@ -222,8 +223,8 @@ var LinearExpression = function(termsToUse){
                 for (let j=this.terms.length-1; j>=0; j--){
                     //ajustes dos learningRates
                     this.coefficients[j] += alpha*this.terms[j].evaluate(inputPoints[i])*error;
-                    if (Math.abs(this.coefficients[j]>1000)){
-                        console.log("nao foi");
+                    if (Math.abs(this.coefficients[j]>100)){
+                        console.log("corta pra mim");
                         this.coefficients.splice(j, 1);
                         this.terms.splice(j, 1);
                     }
@@ -657,11 +658,11 @@ function run_ITLS(){
         return;
     }
 
-    var myPop = new IT_LS(200, 1);
+    let myPop = new IT_LS(200, 1);
 
-    var prevScore;
-    var maxIterations = 25;
-    var counter = 0;
+    let prevScore;
+    let maxIterations = 25;
+    let counter = 0;
 
     document.getElementById("results").innerHTML="<p>População criada. A melhor expressão inicial:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão: "+myPop.getBestExpression_d()+"</p><p>Score: "+myPop.getBestExpressionScore_d()+"</p>";
@@ -698,7 +699,7 @@ function run_SymTree(){
 
         //for leaf in leaves
         for (let i=0; i<leaves.length; i++){
-            nodes.push.apply(nodes, expand(leaves[i], 0.09, gen>=0, gen>0));
+            nodes.push.apply(nodes, expand(leaves[i], 0.09, gen>=10, gen>0));
         }
 
         //leaves <- nodes
@@ -721,6 +722,10 @@ function run_SymTree(){
         if (gen==nOfGens-1){
             document.getElementById("results").innerHTML="<p>A busca não encontrou uma equação perfeita. A mais próxima foi:</p>";
             document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ best.getLinearExpression_d()+ "</p><p>Score: "+best.getScore()+"<p>";
+            for (let i=0; i<leaves.length; i++){
+                console.log(leaves[i].getLinearExpression_d());
+                console.log(leaves[i].getScore());
+            }
         }
     }
 }
