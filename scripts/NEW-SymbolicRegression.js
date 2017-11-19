@@ -35,7 +35,7 @@ class OP{
     };
     static rndOp(){
         let ops = ['id', 'sin', 'cos', 'tan', 'abs', 'sqrt', 'exp', 'log'];
-        return ops[Math.floor(Math.random() * (-7 + 1)) + 7];
+        return ops[Math.floor(Math.random() * (-8 + 1)) + 7];
     };
     static length(){
         return 8;
