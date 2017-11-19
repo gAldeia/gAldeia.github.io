@@ -596,7 +596,7 @@ class SymTree{
         while (refined_exp_list.length>0){
     
             //esta seria a greedy search
-            let best = leaf;
+            let best = leaf.copy();
     
             for(let i=refined_exp_list.length-1; i>=0; i--){
                 let aux_terms = best.copy();
@@ -647,7 +647,7 @@ function run_SymTree(){
         return;
     }
 
-    let expression = new SymTree(10, 0.0001, 10, 0);
+    let expression = new SymTree(9, 0.01, 10, 0);
 
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
