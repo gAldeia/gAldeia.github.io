@@ -560,7 +560,7 @@ class SymTree{
         let result = [ ];
     
         for (let i=0; i<leaf.terms.length; i++){
-            for (let j=1; j<=OP.length; j++){
+            for (let j=1; j<OP.length; j++){
                 result.push( new IT(leaf.terms[i].exp, OP.nextOp(leaf.terms[i].getOp(), j)) );
             }
         }
