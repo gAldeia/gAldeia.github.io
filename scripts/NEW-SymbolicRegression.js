@@ -509,11 +509,12 @@ class IT_LS{
 class SymTree{
     constructor(generations, threshold, minI, minT){
         let gen = -1;
-        let BEST = undefined;
         
-        let root = TermManager.createLE(TermManager.rootTerms(), inputPoints, 5000);
-        let leaves = [root];
+        let leaves = [];
+        leaves.push(TermManager.createLE(TermManager.rootTerms(), inputPoints, 5000));
 
+        let BEST = leaves[0];
+        
         while (++gen<generations){
             let nodes = [ ];
             
@@ -524,9 +525,6 @@ class SymTree{
     
             //leaves <- nodes
             leaves = nodes;
-    
-            //busca pelo melhor resultado (critério de parada)
-            BEST = leaves[0];
     
             for (let i=0; i<leaves.length; i++){
                 if (leaves[i].score>BEST.score){
