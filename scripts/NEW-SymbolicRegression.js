@@ -93,7 +93,7 @@ class TermManager{
     };
     static createLE(terms, inputPoints, iteractions){
         let aux = new LE(terms);
-        LR.improvedGradientDescent(aux, inputPoints, iteractions); //trocar essa linha caso queira usar outra regressão linear para testes
+        LR.gradientDescent(aux, inputPoints, iteractions); //trocar essa linha caso queira usar outra regressão linear para testes
         aux.evaluate(inputPoints);
         
         return aux;
@@ -317,7 +317,7 @@ class LE{
             this.terms = TermManager.rootTerms();
         }
 
-        LR.improvedGradientDescent(this, inputPoints, 10000);
+        LR.gradientDescent(this, inputPoints, 5000);
         this.evaluate(inputPoints);        
     };
     copy(){
@@ -389,7 +389,7 @@ class IT_ES{
                 else{
                     this.parents[i].terms[index].mutateExp();
                 }
-                LR.improvedGradientDescent(this.parents[i], inputPoints, 10000);
+                LR.gradientDescent(this.parents[i], inputPoints, 5000);
                 this.parents[i].evaluate(inputPoints);
             }
         }
