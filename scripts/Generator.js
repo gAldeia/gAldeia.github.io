@@ -14,7 +14,7 @@ function noise(){
 function Eval(range, nOfVars){
     let display = "<table style='width: 300px'><tr><th>f(x)</th>";
 
-    for(let i=0; i<nOfVars; i++){
+    for(let i=1; i<=nOfVars; i++){
         display += "<th>x"+i+"</th>";
     }
     display+="</tr>";
@@ -25,7 +25,7 @@ function Eval(range, nOfVars){
         let lines = "";
         for(let j=1; j<=nOfVars; j++){
             exp = exp.split("x"+j).join(i);
-            lines+="<td>"+i+"</td>";
+            lines+="<td>"+ (i) +"</td>";
         }
         let result = eval(exp)+noise();
         display+="<tr><td>"+result+"</td>"+lines+"</tr>";

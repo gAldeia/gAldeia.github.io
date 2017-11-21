@@ -92,8 +92,10 @@ class TermManager{
         return terms;
     };
     static createLE(terms, inputPoints, iteractions){
+        
         let aux = new LE(terms);
-        LR.improvedGradientDescent(aux, inputPoints, iteractions); //trocar essa linha caso queira usar outra regressão linear para testes
+        LR.leastSquares(aux, inputPoints);
+        //LR.gradientDescent(aux, inputPoints, iteractions); //trocar essa linha caso queira usar outra regressão linear para testes
         aux.evaluate(inputPoints);
         
         return aux;
@@ -194,6 +196,36 @@ class LR{
             }
         }
     };
+    static leastSquares(LE, inputPoints){
+        let mat = new Array(inputPoints.length);
+        let y = new Array(inputPoints.length);
+
+        for (let i=0; i<mat.length; i++){
+            mat[i] = new Array(LE.terms.length);
+            for(let j=0; j<mat[i].length; j++){
+                mat[i][j] = LE.terms[j].evaluate(inputPoints[i])/LE.terms[j].coeff;
+            }
+            y[i] = [inputPoints[i].y];
+        }
+
+        let matT = math.transpose(mat);
+        let q1 = math.multiply(matT, mat);
+
+        if (math.det(q1)==0.0)
+            LR.gradientDescent(LE, inputPoints, 10000);   
+        else {
+            q1 = math.inv(q1);
+
+            let q2 = math.multiply(matT, y);
+
+            let w = math.multiply(q1, q2);
+
+            for(let i=0; i<w.length; i++){
+                LE.terms[i].coeff = w[i][0];
+            }
+            LE.evaluate(inputPoints);
+        }
+    };
 }
 
 
@@ -223,7 +255,7 @@ class IT{
 
         for (let i=0; i<this.exp.length; i++)
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
-        return this.coeff*OP.solve(this.op, value)+0.00000001;
+        return this.coeff*OP.solve(this.op, value);
     };
     mutateOp(){
         this.op = OP.rndOp();
@@ -264,6 +296,17 @@ class LE{
             for (let j=0; j<this.terms.length && push; j++){
                 if (termsToUse[i].printMe()===this.terms[j].printMe())
                     push= false; 
+                else{
+                    let counter = 0;
+                    for(let k=0; k<inputPoints.length; k++){
+                        let myTerm = this.terms[j].evaluate(inputPoints[k])/this.terms[j].coeff;
+                        let candidate = termsToUse[i].evaluate(inputPoints[k])/termsToUse[i].coeff;
+
+                        if (myTerm==candidate) counter++;
+                        else break;
+                    }
+                    push = !(counter==inputPoints.length);
+                }
             }
             if (push && !termsToUse[i].isNull())
                 this.terms.push(termsToUse[i].copy());
@@ -317,8 +360,9 @@ class LE{
             this.terms = TermManager.rootTerms();
         }
 
-        LR.improvedGradientDescent(this, inputPoints, 10000);
-        this.evaluate(inputPoints);        
+        LR.leastSquares(this, inputPoints);
+        //LR.gradientDescent(this, inputPoints, 10000);
+        this.evaluate(inputPoints);    
     };
     copy(){
         let copies = [ ];
@@ -337,7 +381,7 @@ class IT_ES{
         this.size = popSize;
         
         for(let i=1; i<=this.size; i++){
-            let aux = TermManager.createLE(TermManager.rndTerms(LESize), inputPoints, 5000);
+            let aux = TermManager.createLE(TermManager.rndTerms(LESize), inputPoints, 10000);
             this.pop.push(aux);
 
             if (i%(this.size/growthSize)==0){
@@ -374,7 +418,7 @@ class IT_ES{
 
                 winner = winner.score > this.pop[index].score ? winner : this.pop[index];
             }
-            this.parents.push(TermManager.createLE(winner.copy(), inputPoints, 5000));
+            this.parents.push(TermManager.createLE(winner.copy(), inputPoints, 10000));
         }
     };
     mutateParents(mutationRate){
@@ -389,7 +433,8 @@ class IT_ES{
                 else{
                     this.parents[i].terms[index].mutateExp();
                 }
-                LR.improvedGradientDescent(this.parents[i], inputPoints, 10000);
+                LR.leastSquares(this.parents[i], inputPoints);
+                //LR.gradientDescent(this.parents[i], inputPoints, 10000);
                 this.parents[i].evaluate(inputPoints);
             }
         }
@@ -405,7 +450,7 @@ class IT_ES{
 
                 winner = winner.score > this.parents[index].score ? winner : this.parents[index];
             }
-            this.pop.push(TermManager.createLE(winner.copy(), inputPoints, 5000));
+            this.pop.push(TermManager.createLE(winner.copy(), inputPoints, 10000));
         }
     };
     bestCandidate(){
@@ -427,7 +472,7 @@ class IT_LS{
         this.size = popSize;
         
         for(let i=1; i<=this.size; i++){
-            let aux = TermManager.createLE(TermManager.rndTerms(LESize), inputPoints, 5000);
+            let aux = TermManager.createLE(TermManager.rndTerms(LESize), inputPoints, 10000);
             this.pop.push(aux);
 
             if (i%(this.size/growthSize)==0){
@@ -453,7 +498,7 @@ class IT_LS{
                 bestExpression = this.pop[i];
             }
         }
-        let copied = TermManager.createLE(bestExpression.copy(), inputPoints, 5000);
+        let copied = TermManager.createLE(bestExpression.copy(), inputPoints, 10000);
 
         return copied;
     };
@@ -470,7 +515,7 @@ class IT_LS{
 
             for (let j=0; j<=OP.length(); j++){
                 auxTerms[i].op = OP.nextOp(auxTerms[i].op, 1);
-                let auxLE = TermManager.createLE(auxTerms, inputPoints, 5000);
+                let auxLE = TermManager.createLE(auxTerms, inputPoints, 10000);
 
                 if (auxLE.score > bestExpression.score)
                     candidates.push(auxLE);
@@ -479,7 +524,7 @@ class IT_LS{
                     //limite máximo do expoente
                     if (auxTerms[i].exp[k]<5){
                         auxTerms[i].exp[k] +=1;
-                        auxLE = TermManager.createLE(auxTerms, inputPoints, 5000);
+                        auxLE = TermManager.createLE(auxTerms, inputPoints, 10000);
     
                         if (auxLE.score > bestExpression.score)
                             candidates.push(auxLE);
@@ -487,7 +532,7 @@ class IT_LS{
                     //limite mínimo do expoente
                     if (auxTerms[i].exp[k]>-5){
                         auxTerms[i].exp[k] -= 2;
-                        auxLE = TermManager.createLE(auxTerms, inputPoints, 5000);
+                        auxLE = TermManager.createLE(auxTerms, inputPoints, 10000);
     
                         if (auxLE.score > bestExpression.score)
                             candidates.push(auxLE);
@@ -509,10 +554,9 @@ class IT_LS{
 class SymTree{
     constructor(generations, threshold, minI, minT){
         let gen = -1;
-        let BEST = undefined;
         
-        let root = TermManager.createLE(TermManager.rootTerms(), inputPoints, 5000);
-        let leaves = [root];
+        let leaves = [TermManager.createLE(TermManager.rootTerms(), inputPoints, 10000)];
+        let BEST = leaves[0];
 
         while (++gen<generations){
             let nodes = [ ];
@@ -525,14 +569,13 @@ class SymTree{
             //leaves <- nodes
             leaves = nodes;
     
-            //busca pelo melhor resultado (critério de parada)
-            BEST = leaves[0];
-    
             for (let i=0; i<leaves.length; i++){
                 if (leaves[i].score>BEST.score){
                     BEST = leaves[i];
                 }
             }
+            if (BEST.score>0.99)
+                return BEST;
         }
         return BEST;
     };
@@ -548,7 +591,6 @@ class SymTree{
     };
     inverse(leaf){
         let result = [ ];
-    
         for (let i=0; i<leaf.terms.length; i++){
             for (let j=i; j<leaf.terms.length; j++){
                 result.push( new IT(TermManager.vSub(leaf.terms[i].exp, leaf.terms[j].exp), OP.id()) );
@@ -558,23 +600,22 @@ class SymTree{
     };
     transformation(leaf){
         let result = [ ];
-    
         for (let i=0; i<leaf.terms.length; i++){
-            for (let j=1; j<=OP.length; j++){
-                result.push( new IT(leaf.terms[i].exp, OP.nextOp(leaf.terms[i].getOp(), j)) );
+            for (let j=1; j<OP.length(); j++){
+                result.push( new IT(leaf.terms[i].exp, OP.nextOp(leaf.terms[i].op, j)) );
             }
         }
         return result;
     };
     expandedList(leaf, minI, minT){
         let exp_list = [ ];
-    
+
         exp_list.push.apply(exp_list, this.interaction(leaf));
         if (minI)
             exp_list.push.apply(exp_list, this.inverse(leaf));
         if (minT)
             exp_list.push.apply(exp_list, this.transformation(leaf));
-    
+
         return exp_list;
     };
     expand(leaf, threshold, minI, minT){
@@ -587,7 +628,7 @@ class SymTree{
         for (let i=0; i<exp_list.length; i++){
             let aux_terms = leaf.copy();
             aux_terms = aux_terms.concat(exp_list[i].copy());
-            let aux = TermManager.createLE(aux_terms, inputPoints, 5000);
+            let aux = TermManager.createLE(aux_terms, inputPoints, 10000);
             if (aux.score > leaf.score){//score é calculado no construtor
                 refined_exp_list.push(exp_list[i].copy());
             }
@@ -603,7 +644,7 @@ class SymTree{
             for(let i=refined_exp_list.length-1; i>=0; i--){
                 let aux_terms = best.copy();
                 aux_terms = aux_terms.concat(refined_exp_list[i].copy());
-                let aux = TermManager.createLE(aux_terms, inputPoints, 5000);
+                let aux = TermManager.createLE(aux_terms, inputPoints, 10000);
     
                 if (aux.score > best.score){
                     best = aux;
@@ -649,7 +690,7 @@ function run_SymTree(){
         return;
     }
 
-    let expression = new SymTree(10, 0.01, 10, 3);
+    let expression = new SymTree(6, 0.01, 0, 0);
 
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";

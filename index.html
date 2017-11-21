@@ -35,6 +35,9 @@
 			 /*background: url("./images/ibg.png") repeat center center fixed;*/
 			 background: url("./images/main-bg.png") repeat center;
 		}
+		body {
+			padding-top: 70px;
+		}
 		.well{
 			border-radius: 24px 24px 24px 24px;
 			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
@@ -72,7 +75,8 @@
 		</div><!--container-->
 	</nav><!--navbar-->
 
-	<div class="jumbotron vertical-center"> <!--JUMBOTRON-->
+	<!--
+	<div class="jumbotron vertical-center">
 		<div class="text-center well jumbotron-box">
 
 			<h2>Regressão Simbólica - Ferramenta Online</h2>
@@ -81,6 +85,7 @@
 
 		</div>
 	</div>
+	-->
 
 	<div class="container body-content">
 		<div class="well">
@@ -216,145 +221,9 @@
 						<p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a>. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
 					</div>
 
-					<p class="text-justify"><b>13/11/2017</b></p>
-					<p class="text-justify"> - pequenas melhorias no código.</p>
+					As updates registradas no site ficam na nossa página de <a href="./changelog.html">changelog</a>.
 
-					<p class="text-justify"><b>11/11/2017</b></p>
-					<p class="text-justify"> - Opção de ruído nos dados do gerador.</p>
-					<p class="text-justify"> - IT-ES usa agora o construtor na mutação para evitar alguns problemas de referência de variáveis que estava tendo com o JS.</p>
 					
-					<p class="text-justify"><b>09/11/2017</b></p>
-					<p class="text-justify"> - Gerador de dados simples na página de exemplos.</p>
-
-					<p class="text-justify"><b>08/11/2017</b></p>
-					<p class="text-justify"> - IT-ES implementado.</p>
-					<p class="text-justify"> - Nova página com alguns dados para testes.</p>
-
-					<p class="text-justify"><b>06/11/2017</b></p>
-					<p class="text-justify"> - Controle para evitar termos repetidos em expressões.</p>
-
-					<p class="text-justify"><b>05/11/2017</b></p>
-					<p class="text-justify"> - Busca local agora percorre também expoentes.</p>
-					<p class="text-justify"> - Início da implementação do IT-ES.</p>
-					<p class="text-justify"> - Todos os métodos get que envolvem arrays agora retornam novas cópias de todos os objetos (antes era retornado a referência para o array, e o método de busca local acabava não funcionando caso não houvesse melhorias na busca local).</p>
-
-					<p class="text-justify"><b>04/11/2017</b></p>
-					<p class="text-justify"> - Correção da busca local de operadores em IT-LS.</p>
-					<p class="text-justify"> - (quase) todas as variáveis agora são declaradas com "let". Isso faz com que não existam no escopo da função, e sim no escopo de bloco (evita erros principalmente em laços for).</p>
-					<p class="text-justify"> - Método simplify agora anula também termos onde os expoentes são todos zero.</p>
-
-					<p class="text-justify"><b>03/11/2017</b></p>
-					<p class="text-justify"> - Progresso na unificação das classes dos códigos.</p>
-					<p class="text-justify"> - novo IT-LS faz busca local nos operadores (faltam os expoentes).</p>
-
-					<p class="text-justify"><b>01/11/2017</b></p>
-					<p class="text-justify"> - Revisão do código da página, do IT-LS e do SymTree.</p>
-					<p class="text-justify"> - Critério de parada para regressão linear nos dois algoritmos.</p>
-					<p class="text-justify"> - operação de transformação em expressões do SymTree habilitada.</p>
-					<p class="text-justify"> - Mensagem de erro caso não tenha entrada e o usuário tente executar o algoritmo.</p>
-
-					<p class="text-justify"><b>29/10/2017</b></p>
-					<p class="text-justify"> - Correção da regressão linear.</p>
-					<p class="text-justify"> - Correção de variáveis de classes em SymTree e IT-LS.</p>
-					<p class="text-justify"> - Mudança do texto de resultados.</p>
-
-					<p class="text-justify"><b>21/10/2017</b></p>
-					<p class="text-justify"> - SymTree agora escreve os resultados na página.</p>
-
-					<p class="text-justify"><b>19/10/2017</b></p>
-					<p class="text-justify"> - Início da implementação de um novo método interno no ajuste dos coeficientes, que faz com que o ajuste seja mais preciso e mais rápido em menos iterações.</p>
-
-					<p class="text-justify"><b>14/10/2017</b></p>
-					<p class="text-justify"> - Entrada pode ser separada com tabulação também (ou com espaços ou vírgulas ou as 3 coisas juntas).</p>
-					<p class="text-justify"> - Corrigidos erros no ajuste dos coeficientes.</p>
-					<p class="text-justify"> - Busca local em ITLS corrigida e aprimorada.</p>
-					<p class="text-justify"> - Corrigidas algumas inconsistências encontradas no expand de SymTree.</p>
-					<p class="text-justify"> - Classe operator incorporada no ITLS.</p>
-					<p class="text-justify"> - Removidos backgrounds fixos (segundo fontes, tem um peso no desempenho do site, inclusive os backgrounds fixos são ignorados quando acessados por dispositivos mobile).</p>
-
-
-					<p class="text-justify"><b>13/10/2017</b></p>
-					<p class="text-justify"> - ITLS agora cria tamanhos diferentes de expressões numa mesma população.</p>
-					<p class="text-justify"> - Nova mensagem para o usuário quando não há arquivo enviado e tenta usar os dados de arquivo enviado.</p>
-					<p class="text-justify"> - Algoritmo principal do SymTree implementado (em fase de revisão).</p>
-					<p class="text-justify"> - Ajuste de coeficientes tem um critério de parada novo. Antes ele repetia uma quantidade fixa de iterações, mas agora ele também para quando o erro é muito pequeno (o que for válido primeiro gera a parada) Isso permite learningRates menores e mais precisão.</p>
-					<p class="text-justify"> - Algoritmo principal do SymTree implementado (em fase de revisão).</p>
-					<p class="text-justify"> - Nova classe para cuidar dos operadores em SymTree (será migrada para ITLS também).</p>
-
-					<p class="text-justify"><b>12/10/2017</b></p>
-					<p class="text-justify"> - Calculo do score criado.</p>
-					<p class="text-justify"> - Ajuste dos coeficientes.</p>
-					<p class="text-justify"> - Criado laço principal do SymTree (ainda não funcional).</p>
-					<p class="text-justify"> - Simplificação de expressões criada.</p>
-					<p class="text-justify"> - operação de interação criada.</p>
-					<p class="text-justify"> - operação de interação inversa criada.</p>
-
-					<p class="text-justify"><b>10/10/2017</b></p>
-					<p class="text-justify"> - Critério de parada para o algoritmo IT-LS.</p>
-					<p class="text-justify"> - Início da implementação do novo algoritmo SymTree: Objetos termo e expressão linear criados.</p>
-					<p class="text-justify"> - Criação da raiz da regressão (root).</p>
-					<p class="text-justify"> - Reorganização de métodos e variáveis no código, para que exista uma base "universal", que rode em qualquer algoritmo de regressão e não tenha nenhum fragmento de código dependente de outro a não ser da base (Base é o atual algoritmo loadFile, que faz leitura, validação e processamento da entrada).</p>
-
-					<p class="text-justify"><b>07/10/2017</b></p>
-					<p class="text-justify"> - Textos e códigos revisados.</p>
-					<p class="text-justify"> - Pequena otimização no loading da página.</p>
-
-					<p class="text-justify"><b>03/10/2017</b></p>
-					<p class="text-justify"> - Validação da entrada do usuário.</p>
-
-					<p class="text-justify"><b>02/10/2017</b></p>
-					<p class="text-justify"> - Cálculo do coeficiente arrumado.</p>
-					<p class="text-justify"> - Corrigido individuos com alto mse se destacando na primeira pop.</p>
-					<p class="text-justify"> - Remake visual. Remoção de algumas coisas desnecessárias.</p>
-					<p class="text-justify"> - Saída de dados agora não usa canvas e é selecionável.</p>
-					<p class="text-justify"> - Textos revisados.</p>
-
-					<p class="text-justify"><b>28/09/2017</b></p>
-					<p class="text-justify"> - Busca local agora faz uma varredura nos expoentes de cada mini termo também, incrementando e decrementando 1 unidade.</p>
-					<p class="text-justify"> - NOVO ISSUE NO GITHUB, PARA MELHORAR O DESEMPENHO DA BUSCA LOCAL (aquilo ainda pode ser muito otimizado)</p
-
-					<p class="text-justify"><b>26/09/2017</b></p>
-					<p class="text-justify"> - Impressão do MSE na tela</p>
-
-					<p class="text-justify"><b>24/09/2017</b></p>
-					<p class="text-justify"> - Local search (primitivo) implementado: busca a melhor opção de operação para cada um dos minitermos</p>
-
-					<p class="text-justify"><b>21/09/2017</b></p>
-					<p class="text-justify"> - Corrigido erro (feio) na busca do melhor indivíduo</p>
-					<p class="text-justify"> - Revisão do código da regressão linear</p>
-
-					<p class="text-justify"><b>20/09/2017</b></p>
-					<p class="text-justify"> - Reescritas as classes no modelo singletron, para conseguir definir métodos/variáveis privados/públicos</p>
-					<p class="text-justify"> - Regressão linear corrigida (ainda não sabemos se está 100% correta)</p>
-
-					<p class="text-justify"><b>14/09/2017</b></p>
-					<p class="text-justify"> - Novo visual do site!</p>
-
-					<p class="text-justify"><b>13/09/2017</b></p>
-					<p class="text-justify"> - Regressão linear para ajustar parâmetros implementada e funcionando. Coeficientes voltaram a ser ajustados (sem certeza de que está certo).</p>
-					<p class="text-justify"> - Removida a biblioteca math.js.</p>
-
-					<p class="text-justify"><b>12/09/2017</b></p>
-					<p class="text-justify"> - Revisão do código que cuida da leitura da entrada, agora mais modular e comentado.</p>
-					
-					<p class="text-justify"><b>11/09/2017</b></p>
-					<p class="text-justify"> - Percebido inconsistência no ajuste dos coeficientes, código removido.</p>
-					<p class="text-justify"> - Nova classe, Population, para conter métodos de "gerenciamento" das expressões (mutação, crossover e seleção)</p>
-					<p class="text-justify"> - Population -> novo método para encontrar o indivíduo de melhor fitness</p>
-					<p class="text-justify"> - Population -> mutação implementada, que percorre cada termo de cada expressão e quando sorteado o termo é modificado. </p>
-
-					<p class="text-justify"><b>08/09/2017</b></p>
-					<p class="text-justify"> - Calculo do MSE totalmente funcional (ainda não está livre de eventuais bugs).</p>
-					<p class="text-justify"> - Coeficientes agora são ajustados utilizando regressão linear.</p>
-					<p class="text-justify"> - Incorporação da biblioteca math.js no código, pela licensa Apache-2.0. Link da biblioteca <a href="http://mathjs.org/index.html">aqui</a>. </p>
-
-					<p class="text-justify"><b>07/09/2017</b></p>
-					<p class="text-justify"> - Cálculo do MSE funcionando com coeficientes nulos.</p>
-					<p class="text-justify"> - Melhoramentos visuais (ao menos eu achei melhor, não sou webdesigner).</p>
-
-					<p class="text-justify"><b>06/09/2017</b></p>
-					<p class="text-justify"> - Leitura de dados funcionando e convertendo os valores para dataPoint.</p>
-					<p class="text-justify"> - Novo quadro de avisos e updates no início da página</p>
 				</div>
 			</section> 
 
@@ -374,6 +243,7 @@
 
 	<!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/LoadFile.js></script>
+	<script type="text/javascript" src=./scripts/math.js></script>
 	<script type="text/javascript" src=./scripts/NEW-SymbolicRegression.js></script>
 	<!--script type="text/javascript" src=./scripts/new-ITLS.js></script>
 	<script type="text/javascript" src=./scripts/SymTree.js></script-->
