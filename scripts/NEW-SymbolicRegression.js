@@ -35,7 +35,7 @@ class OP{
     };
     static rndOp(){
         let ops = ['id', 'sin', 'cos', 'tan', 'abs', 'sqrt', 'exp', 'log'];
-        return ops[Math.floor(Math.random() * (-7 + 1)) + 7];
+        return ops[Math.floor(Math.random() * (-8 + 1)) + 7];
     };
     static length(){
         return 8;
@@ -360,9 +360,14 @@ class LE{
             this.terms = TermManager.rootTerms();
         }
 
+<<<<<<< HEAD
         LR.leastSquares(this, inputPoints);
         //LR.gradientDescent(this, inputPoints, 10000);
         this.evaluate(inputPoints);    
+=======
+        LR.improvedGradientDescent(this, inputPoints, 5000);
+        this.evaluate(inputPoints);        
+>>>>>>> 42e5fbea84fa0f5877c9c1dfe93d259ca31cd2d4
     };
     copy(){
         let copies = [ ];
@@ -433,8 +438,12 @@ class IT_ES{
                 else{
                     this.parents[i].terms[index].mutateExp();
                 }
+<<<<<<< HEAD
                 LR.leastSquares(this.parents[i], inputPoints);
                 //LR.gradientDescent(this.parents[i], inputPoints, 10000);
+=======
+                LR.improvedGradientDescent(this.parents[i], inputPoints, 5000);
+>>>>>>> 42e5fbea84fa0f5877c9c1dfe93d259ca31cd2d4
                 this.parents[i].evaluate(inputPoints);
             }
         }
@@ -555,9 +564,16 @@ class SymTree{
     constructor(generations, threshold, minI, minT){
         let gen = -1;
         
+<<<<<<< HEAD
         let leaves = [TermManager.createLE(TermManager.rootTerms(), inputPoints, 10000)];
         let BEST = leaves[0];
+=======
+        let leaves = [];
+        leaves.push(TermManager.createLE(TermManager.rootTerms(), inputPoints, 5000));
+>>>>>>> 42e5fbea84fa0f5877c9c1dfe93d259ca31cd2d4
 
+        let BEST = leaves[0];
+        
         while (++gen<generations){
             let nodes = [ ];
             
@@ -601,8 +617,13 @@ class SymTree{
     transformation(leaf){
         let result = [ ];
         for (let i=0; i<leaf.terms.length; i++){
+<<<<<<< HEAD
             for (let j=1; j<OP.length(); j++){
                 result.push( new IT(leaf.terms[i].exp, OP.nextOp(leaf.terms[i].op, j)) );
+=======
+            for (let j=1; j<OP.length; j++){
+                result.push( new IT(leaf.terms[i].exp, OP.nextOp(leaf.terms[i].getOp(), j)) );
+>>>>>>> 42e5fbea84fa0f5877c9c1dfe93d259ca31cd2d4
             }
         }
         return result;
@@ -630,7 +651,7 @@ class SymTree{
             aux_terms = aux_terms.concat(exp_list[i].copy());
             let aux = TermManager.createLE(aux_terms, inputPoints, 10000);
             if (aux.score > leaf.score){//score é calculado no construtor
-                refined_exp_list.push(exp_list[i].copy());
+                refined_exp_list.push(exp_list[i]);
             }
         }
     
@@ -690,7 +711,11 @@ function run_SymTree(){
         return;
     }
 
+<<<<<<< HEAD
     let expression = new SymTree(6, 0.01, 0, 0);
+=======
+    let expression = new SymTree(9, 0.01, 6, 3);
+>>>>>>> 42e5fbea84fa0f5877c9c1dfe93d259ca31cd2d4
 
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
     document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
