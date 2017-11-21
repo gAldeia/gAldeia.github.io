@@ -35,7 +35,7 @@ class OP{
     };
     static rndOp(){
         let ops = ['id', 'sin', 'cos', 'tan', 'abs', 'sqrt', 'exp', 'log'];
-        return ops[Math.floor(Math.random() * (-8 + 1)) + 7];
+        return ops[Math.floor(Math.random() * (-7 + 1)) + 7];
     };
     static length(){
         return 8;
@@ -558,8 +558,6 @@ class SymTree{
         let leaves = [TermManager.createLE(TermManager.rootTerms(), inputPoints, 10000)];
         let BEST = leaves[0];
 
-        let BEST = leaves[0];
-        
         while (++gen<generations){
             let nodes = [ ];
             
@@ -632,7 +630,7 @@ class SymTree{
             aux_terms = aux_terms.concat(exp_list[i].copy());
             let aux = TermManager.createLE(aux_terms, inputPoints, 10000);
             if (aux.score > leaf.score){//score é calculado no construtor
-                refined_exp_list.push(exp_list[i]);
+                refined_exp_list.push(exp_list[i].copy());
             }
         }
     
