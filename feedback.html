@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<title>Regressão Simbólica - Registro de updates</title>
+
+	<style>
+        *{
+            box-sizing: border-box;
+        }
+		body {
+            font-family: sans-serif;
+		}
+        .body-background {
+			background: url("./images/main-bg.png") repeat center center fixed;
+		}
+        section#sideMenu{
+            max-width: 240px;
+            min-width: 240px;
+            min-height: calc(100% - 70px);
+            margin-top: 38px;
+            padding-top: 50px;
+            margin-left: 20px;
+            position: fixed;
+        }
+        section#bodyContent{
+            position: absolute;
+            min-width: calc(100% - 340px);
+            max-width: calc(100% - 340px);
+            margin-left: 300px;
+            margin-top: 70px;
+            
+        }
+        section#sideMenu nav a.active{
+            background: lightgreen;
+            text-decoration: none;
+            border-left: 5px solid #92CF48;
+        }
+        section#sideMenu nav a:hover{
+            background: lightgreen;
+            text-decoration: none;
+            border-left: 5px solid #92CF48;
+        }
+        section#sideMenu nav a{
+            text-decoration: none;
+            color: #000;
+            padding: 10px 5px;
+            display: block;
+            border-bottom: 1px solid #92CF48;
+        }
+		.well{
+			border-radius: 12px 12px 12px 12px;
+			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
+		}
+        table, th, td {
+			border: 1px solid black;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+    <!--Cabeçalho da página-->
+    <nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+        <div class="container">
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+            </button>
+                <a class="navbar-brand" href="./index.html"><u><strong>Regressão</strong> Simbólica</u></a>
+            </div><!--logo do site-->
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="./index.html">Página inicial</a></li>
+                    <li><a href="#form">Formulário</a></li>
+                    <li><a href="#contact-us">Contato</a></li>
+                </ul><!--Lista de opções-->
+            </div><!--menu-->
+        </div><!--container-->
+    </nav><!--navbar-->
+
+<body class="body body-background">
+
+    <section id="sideMenu" class="well">
+        <p>Aqui estão listadas todas as páginas do site:</p>
+        <nav>
+            <a href="./index.html">Página inicial</a>
+            <a href="./input-examples.html">Exemplos de entrada</a>
+            <a href="./study-notes.html">Notas de estudo</a>
+            <a href="./feedback.html" class="active"><strong>Dê seu feedback</strong></a>
+            <a href="./changelog.html">Registo de updates do site</a>
+            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">GitHub do projeto <br><small>(página externa)</small></a>
+            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">GitHub dos estudos <br><small>(página externa)</small></a>
+        </nav>
+    </section>
+
+    <section id="bodyContent" class="well">
+        
+        <div id="form">
+
+            <h2>Conte-nos o que achou do site!</h2>
+
+            <p class="text-justify">
+                É importante para nós termos um registro da opinião das pessoas que utilizaram o site. Este formulário não leva nem 2 minutos para ser preenchido!
+            </p>
+
+            <p class="text-center">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScejB3rrSJUKhIZSp4sgypwXzJrRb4XFoxgArx_-vLZMMzQSw/viewform?embedded=true" width="760" height="2000" frameborder="0" marginheight="0" marginwidth="0">Carregando…</iframe>
+            </p>
+        </div>
+
+        <div style="border-top: 1px solid darkgrey" class="page-header text-center" id="contact-us">
+
+            <h2>Contato</h2>
+
+            <p>Dúvidas, críticas ou sugestões?</p> 
+            <p>Contate o desenvolvedor pelo email: guilherme.aldeia@aluno.ufabc.edu.br</p> 
+            <p>Além disso, veja os <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">algoritmos</a> desenvolvidos durante os estudos do projeto!</p>
+
+        </div>
+        
+    </section>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+
+</html>
