@@ -375,7 +375,7 @@ class LE{
 
 
 class IT_ES{
-    constructor(popSize, LESize, growthSize, mutationRate, selectedSize, generations){ //LES e growth precisam ser múltiplos!
+    constructor(popSize, LESize, growthSize, selectedSize, generations){ //LES e growth precisam ser múltiplos!
         this.pop = [ ];
         this.parents = [ ];
         this.size = popSize;
@@ -391,7 +391,7 @@ class IT_ES{
 
         for(let i=0; i<generations; i++){
             this.tournamentSelection(selectedSize);
-            this.mutateParents(mutationRate);
+            this.mutateParents();
             this.childTournamentSelection();
         }
 
@@ -421,22 +421,20 @@ class IT_ES{
             this.parents.push(TermManager.createLE(winner.copy(), inputPoints, 10000));
         }
     };
-    mutateParents(mutationRate){
+    mutateParents(){
 
         for (let i=0; i<this.parents.length; i++){
-            if (Math.random() < mutationRate){
-                let index = Math.floor( Math.random()*(this.parents[i].terms.length-1) );
+            let index = Math.floor( Math.random()*(this.parents[i].terms.length-1) );
 
-                if (Math.random()>0.5){//vai mutar o op
-                    this.parents[i].terms[index].mutateOp();
-                }
-                else{
-                    this.parents[i].terms[index].mutateExp();
-                }
-                LR.leastSquares(this.parents[i], inputPoints);
-                //LR.gradientDescent(this.parents[i], inputPoints, 10000);
-                this.parents[i].evaluate(inputPoints);
+            if (Math.random()>0.5){//vai mutar o op
+                this.parents[i].terms[index].mutateOp();
             }
+            else{
+                this.parents[i].terms[index].mutateExp();
+            }
+            LR.leastSquares(this.parents[i], inputPoints);
+            //LR.gradientDescent(this.parents[i], inputPoints, 10000);
+            this.parents[i].evaluate(inputPoints);
         }
     };
     childTournamentSelection(){
@@ -680,8 +678,13 @@ function run_ITLS(){
 
     let expression = new IT_LS(150, 1, 3, 25);
 
+    let expressionString = expression.printMe();
+    for(let i=0; i<labels.length; i++){
+        expressionString = expressionString.split("x"+i).join(labels[i]);
+    }
+
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
 }
 
 function run_SymTree(){
@@ -692,8 +695,13 @@ function run_SymTree(){
 
     let expression = new SymTree(6, 0.01, 0, 0);
 
+    let expressionString = expression.printMe();
+    for(let i=0; i<labels.length; i++){
+        expressionString = expressionString.split("x"+i).join(labels[i]);
+    }
+
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
 }
 
 function run_ITES(){
@@ -702,8 +710,13 @@ function run_ITES(){
         return;
     }
 
-    let expression = new IT_ES(150, 1, 3, 0.07, 45, 25);
+    let expression = new IT_ES(150, 1, 3, 45, 25);
+
+    let expressionString = expression.printMe();
+    for(let i=0; i<labels.length; i++){
+        expressionString = expressionString.split("x"+i).join(labels[i]);
+    }
 
     document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expression.printMe()+ "</p><p>Score: "+expression.score+"<p>";
+    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
 }

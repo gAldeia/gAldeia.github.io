@@ -10,7 +10,11 @@ var lines = [];
 //[ [y, x1, x2, ...], [y, x1, x2, ...] ]
 
 //conjunto dos pontos de entrada
-inputPoints = [ ];
+var inputPoints = [ ];
+
+var labels = [ ];
+
+var firstLineAsLabel = 0;
 
 
 // --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
@@ -35,10 +39,10 @@ function linesToDataPoint(){
 	for (var i=0; i<lines.length; i++){
 		aux = [];
 
-		for(var j=1; j<lines[i].length; j++)
+		for(var j=0; j<lines[i].length-1; j++)
 			aux.push(lines[i][j]);
 		
-		Points.push(new DataPoint(aux, lines[i][0]) );
+		Points.push(new DataPoint(aux, lines[i][lines[i].length-1]) );
 	}
 	return Points;
 }
@@ -87,11 +91,16 @@ function loadHandler(inputData){
 
 	var allTextLines = inputData.split(/\r\n|\n/);
 	
-	for (var i=0; i<allTextLines.length; i++){
+	if (document.getElementById("labeled").checked){
+		firstLineAsLabel = 1;
+		labels = allTextLines[0].split(/\ |,|\t/);
+	}
+
+	for (var i=0+firstLineAsLabel; i<allTextLines.length; i++){
 	
 		var data = allTextLines[i].split(/\ |,|\t/);
 		var tarr = [];
-		
+
 		for (var j=0; j<data.length; j++){
 
 			//controle para ver se é um número (jamais duvide da capacidade

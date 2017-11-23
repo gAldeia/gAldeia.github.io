@@ -167,14 +167,13 @@
                     </div>
                 </div><br>
 
-                <div class="row">
-                    <div class="col-lg-6">
-                        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
-                    </div>
-                    <div class="col-lg-6">
-                        <button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
-                    </div>
-                </div><br>
+                <p class="text-center">
+                    <input type="checkbox" id="labeled" value="true">
+                    <label for="noise">Usar a primeira linha da entrada como rótulo?</label>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
+                    <button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
+                </p>
 
                 <div id="notification">
                 </div>
@@ -185,8 +184,7 @@
             <div class="page-header">
                 <h2>Resultados</h2>
 
-                <p class="text-justify">O que se espera é encontrar a equação que deu origem aos dados de entrada. Se os dados vieram de uma equação, espera-se encontrar a própria equação (ou uma muito próxima dela).</p>
-                <p class="text-justify">Para dados que vieram de um experimento, por exemplo, espera-se encontrar um modelo matemático que descreva os pontos da entrada.</p>
+                <p class="text-justify">Escolha o algoritmo à ser executado:</p>
 
                 <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
                 <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
