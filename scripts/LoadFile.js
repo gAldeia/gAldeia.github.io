@@ -92,8 +92,18 @@ function loadHandler(inputData){
 	var allTextLines = inputData.split(/\r\n|\n/);
 	
 	if (document.getElementById("labeled").checked){
+		
+		let aux = allTextLines[0].split(/\ |,|\t/);
+		for(let i=0; i<aux.length; i++){
+			if (aux[i].length>0)
+				labels.push(aux[i]);
+		}
+
 		firstLineAsLabel = 1;
-		labels = allTextLines[0].split(/\ |,|\t/);
+	}
+	else{
+		firstLineAsLabel = 0;
+		labels = [ ];
 	}
 
 	for (var i=0+firstLineAsLabel; i<allTextLines.length; i++){

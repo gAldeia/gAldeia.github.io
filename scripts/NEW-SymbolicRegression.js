@@ -53,8 +53,11 @@ class OP{
             return value<0? -value : value;
         else if (op==='sqrt')
             return value<0? 0 : Math.sqrt(value);
-        else if (op==='exp')
+        else if (op==='exp'){
+            if (value>=300)
+                return Math.exp(300);
             return Math.exp(value);
+        }
         else if (op==='log')
             return value<=0? 0 : Math.log(value);
         console.error('PROBLEMA EM SOLVE OP');
@@ -211,13 +214,10 @@ class LR{
         let matT = math.transpose(mat);
         let q1 = math.multiply(matT, mat);
 
-        if (math.det(q1)==0.0)
-            LR.gradientDescent(LE, inputPoints, 10000);   
-        else {
+        try{
             q1 = math.inv(q1);
-
             let q2 = math.multiply(matT, y);
-
+            
             let w = math.multiply(q1, q2);
 
             for(let i=0; i<w.length; i++){
@@ -225,6 +225,10 @@ class LR{
             }
             LE.evaluate(inputPoints);
         }
+        catch(err){
+            LR.gradientDescent(LE, inputPoints, 10000);  
+        }
+        
     };
 }
 
@@ -242,7 +246,7 @@ class IT{
         this.exp = exponents.slice(0); //copio o array de exp
         this.op = operator.slice(0);
     };
-    printMe(){
+    printMeFullTerm(){
         let myExp = this.coeff.toFixed(2) + '*([';
 
         for (let i in this.exp) //maybe
@@ -250,6 +254,17 @@ class IT{
 
         return myExp + '], ' + this.op + ')';
     };
+    printMe(){
+        let myExp = "";
+    
+        for (let i in this.exp) //maybe
+            if (this.exp[i]!=0){
+                if (myExp.length!=0)
+                    myExp += '*';
+                myExp += 'x' + i + '^' + this.exp[i];
+            }
+        return this.coeff.toFixed(2) + '*' + this.op +'(' + myExp + ')';
+    }
     evaluate(DataPoint){
         let value = 1.0;
 
@@ -332,7 +347,7 @@ class LE{
             for(let j=0; j<this.terms.length; j++){
                 aux += this.terms[j].evaluate(inputPoints[i]);
             }
-            mae += Math.abs(inputPoints[i].y - aux);
+            mae += Math.abs(aux -inputPoints[i].y);
         }
         mae = mae/inputPoints.length;
 
@@ -341,7 +356,6 @@ class LE{
         }
         else{
             console.error("MAE não é finito!!");
-            console.log(this.printMe());
             this.score = 0.0;
         }
         return mae;
