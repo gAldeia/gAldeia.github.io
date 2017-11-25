@@ -689,7 +689,7 @@ function run_ITLS(){
         return;
     }
 
-    let expression = new IT_LS(150, 1, 3, 25);
+    let expression = new IT_LS(150, 1, 3, 50);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
@@ -706,7 +706,7 @@ function run_SymTree(){
         return;
     }
 
-    let expression = new SymTree(6, 0.01, 0, 0);
+    let expression = new SymTree(8, 0.01, 3, 0);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
@@ -723,7 +723,7 @@ function run_ITES(){
         return;
     }
 
-    let expression = new IT_ES(150, 1, 3, 45, 25);
+    let expression = new IT_ES(150, 1, 3, 45, 50);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
