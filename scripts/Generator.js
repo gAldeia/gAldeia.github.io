@@ -64,6 +64,6 @@ function createTable(matrix, tableName){
 
     for(let i=0; i<expressions.length; i++){
         let mat = createMatrix(expressions[i], 10, false);
-        tableHolder.innerHTML += '<div class="col-lg-3"><p>'+createTable(mat, expressionsNames[i])+'</p></div>';
+        tableHolder.innerHTML += '<div class="col-lg-4"><p>'+createTable(mat, expressionsNames[i])+'</p></div>';
     }
 })();
