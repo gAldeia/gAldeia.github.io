@@ -228,7 +228,6 @@ class LR{
         catch(err){
             LR.gradientDescent(LE, inputPoints, 10000);  
         }
-        
     };
 }
 
