@@ -59,7 +59,7 @@ function csv_upload(){
 	var csv = document.getElementById("my-csvinput").files[0];
 
 	if (csv==undefined){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar. O site só aceita arquivos de extensão .csv.</p></div>";
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O site só aceita arquivos de extensão .csv, e o algoritmo precisa de pelo menos uma linha de entrada para funcionar.</p></div>";
 
 		return;
 	}
@@ -134,7 +134,7 @@ function loadHandler(inputData){
 
 	//avisos ao usuário
 	if (lines.length==0){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar. O site só aceita arquivos de extensão .csv.</p></div>";
+		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar.</p></div>";
 	}
 	else if (lines[0].length==1){
 		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores!</p></div>";

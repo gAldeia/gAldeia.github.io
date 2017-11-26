@@ -6,6 +6,17 @@ function noise(){
 }
 
 function generateLines(){
+    let userExp = document.getElementById("expressionInput").value;
+    
+    if (userExp.length==0){
+        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não digitou uma expressão.</p></div>";
+        return;
+    }
+    if (userExp.indexOf("x0")==-1){
+        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> A equação não começa com o x0.</p></div>";
+        return;
+	}
+
     let mat = createMatrix(document.getElementById("expressionInput").value, document.getElementById("range").value, document.getElementById("noise").checked, document.getElementById("positiveOnly").checked);
 
     document.getElementById("expressionOutput").innerHTML = createTable(mat, document.getElementById("expressionInput").value);
@@ -34,7 +45,14 @@ function createMatrix(expression, range, useNoise, strictlyPositive){
             x.splice(index, 1);
             expressionAux = expressionAux.split("x"+j).join(line[j]);
         }
-        let result = eval(expressionAux);
+        let result;
+        try{
+            result = eval(expressionAux);
+        }
+        catch{
+            document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Alguma coisa está errada. Verifique se não esqueceu algum operador entre dois números e se funções matemáticas (seno, cosseno, raiz, etc) estão de acordo com a sintaxe da biblioteca Math do javascript (Math.sin(), Math.cos(), Math.sqrt()).</p></div>";
+            return;
+        }
         if (useNoise) result += noise();
 
         line.push(result.toFixed(2));
