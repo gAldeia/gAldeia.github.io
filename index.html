@@ -123,17 +123,17 @@
                     <div class="col-lg-4">
                         <h4>1 - Digite os dados</h4>
 
-                        <p class="text-justify">Os dados de entrada podem ser digitados manualmente ou carregados através de um arquivo de extensão <strong>.csv</strong>.</p>
+                        <p class="text-justify">Os dados de entrada podem ser digitados ou carregados através de um arquivo <strong>.csv</strong>;</p>
                     </div>
                     <div class="col-lg-4">
                         <h4>2 - Execute o algoritmo</h4>
 
-                        <p class="text-justify">Com os dados digitados, basta apenas executar o algoritmo.</p>
+                        <p class="text-justify">Escolha um algoritmo para executar (ou todos);</p>
                     </div>
                     <div class="col-lg-4">
                         <h4>3 - Analise o resultado</h4>
 
-                        <p class="text-justify">Após finalizar todo o processamento, o site irá exibir os resultados.</p>
+                        <p class="text-justify">Após finalizar o processamento, o site irá exibir os resultados da regressão simbólica.</p>
                     </div>
                 </div>
             </div>
@@ -143,10 +143,7 @@
             <div class="page-header">
                 <h2>Entrada de dados</h2>
 
-                <p class="text-justify"></p>
-
-                <p class="text-justify">Digite os dados aqui ou carregue um arquivo do seu computador (<a target="_blank" href="./input-examples.html">conjunto de dados de testes</a>):</p>
-
+                <p class="text-justify">Os dados podem ser digitados manualmente, ou você pode fazer o upload de um arquivo <strong>.csv</strong> contendo seus dados. Caso queira, a primeira linha pode ser usada para nomear as variáveis. No site há uma página mais elaborada sobre os <a href=".\input-examples.html">dados de entrada</a>;</p>
                 <div class="row">
                     <div class="col-lg-6">
                         <h4>Entrada manual de dados</h4>
@@ -180,13 +177,15 @@
             <div class="page-header">
                 <h2>Resultados</h2>
 
-                <p class="text-justify">Escolha o algoritmo à ser executado:</p>
+                <p class="text-justify">Com os dados carregados, basta escolher um algoritmo abaixo:</p>
 
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITES()">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
+                <p class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITES()">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
+                </p>
 
-                <div id="results" class="page-header">
+                <div id="results">
                 </div>
             </div>
         </section>
@@ -195,23 +194,27 @@
             <div class="page-header">
                 <h2>O resultado obtido foi satisfatório?</h2>
 
-                <p class="text-justify">O score é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada (varia de 0 a 1). Quanto menor a soma das distâncias dos pontos de entrada com a função encontrada, melhor o score da equação.</p>
+                <p class="text-justify">O score é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada, e varia de 0 a 1. O score é calculado por:</p>
 
+                <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
+                
+                <p class="text-justify">Onde o MAE (desvio médio absoluto) é a soma das diferenças entre todos os valores de y da entrada e os valores da equação que o algoritmo está avaliando:</p>
+
+                <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
+                
                 <p class="text-justify"><b>Algoritmo IT-LS</b></p>
-                <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias e selecionando a melhor, e então executa uma busca local (incrementando e decrementando os expoentes e trocando os operadores dos termos), e repete o processo até que a busca local retorne um valor igual a anterior (ou seja, a busca local não consegue encontrar resultado melhor).</p>
+                <p class="text-justify">O algoritmo funciona criando uma população inicial de expressões aleatórias e selecionando a melhor dentre elas. Após isso, executa uma busca local na equação, mudando os operadores e expoentes da equação, repetindo o processo até que não exista uma modificação que melhore ainda mais o score da equação.</p>
 
                 <p class="text-justify"><b>Algoritmo SymTree</b></p>
                 <p class="text-justify">Este algoritmo faz uma busca gulosa, explorando todos os aspectos que podem mudar entre as expressões. Começando com uma equação raiz, faz combinações de expoentes e variações de operadores, sempre separando termos que quando combinados com a expressão inicial resultam numa melhoria do score. O processo é repetido até que um critério de parada seja atingido; e em cada iteração novas expressões são adicionadas ao grupo de potenciais candidatos para responder o problema.</p>
 
                 <p class="text-justify"><b>Algoritmo IT-ES</b></p>
-                <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias e selecionando a melhor, e então executa estratégias baseadas na programação genética (mutação e seleção por torneio) para ir refinando a população e buscando uma melhoria num numero pré definido de iterações.</p>
-
+                <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa estratégias baseadas na programação genética (mutação e seleção por torneio) para ir refinando a população e buscando uma melhoria num numero pré definido de iterações.</p>
             </div>
         </section> 
         
         <section id="contact-us">
             <div style="border-top: 1px solid darkgrey" class="page-header text-center">
-
                 <h2>Contato</h2>
 
                 <p>Dúvidas, críticas ou sugestões?</p> 
