@@ -158,26 +158,27 @@
         <div class="page-header" id="gen">
             <h2>Gerador de dados <small>(à partir de expressões)</small></h2>
 
-            <p class="text-justify">Ao usar o gerador lembre de sempre definir um índice para as variáveis, começando do 0 (x0, x1, x2, ...). O range vai de 1 a 40 (de 2 em 2), e ele suporta expressões com até 10 variáveis. O gerador segue a sintaxe do javaScript, e as funções matemáticas devem ser usadas de acordo com a classe de funções Math (ex: Math.sin(x2) + Math.sqrt(x1) * Math.abs(x3)). Para evitar NaN e infinitos, a contagem começa sempre no 1.</p>
+            <p class="text-justify">Ao usar o gerador lembre de sempre definir um índice para as variáveis, começando do 0 (x0, x1, x2, ...). O range vai de 1 a 40 (de 2 em 2), e ele suporta expressões com até 10 variáveis. O gerador segue a sintaxe do javaScript, e as funções matemáticas devem ser usadas de acordo com a classe de funções Math (ex: Math.sin(x2) + Math.sqrt(x1) * Math.abs(x3)).</p>
 
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-6">
                     <textarea style="max-width: 100%; min-width:100%" class="form-control" rows="3" placeholder="Digite uma função aqui (usando sintaxe do javascript). EX: Math.sin(x1) + x2" id="expressionInput"></textarea>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-6">
                     <button type="button" class="btn btn-primary btn-lg btn-block" onclick="generateLines()">Criar tabela</button>
                     <br>
                     <input type="range" min="1" max="40" value="10" class="slider" step="2" id="range">
                     <input type="checkbox" id="noise" value="true">
                     <label for="noise">Ruído nos dados?</label>
-                </div>
-
-                <div class="col-lg-3" id="expressionOutput">
-    
+                    <br>
+                    <input type="checkbox" id="positiveOnly" value="true">
+                    <label for="noise">Usar só valores positivos?</label>
                 </div>
             </div><br>
 
+            <div id="expressionOutput">
+            </div>
         </div>
 
         <div style="border-top: 1px solid darkgrey" class="page-header text-center" id="contact-us">
