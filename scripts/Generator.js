@@ -52,7 +52,7 @@ function createMatrix(expression, range, useNoise, strictlyPositive){
         }
         catch(err){
             document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Alguma coisa está errada. Verifique se não esqueceu algum operador entre dois números e se funções matemáticas (seno, cosseno, raiz, etc) estão de acordo com a sintaxe da biblioteca Math do javascript (Math.sin(), Math.cos(), Math.sqrt()).</p></div>";
-            return;
+            return [];
         }
         if (useNoise) result += noise();
 
