@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+
+<html lan="en">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<title>Symbolic Regression - Input Examples</title>
+
+	<style>
+        *{
+            box-sizing: border-box;
+        }
+		body {
+            font-family: sans-serif;
+		}
+        .body-background {
+			background: url("./images/main-bg.png") repeat center center fixed;
+		}
+        section#sideMenu{
+            max-width: 240px;
+            min-width: 240px;
+            min-height: calc(100% - 70px);
+            margin-top: 38px;
+            padding-top: 50px;
+            position: fixed;
+        }
+        section#bodyContent{
+            position: relative;
+            margin-left: 280px;
+            margin-top: 70px;
+        }
+        section#sideMenu nav a.active{
+            background: lightgreen;
+            text-decoration: none;
+            border-left: 5px solid #92CF48;
+        }
+        section#sideMenu nav a:hover{
+            background: lightgreen;
+            text-decoration: none;
+            border-left: 5px solid #92CF48;
+        }
+        section#sideMenu nav a{
+            text-decoration: none;
+            color: #000;
+            padding: 10px 5px;
+            display: block;
+            border-bottom: 1px solid #92CF48;
+        }
+		.well{
+			border-radius: 12px 12px 12px 12px;
+			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
+		}
+        table, th, td {
+			border: 1px solid black;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+    <!--Cabeçalho da página-->
+    <nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+        <div class="container">
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+            </button>
+                <a class="navbar-brand" href="./index.html"><u><strong>Symbolic</strong> Regression</u></a>
+            </div><!--logo do site-->
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="./index-en.html">Home</a></li>
+                    <li><a href="#testes">Successful Tests</a></li>
+                  <li><a href="#failed">Unsuccessful Tests</a></li>
+                    <li><a href="#impossible">Note about unsupported functions</a></li>
+                    <li><a href="#gen">Data Generator</a></li>
+                    <li><a href="#contact-us">Contact</a></li>
+                </ul><!--Lista de opções-->
+            </div><!--menu-->
+        </div><!--container-->
+    </nav><!--navbar-->
+
+<body class="body body-background container">
+
+    <section id="sideMenu" class="well">
+        
+        <nav>
+            <a href="./index.html">Home</a>
+            <a href="./input-examples-en.html" class="active">Input Examples</a>
+            <a href="./study-notes.html">Study Notes</a>
+            <a href="./feedback.html"><strong>Feedback</strong></a>
+            <a href="./changelog.html">Roadmap</a>
+            <a href="https://github.com/gAldeia/gAldeia.github.io">Project GitHub<br><small>(external link)</small></a>
+            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">GitHub<br><small>(external link)</small></a>
+        </nav>
+    </section>
+
+    <section id="bodyContent" class="well">
+        <div class="page-header" id="testes">
+            <h2>Successful Test Cases</h2>
+
+            <div class="row" id="tableHolder">
+            </div>
+
+             
+        </div>
+      
+      <div class="page-header" id="failed">
+            <h2>Unsuccessful Test Cases</h2>
+
+            <div class="row" id="tableHolder">
+            </div>
+
+             
+        </div>
+
+       <!-- <div class="page-header" id="impossible">
+            <h2>Note about unsupported functions</h2>
+            
+            <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
+
+            <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ya9nq6ys.png"></p><br>
+
+            <p class="text-justify">Para facilitar a compreensão, tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
+
+            <p class="text-justify">O algoritmo compôe uma expressão somando várias estruturas IT, onde cada uma tem um coeficiente. Isso quer dizer que toda expressão será da forma:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
+
+            <p class="text-justify">Note que não necessariamente a quantidade de variáveis é igual a quantidade de estruturas IT; mas toda estrutura IT tem uma quantidade de expoentes igual a quantidade de variáveis.</p>
+                
+            <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
+                            
+            <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
+            
+            <p class="text-justify">Mas perceba que a expressão:</p>
+                
+            <br><p class="text-center"><img src="http://mathurl.com/ybv67p4j.png"></p><br>
+            
+            <p class="text-justify">nunca será formada, pois uma estrutura IT está contendo outra estrutura IT. Por não ser possível formar a expressão, sua solução exata nunca será encontrada, embora possa existir alguma outra expressão que minimize o erro e consequentemente apresente um bom score. Abaixo estão mais alguns exemplos de expressões que não podem ser encontradas pelos algoritmos:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/y8fss2sq.png"></p>
+                <p class="text-center"><img src="http://mathurl.com/ycwj2v7w.png"></p>
+                <p class="text-center"><img src="http://mathurl.com/y7epyw9f.png"></p><br>
+
+            <p class="text-justify">De um ponto de vista, isso limita o campo de busca, que ao contrário do algoritmo genético, não tem restrições na forma das expressões. Mas, por outro lado, são improváveis os casos onde a equação que rege os dados de entrada possa ter várias funções encadeadas:</p>
+
+            <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
+            
+            <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
+        </div> -->
+
+        <div class="page-header" id="gen">
+            <h2>Data Generator</h2>
+
+            <p class="text-justify">Write a JavaScript expression in the box below with variables starting from index 0: Math.sin(x0) + Math.sqrt(x1) + Math.abs(x2).</p>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <textarea style="max-width: 100%; min-width:100%" class="form-control" rows="3" placeholder="Digite uma função aqui (usando sintaxe do javascript). EX: Math.sin(x1) + x2" id="expressionInput"></textarea>
+                </div>
+
+                <div class="col-lg-6">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="generateLines()">Criar tabela</button>
+                    <br>
+                    <input type="range" min="1" max="40" value="10" class="slider" step="2" id="range">
+                    <input type="checkbox" id="noise" value="true">
+                    <label for="noise">Noise?</label>
+                    <br>
+                    <input type="checkbox" id="positiveOnly" value="true">
+                    <label for="noise">Just positive values?</label>
+                </div>
+            </div><br>
+
+            <div id="expressionOutput">
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid darkgrey" class="page-header text-center" id="contact-us">
+
+            <h2>Contact</h2>
+
+            <p>guilherme.aldeia@aluno.ufabc.edu.br</p>             
+
+        </div>
+        
+    </section>
+
+	<script type="text/javascript" src=./scripts/Generator.js></script>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+
+</html>
