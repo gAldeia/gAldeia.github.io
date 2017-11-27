@@ -10,7 +10,7 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-	<title>Regressão Simbólica - Ferramenta Online</title>
+	<title>Auxiliar de Laboratório: Regressão Simbólica para Funções simples.</title>
 
 	<style>
         *{
@@ -71,9 +71,9 @@
             <ul class="nav navbar-nav">
                 <li><a href="#about">O projeto</a></li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="">Ferramenta online<span class="caret"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">Regressão Simbólica<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#guide">Como utilizar a ferramenta online</a></li>
+                        <li><a href="#guide">Como utilizar a ferramenta</a></li>
                         <li><a href="#input">Entrada de dados</a></li>
                         <li><a href="#output">Resultados</a></li>
                         <li><a href="#explain">Resultados esperados</a></li>
@@ -88,7 +88,7 @@
 <body class="body body-background container">
 
     <section id="sideMenu" class="well">
-        <p>Aqui estão listadas todas as páginas do site:</p>
+        <!-- <p>Aqui estão listadas todas as páginas do site:</p> -->
         <nav>
             <a href="./index.html" class="active">Página inicial</a>
             <a href="./input-examples.html">Exemplos de entrada</a>
@@ -105,13 +105,14 @@
         <section id="about">
             <div class="page-header">
                 <div class="alert alert-info">
-                    <p class="text-justify"><strong>Quadro de avisos</strong><br> O site ainda está em desenvolvimento. Podem acontecer problemas durante a execução de algumas operações. Críticas e sugestões são bem vindas. Informações de contato no final da página.</p>
+                    <p class="text-justify"><strong>Quadro de avisos</strong><br> O site ainda está em desenvolvimento. Podem ocorrer problemas durante a execução de algumas operações. Críticas e sugestões são bem vindas. Informações de contato no final da página.</p>
                 </div>
 
                 <h2>Sobre</h2>
 
-                <p class="text-justify">Regressão simbólica é uma técnica que consiste na criação e manipulação de expressões matemáticas a fim de encontrar um modelo que seja capaz de descrever suficientemente bem uma série de pontos. Existem diversas técnicas para isso.</p>
-                <p class="text-justify">Sua aplicação se torna muito mais poderosa com técnicas computacionais, já que o computador pode realizar operações muito mais rápido do que um humano. A ideia de regressão simbólica foi introduzida originalmente por Koza, em seu livro Genetic Programming; e desde então, a técnica tem sido estudada e aprimorada. Este site implementa alguns algoritmos poderosos de regressão simbólica, com o objetivo de oferecer uma ferramenta online que aplica tais técnicas num ambiente agradável.</p>
+                <p class="text-justify">A Regressão Simbólica tem por objetivo encontrar a função geradora de uma base de dados amostrais. Ela difere de outros tipos de regressão pois não está restrito a uma forma fixa como em métodos de regressão linear, polinomial e redes neurais. Normalmente, a Regressão Simbólica é feita através de Algoritmos Evolutivos (ex.: Programação Genética), mas esses costumam ser computacionalmente custosos, mesmo em bases de dados de baixa dimenso.</p>
+                <p class="text-justify">Esse projeto tem como objetivo mostrar o potencial do algoritmo SymTree para dados de baixa dimensão e gerados por funções conhecidas da Física, Matemática e Engenharia.</p>
+		    <p class="text-justify">Essa ferramenta pode ser utilizada como auxiliar de laboratórios didáticos em que são feitos experimentos de mensuração para verificar relações vistas em sala de aula. A tecnologia utilizada é a linguagem JavaScript e, portanto, executa o algoritmo no próprio navegador do usuários.</p>
             </div>
         </section>
 
@@ -123,12 +124,12 @@
                     <div class="col-lg-4">
                         <h4>1 - Digite os dados</h4>
 
-                        <p class="text-justify">Os dados de entrada podem ser digitados ou carregados através de um arquivo <strong>.csv</strong>;</p>
+                        <p class="text-justify">Os dados de entrada podem ser digitados ou carregados através de um arquivo <strong>.csv</strong>. O formato de entrada devem primeiro conter as variáveis de entrada e, em seguida, a variável de medição: x1, x2, ...,y. Opcionalmente, a primeira linha pode conter os nomes das variáveis (clique na caixa correspondente para ativar essa opção);</p>
                     </div>
                     <div class="col-lg-4">
                         <h4>2 - Execute o algoritmo</h4>
 
-                        <p class="text-justify">Escolha um algoritmo para executar (ou todos);</p>
+                        <p class="text-justify">Escolha o algoritmo a ser executado;</p>
                     </div>
                     <div class="col-lg-4">
                         <h4>3 - Analise o resultado</h4>
@@ -202,14 +203,14 @@
 
                 <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
                 
-                <p class="text-justify"><b>Algoritmo IT-LS</b></p>
-                <p class="text-justify">O algoritmo funciona criando uma população inicial de expressões aleatórias e selecionando a melhor dentre elas. Após isso, executa uma busca local na equação, mudando os operadores e expoentes da equação, repetindo o processo até que não exista uma modificação que melhore ainda mais o score da equação.</p>
-
                 <p class="text-justify"><b>Algoritmo SymTree</b></p>
-                <p class="text-justify">Este algoritmo faz uma busca gulosa, explorando todos os aspectos que podem mudar entre as expressões. Começando com uma equação raiz, faz combinações de expoentes e variações de operadores, sempre separando termos que quando combinados com a expressão inicial resultam numa melhoria do score. O processo é repetido até que um critério de parada seja atingido; e em cada iteração novas expressões são adicionadas ao grupo de potenciais candidatos para responder o problema.</p>
+                <p class="text-justify">Este algoritmo inicia sua busca a partir de uma solução representando uma regressão linear. A cada iteração ele aplica as operações de interação entre as variáveis e transformação, gerando funções incrementalmente mais complexas. Esse algoritmo é executado por três iterações permitindo obter polinômios de grau 8. Mais detalhes pode ser visto em: </p>
+
+                <p class="text-justify"><b>Algoritmo IT-LS</b></p>
+                <p class="text-justify">O algoritmo funciona criando uma população inicial de expressões aleatórias e selecionando a melhor dentre elas. Após isso, executa uma busca local na equação, mudando ou as funções não-lineares ou os expoentes da equação, repetindo o processo até que não exista uma modificação que melhore ainda mais o score da equação.</p>
 
                 <p class="text-justify"><b>Algoritmo IT-ES</b></p>
-                <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa estratégias baseadas na programação genética (mutação e seleção por torneio) para ir refinando a população e buscando uma melhoria num numero pré definido de iterações.</p>
+                <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa um algoritmo de Estratégia Evolutiva ES-(mu, lambda). Esse algoritmo foi executado apenas com mutação, mu=lambda=100 e 400 iterações</p>
             </div>
         </section> 
         
