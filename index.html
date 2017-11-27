@@ -69,7 +69,7 @@
         </div><!--logo do site-->
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li><a href="#about">O projeto</a></li>
+                <li><a href="#intro">Descrição</a></li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">Regressão Simbólica<span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -79,6 +79,7 @@
                         <li><a href="#explain">Resultados esperados</a></li>
                     </ul>
                 </li>
+		   <li><a href="#about">Sobre o projeto</a></li>
                 <li><a href="#contact-us">Contato</a></li>
             </ul><!--Lista de opções-->
         </div><!--menu-->
@@ -102,17 +103,13 @@
 
     <section id="bodyContent" class="well">
         
-        <section id="about">
+        <section id="intro">
             <div class="page-header">
                 <div class="alert alert-info">
                     <p class="text-justify"><strong>Quadro de avisos</strong><br> O site ainda está em desenvolvimento. Podem ocorrer problemas durante a execução de algumas operações. Críticas e sugestões são bem vindas. Informações de contato no final da página.</p>
                 </div>
 
-                <h2>Sobre</h2>
-
-                <p class="text-justify">A Regressão Simbólica tem por objetivo encontrar a função geradora de uma base de dados amostrais. Ela difere de outros tipos de regressão pois não está restrito a uma forma fixa como em métodos de regressão linear, polinomial e redes neurais. Normalmente, a Regressão Simbólica é feita através de Algoritmos Evolutivos (ex.: Programação Genética), mas esses costumam ser computacionalmente custosos, mesmo em bases de dados de baixa dimenso.</p>
-                <p class="text-justify">Esse projeto tem como objetivo mostrar o potencial do algoritmo SymTree para dados de baixa dimensão e gerados por funções conhecidas da Física, Matemática e Engenharia.</p>
-		    <p class="text-justify">Essa ferramenta pode ser utilizada como auxiliar de laboratórios didáticos em que são feitos experimentos de mensuração para verificar relações vistas em sala de aula. A tecnologia utilizada é a linguagem JavaScript e, portanto, executa o algoritmo no próprio navegador do usuários.</p>
+                    <p class="text-justify">Essa ferramenta pode ser utilizada como auxiliar de laboratórios didáticos em que são feitos experimentos de mensuração para verificar relações vistas em sala de aula. A tecnologia utilizada é a linguagem JavaScript e, portanto, executa o algoritmo no próprio navegador do usuários.</p>
             </div>
         </section>
 
@@ -213,6 +210,16 @@
                 <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa um algoritmo de Estratégia Evolutiva ES-(mu, lambda). Esse algoritmo foi executado apenas com mutação, mu=150, lambda=45 e 150 iterações</p>
             </div>
         </section> 
+	    
+	     <section id="about">
+            <div class="page-header">
+                <h2>Sobre</h2>
+
+                <p class="text-justify">A Regressão Simbólica tem por objetivo encontrar a função geradora de uma base de dados amostrais. Ela difere de outros tipos de regressão pois não está restrito a uma forma fixa como em métodos de regressão linear, polinomial e redes neurais. Normalmente, a Regressão Simbólica é feita através de Algoritmos Evolutivos (ex.: Programação Genética), mas esses costumam ser computacionalmente custosos, mesmo em bases de dados de baixa dimenso.</p>
+                <p class="text-justify">Esse projeto tem como objetivo mostrar o potencial do algoritmo SymTree para dados de baixa dimensão e gerados por funções conhecidas da Física, Matemática e Engenharia.</p>
+		    
+            </div>
+        </section>
         
         <section id="contact-us">
             <div style="border-top: 1px solid darkgrey" class="page-header text-center">
