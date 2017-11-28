@@ -9,55 +9,9 @@
 	<meta charset="UTF-8"/>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
 
-	<title>Assistente de Laboratório: Regressão Simbólica para Funções simples.</title>
-
-	<style>
-        *{
-            box-sizing: border-box;
-        }
-		body {
-            font-family: sans-serif;
-		}
-        .body-background {
-			background: url("./images/main-bg.png") repeat center center fixed;
-		}
-        section#sideMenu{
-            max-width: 240px;
-            min-width: 240px;
-            min-height: calc(100% - 70px);
-            margin-top: 38px;
-            padding-top: 50px;
-            position: fixed;
-        }
-        section#bodyContent{
-            position: relative;
-            margin-left: 280px;
-            margin-top: 70px;
-        }
-        section#sideMenu nav a.active{
-            background: lightgreen;
-            text-decoration: none;
-            border-left: 5px solid #92CF48;
-        }
-        section#sideMenu nav a:hover{
-            background: lightgreen;
-            text-decoration: none;
-            border-left: 5px solid #92CF48;
-        }
-        section#sideMenu nav a{
-            text-decoration: none;
-            color: #000;
-            padding: 10px 5px;
-            display: block;
-            border-bottom: 1px solid #92CF48;
-        }
-		.well{
-			border-radius: 12px 12px 12px 12px;
-			box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
-		}
-	</style>
-
+	<title>Assistente de Laboratório: Regressão Simbólica para Funções simples</title>
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
@@ -79,10 +33,12 @@
                         <li><a href="#explain">Resultados esperados</a></li>
                     </ul>
                 </li>
-		   <li><a href="#about">Sobre o projeto</a></li>
+		        <li><a href="#about">Sobre o projeto</a></li>
                 <li><a href="#contact-us">Contato</a></li>
-		    <li><a href="index-en.html">English version</a></li>
             </ul><!--Lista de opções-->
+            <ul class="nav navbar-nav navbar-right">
+                <button class="btn btn-info navbar-btn" onclick="window.location='index-en.html'">English version</button>
+            </ul>
         </div><!--menu-->
     </div><!--container-->
 </nav><!--navbar-->
@@ -90,7 +46,7 @@
 <body class="body body-background container">
 
     <section id="sideMenu" class="well">
-        <!-- <p>Aqui estão listadas todas as páginas do site:</p> -->
+        <!-- Aqui estão listadas todas as páginas do site: -->
         <nav>
             <a href="./index.html" class="active">Página inicial</a>
             <a href="./input-examples.html">Exemplos de entrada</a>
