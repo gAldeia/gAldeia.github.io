@@ -29,7 +29,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="">Nesta página<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#regression">O problema da regressão</a></li>
-                            <li><a href="#IT">Estrutura de dados IT</a></li>
+                            <li><a href="#IT">A estrutura de dados IT</a></li>
                             <li><a href="#SymTree">SymTree</a></li>
                             <li><a href="#IT-LS">IT-LS</a></li>
                             <li><a href="#IT-ES">IT-ES</a></li>
@@ -70,6 +70,40 @@
             <h3>Algoritmos implementados e seus funcionamentos</h3>
             
             <h4 id="IT">A estrutura de dados IT</h4>
+
+                <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
+                <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
+
+                <br><p class="text-center"><img src="http://mathurl.com/ya9nq6ys.png"></p><br>
+
+                <p class="text-justify">Para facilitar a compreensão, tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
+
+                <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
+
+                <p class="text-justify">O algoritmo compôe uma expressão somando várias estruturas IT, onde cada uma tem um coeficiente. Isso quer dizer que toda expressão será da forma:</p>
+
+                <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
+
+                <p class="text-justify">Note que não necessariamente a quantidade de variáveis é igual a quantidade de estruturas IT; mas toda estrutura IT tem uma quantidade de expoentes igual a quantidade de variáveis.</p>
+                <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
+                                
+                <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
+                
+                <p class="text-justify">Mas perceba que a expressão:</p>
+                    
+                <br><p class="text-center"><img src="http://mathurl.com/ybv67p4j.png"></p><br>
+                
+                <p class="text-justify">nunca será formada, pois uma estrutura IT está contendo outra estrutura IT. Por não ser possível formar a expressão, sua solução exata nunca será encontrada, embora possa existir alguma outra expressão que minimize o erro e consequentemente apresente um bom score. Abaixo estão mais alguns exemplos de expressões que não podem ser encontradas pelos algoritmos:</p>
+
+                <br><p class="text-center"><img src="http://mathurl.com/y8fss2sq.png"></p>
+                    <p class="text-center"><img src="http://mathurl.com/ycwj2v7w.png"></p>
+                    <p class="text-center"><img src="http://mathurl.com/y7epyw9f.png"></p><br>
+
+                <p class="text-justify">De um ponto de vista, isso limita o campo de busca, que ao contrário do algoritmo genético, não tem restrições na forma das expressões. Mas, por outro lado, são improváveis os casos onde a equação que rege os dados de entrada possa ter várias funções encadeadas:</p>
+
+                <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
+                
+                <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
 
             <h4>Regressão linear</h4>
             
