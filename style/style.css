@@ -4,6 +4,9 @@
 body {
     font-family: sans-serif;
 }
+.navbar {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 .body-background {
     background: url("../images/main-bg.png") repeat center center fixed;
 }
@@ -14,6 +17,7 @@ section#sideMenu{
     margin-top: 38px;
     padding-top: 50px;
     position: fixed;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 section#bodyContent{
     position: relative;
