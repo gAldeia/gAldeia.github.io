@@ -706,7 +706,7 @@ function run_SymTree(){
         return;
     }
 
-    let expression = new SymTree(8, 0.01, 3, 0);
+    let expression = new SymTree(8, 0.05, 3, 0);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
