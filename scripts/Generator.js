@@ -78,7 +78,7 @@ function createTable(matrix, tableName){
         lines +='</tr>';
     }
 
-    return '<table align="center" style="width:' + matrix[0].length*75 + 'px">'+header+lines+'<caption class="text-center">'+tableName+'</caption></table>';
+    return '<table align="center" style="width:' + matrix[0].length*65 + 'px">'+header+lines+'<caption class="text-center">'+tableName+'</caption></table>';
 }
 
 (function(){
