@@ -14,7 +14,7 @@ var inputPoints = [ ];
 
 var labels = [ ];
 
-var firstLineAsLabel = 0;
+var firstLineAsLabel;
 
 
 // --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
@@ -88,6 +88,8 @@ function loadHandler(inputData){
 	//lines, pronto para ser utilizado por funções matemáticas.
 
 	lines = [ ];
+	labels = [ ];
+	firstLineAsLabel = 0;
 
 	var allTextLines = inputData.split(/\r\n|\n/);
 	

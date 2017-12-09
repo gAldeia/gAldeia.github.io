@@ -68,7 +68,7 @@ function createTable(matrix, tableName){
     let header = '<tr>';
     for(let i=0; i<matrix[0].length-1; i++)
         header+= '<th>' + ('x' + i) + '</th>';
-    header += '<th>f(x)</th><tr>';
+    header += '<th>f(X)</th><tr>';
 
     let lines = '';
     for(let i=0; i<matrix.length; i++){
