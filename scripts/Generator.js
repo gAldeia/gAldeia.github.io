@@ -85,7 +85,7 @@ function createTable(matrix, tableName){
     tableHolder = document.getElementById("tableHolder");
     
     let expressions = ["x0*x0", "Math.sqrt(x0)", "Math.sin(x0)", "x0 + x1*x1", "x0*x1", "Math.cos(x0) + x1*x1"];
-    let expressionsNames = ["f(x) = x^2", "f(x) = x^(1/2)", "f(x) = sin(x)", "f(x0, x1) = x0 + x1^2", "f(x0, x1) = x0*x1", "f(x0, x1) = cos(x0) + x1^2"];
+    let expressionsNames = ["f(x) = x<sup>2</sup>", "f(x) = &radic;x", "f(x) = sin(x)", "f(x0, x1) = x0 + x1<sup>2</sup>", "f(x0, x1) = x0&middot;x1", "f(x0, x1) = cos(x0) + x1<sup>2</sup>"];
 
     for(let i=0; i<expressions.length; i++){
         let mat = createMatrix(expressions[i], 10, false, (i==1 || i==5));
