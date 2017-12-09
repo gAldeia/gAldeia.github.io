@@ -84,39 +84,39 @@
             
             <h4 id="IT">A estrutura de dados IT</h4>
 
-                <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
-                <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
+            <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
+            <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
 
-                <br><p class="text-center"><img src="http://mathurl.com/ya9nq6ys.png"></p><br>
+            <br><p class="text-center"><img src="http://mathurl.com/ya9nq6ys.png"></p><br>
 
-                <p class="text-justify">Para facilitar a compreensão, tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
+            <p class="text-justify">Para facilitar a compreensão, tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
 
-                <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
+            <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
 
-                <p class="text-justify">O algoritmo compôe uma expressão somando várias estruturas IT, onde cada uma tem um coeficiente. Isso quer dizer que toda expressão será da forma:</p>
+            <p class="text-justify">O algoritmo compôe uma expressão somando várias estruturas IT, onde cada uma tem um coeficiente. Isso quer dizer que toda expressão será da forma:</p>
 
-                <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
+            <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
 
-                <p class="text-justify">Note que não necessariamente a quantidade de variáveis é igual a quantidade de estruturas IT; mas toda estrutura IT tem uma quantidade de expoentes igual a quantidade de variáveis.</p>
-                <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
-                                
-                <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
+            <p class="text-justify">Note que não necessariamente a quantidade de variáveis é igual a quantidade de estruturas IT; mas toda estrutura IT tem uma quantidade de expoentes igual a quantidade de variáveis.</p>
+            <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
+                            
+            <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
+            
+            <p class="text-justify">Mas perceba que a expressão:</p>
                 
-                <p class="text-justify">Mas perceba que a expressão:</p>
-                    
-                <br><p class="text-center"><img src="http://mathurl.com/ybv67p4j.png"></p><br>
-                
-                <p class="text-justify">nunca será formada, pois uma estrutura IT está contendo outra estrutura IT. Por não ser possível formar a expressão, sua solução exata nunca será encontrada, embora possa existir alguma outra expressão que minimize o erro e consequentemente apresente um bom score. Abaixo estão mais alguns exemplos de expressões que não podem ser encontradas pelos algoritmos:</p>
+            <br><p class="text-center"><img src="http://mathurl.com/ybv67p4j.png"></p><br>
+            
+            <p class="text-justify">nunca será formada, pois uma estrutura IT está contendo outra estrutura IT. Por não ser possível formar a expressão, sua solução exata nunca será encontrada, embora possa existir alguma outra expressão que minimize o erro e consequentemente apresente um bom score. Abaixo estão mais alguns exemplos de expressões que não podem ser encontradas pelos algoritmos:</p>
 
-                <br><p class="text-center"><img src="http://mathurl.com/y8fss2sq.png"></p>
-                    <p class="text-center"><img src="http://mathurl.com/ycwj2v7w.png"></p>
-                    <p class="text-center"><img src="http://mathurl.com/y7epyw9f.png"></p><br>
+            <br><p class="text-center"><img src="http://mathurl.com/y8fss2sq.png"></p>
+                <p class="text-center"><img src="http://mathurl.com/ycwj2v7w.png"></p>
+                <p class="text-center"><img src="http://mathurl.com/y7epyw9f.png"></p><br>
 
-                <p class="text-justify">De um ponto de vista, isso limita o campo de busca, que ao contrário do algoritmo genético, não tem restrições na forma das expressões. Mas, por outro lado, são improváveis os casos onde a equação que rege os dados de entrada possa ter várias funções encadeadas:</p>
+            <p class="text-justify">De um ponto de vista, isso limita o campo de busca, que ao contrário do algoritmo genético, não tem restrições na forma das expressões. Mas, por outro lado, são improváveis os casos onde a equação que rege os dados de entrada possa ter várias funções encadeadas:</p>
 
-                <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
-                
-                <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
+            <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
+            
+            <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
 
             <h4>Métodos de aproximação</h4>
 
@@ -124,15 +124,29 @@
 
             <h4>Como é feito o cálculo do score</h4>
 
+            <p class="text-justify">O score é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada, e varia de 0 a 1. O score é calculado por:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
+            
+            <p class="text-justify">Onde o MAE (desvio médio absoluto) é a soma das diferenças entre todos os valores de y da entrada e os valores da equação que o algoritmo está avaliando:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
+
             <h4 id="SymTree" >O algoritmo SymTree</h4>
+
+            <p class="text-justify">Este algoritmo inicia sua busca a partir de uma solução representando uma regressão linear. A cada iteração ele aplica as operações de interação entre as variáveis e transformação, gerando funções incrementalmente mais complexas. Esse algoritmo é executado por oito iterações. Mais detalhes pode ser visto em: </p>
 
             <h5>abordagem com busca gulosa</h5>
             
             <h4 id="IT-LS">O algoritmo IT-LS</h4>
 
+            <p class="text-justify">O algoritmo funciona criando uma população inicial de expressões aleatórias e selecionando a melhor dentre elas. Após isso, executa uma busca local na equação, mudando ou as funções não-lineares ou os expoentes da equação, repetindo o processo até que não exista uma modificação que melhore ainda mais o score da equação. Esse algoritmo é executado até no máximo 50 iterações.</p>
+
             <h5>mínimo local</h5>
 
             <h4 id="IT-ES">O algoritmo IT-ES</h4>
+
+            <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa um algoritmo de Estratégia Evolutiva ES-(mu, lambda). Esse algoritmo foi executado apenas com mutação, mu=150,lambda=45 e 150 iterações</p>
 
             <h5>mutação como elemento para busca</h5>
         </div>
