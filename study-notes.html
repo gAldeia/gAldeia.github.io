@@ -63,26 +63,35 @@
 
             <h3 id="regression" class="text-center">O problema de regressão</h3>
 
-            <p class="text-justify">Regressão é um processo estatístico que tem como objetivo encontrar uma relação entre variáveis. Dado um conjunto onde cada elemento é um conjunto de variáveis,  Então a missão de um método de regressão, para um conjunto de variáveis, é encontrar uma função.</p>
+            <p class="text-justify">Regressão é o nome dado à processos estatísticos que tem como objetivo encontrar uma relação entre um conjunto de variáveis - encontrar uma função que se ajuste às variáveis do conjunto (ou, em outras palavras, encontrar uma expressão que descreva suficientemente bem este conjunto).</p>
 
-            <p class="text-justify">Regressão Linear: Na regressão linear, o palpite é de que a função que se ajusta ao conjunto de variáveis é uma composição linear de parâmetros. numa regressão linear simples ainda pode existir um termo independente. Os algoritmos do site implementam uma regressão linear, onde cada algoritmo tem sua particularidade.</p>
+            <p class="text-justify">Um conjunto de variáveis tem a forma <img src="http://mathurl.com/ybvltqmr.png">, onde x<sub>i1</sub>, x<sub>i2</sub>, ... são chamadas de variáveis explicativas e y<sub>i</sub> de variável dependente. Partimos da suposição que y depende de X, e há relação entre y<sub>i</sub> e as variáveis explicativas.</p>
 
-            <p class="text-justify">um modelo geral de regressão linear é:(MODELO AQUI)</p>
+            <p class="text-justify">A regressão linear é um método de regressão amplamente conhecido, onde o palpite é de que a função que se ajusta ao conjunto de variáveis é uma composição linear de parâmetros. Numa regressão linear simples ainda pode existir um termo independente.</p>
+            
+            <p class="text-justify">Os algoritmos desenvolvidos neste site funcionam construindo expressões lineares, mas cada algoritmo realiza esse processo utilizando uma abordagem diferente. Estes detalhes serão apresentados mais a frente.</p>
 
-            <p class="text-justify">A regressão simbólica: tem origem na programação genética. elementos da seleção natural atuando sobre a composição de funções. crossover, mutação, seleção</p>
+            <p class="text-justify">Um modelo geral de regressão linear, para um conjunto de n linhas de entrada <img src="http://mathurl.com/ybvltqmr.png"> é:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ydb48h6c.png"></p>
 
             <h3 class="text-center">Algoritmos implementados e seus funcionamentos</h3>
 
+            <p class="text-justify">Os três algoritmos implementados no site tem execução rápida, sem perder a capacidade de encontrar uma solução adequada quando há uma e essa é possível de ser encontrada dentro dos limites de cada algoritmo. Cada um dos algoritmos funciona baseado em um princípio diferente, mas todos compôe suas expressões com a mesma estrutura de dados, IT.</p>
+
+            <p class="text-justify">Para qualificar os algoritmos, usamos o score. O score é uma classificação para a expressão de acordo com o quão distante a equação gerada está dos dados de entrada, e varia de 0 a 1. O score é calculado por:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
             
-            <p class="text-justify">Os três algoritmos implementados no site tem execução rápida sem perder a eficiencia na busca. cada um dos algoritmos funciona baseado em um princípio diferente, mas todos compôe suas expressões com a mesma estrutura de dados, IT.</p>
+            <p class="text-justify">Onde o MAE (desvio médio absoluto) é a soma das diferenças entre todos os valores de y da entrada e os valores da equação que o algoritmo está avaliando:</p>
 
-            <p class="text-justify">Para quantificar os algoritmos, usamos o score. (INSERIR CALCULO DO SCORE AQUI)</p>
+            <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
 
-            <p class="text-justify">(MOSTRAR CONJUNTO DE OPERAÇÔES EM IT)</p>
+            <p class="text-justify">Nos algoritmos implementados, temos as seguintes operações:</p>
 
-            <p class="text-justify">(FALAR QUE O NOSSO MODELO SE ASSEMELHA AO MODELO GERAL)</p>
+            <br><p class="text-center"><i>identidade, seno, cosseno, tangente, valor absoluto, raiz quadrada, exponencial, logaritmo</i></p><br>
             
-            <h4 id="IT">A estrutura de dados IT</h4>
+            <h3 class="text-center" id="IT">A estrutura de dados IT</h3>
 
             <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
             <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
@@ -117,20 +126,6 @@
             <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
             
             <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
-
-            <h4>Métodos de aproximação</h4>
-
-            <h5>Gradiente descendente</h5>
-
-            <h4>Como é feito o cálculo do score</h4>
-
-            <p class="text-justify">O score é uma forma de quantificar o quão distante a equação gerada está dos dados de entrada, e varia de 0 a 1. O score é calculado por:</p>
-
-            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
-            
-            <p class="text-justify">Onde o MAE (desvio médio absoluto) é a soma das diferenças entre todos os valores de y da entrada e os valores da equação que o algoritmo está avaliando:</p>
-
-            <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
 
             <h4 id="SymTree" >O algoritmo SymTree</h4>
 
