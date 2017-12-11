@@ -365,7 +365,7 @@ class LE{
     simplify(threshold){
         let newTerms = [ ];
         for (let i=0; i<this.terms.length; i++){
-            if (Math.abs(this.terms[i].coeff)>threshold && this.terms[i].isNull()==false){
+            if (Math.abs(this.terms[i].coeff)>threshold && !this.terms[i].isNull()){
                 newTerms.push(this.terms[i]);
             }
         }
@@ -688,7 +688,7 @@ function run_ITLS(){
     }
 
     let expression = new IT_LS(150, 1, 3, 50);
-    expression.simplify(0.01);
+    expression.simplify(0.05);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
@@ -705,7 +705,8 @@ function run_SymTree(){
         return;
     }
 
-    let expression = new SymTree(8, 0.05, 3, 0);
+    let expression = new SymTree(8, 0.05, 3, 1);
+    expression.simplify(0.05);
 
     let expressionString = expression.printMe();
     for(let i=0; i<labels.length; i++){
