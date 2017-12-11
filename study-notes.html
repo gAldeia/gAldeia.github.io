@@ -63,44 +63,37 @@
 
             <h3 id="regression" class="text-center">O problema de regressão</h3>
 
-            <p class="text-justify">Regressão é o nome dado à processos estatísticos que tem como objetivo encontrar uma relação entre um conjunto de variáveis - encontrar uma função que se ajuste às variáveis do conjunto (ou, em outras palavras, encontrar uma expressão que descreva suficientemente bem este conjunto).</p>
+            <p class="text-justify">Regressão é o nome dado a processos estatísticos que tem como objetivo encontrar uma relação entre um conjunto de variáveis, descrevendo essa relação através de uma função.</p>
 
-            <p class="text-justify">Um conjunto de variáveis tem a forma <img src="http://mathurl.com/ybvltqmr.png">, onde x<sub>i1</sub>, x<sub>i2</sub>, ... são chamadas de variáveis explicativas e y<sub>i</sub> de variável dependente. Partimos da suposição que y depende de X, e há relação entre y<sub>i</sub> e as variáveis explicativas.</p>
+            <p class="text-justify">Um conjunto de variáveis tem a forma <img src="http://mathurl.com/yajlfa4o.png">, onde x<sub>i1</sub>, x<sub>i2</sub>, ... são chamadas de variáveis explicativas e y<sub>i</sub> de variável dependente. Partimos da suposição de que y depende de X e que há relação entre y<sub>i</sub> e as variáveis explicativas. Um conjunto composto por vários conjuntos de variáveis é chamado de DATASET:</p>
+            
+            <br><p class="text-center"><img src="http://mathurl.com/ydc7pph4.png"></p><br>
 
-            <p class="text-justify">A regressão linear é um método de regressão amplamente conhecido, onde o palpite é de que a função que se ajusta ao conjunto de variáveis é uma composição linear de parâmetros. Numa regressão linear simples ainda pode existir um termo independente.</p>
+            <p class="text-justify">A regressão linear é um método de regressão amplamente conhecido, onde o palpite é de que a função que se ajusta ao conjunto de variáveis é uma composição linear de parâmetros. Em uma regressão linear simples ainda pode existir um termo independente.</p>
             
             <p class="text-justify">Os algoritmos desenvolvidos neste site funcionam construindo expressões lineares, mas cada algoritmo realiza esse processo utilizando uma abordagem diferente. Estes detalhes serão apresentados mais a frente.</p>
 
-            <p class="text-justify">Um modelo geral de regressão linear, para um conjunto de n linhas de entrada <img src="http://mathurl.com/ybvltqmr.png"> é:</p>
+            <p class="text-justify">Um modelo geral de regressão linear para um conjunto de variáveis <img src="http://mathurl.com/ybvltqmr.png"> é:</p>
 
             <br><p class="text-center"><img src="http://mathurl.com/ydb48h6c.png"></p>
-
-            <h3 class="text-center">Algoritmos implementados e seus funcionamentos</h3>
-
-            <p class="text-justify">Os três algoritmos implementados no site tem execução rápida, sem perder a capacidade de encontrar uma solução adequada quando há uma e essa é possível de ser encontrada dentro dos limites de cada algoritmo. Cada um dos algoritmos funciona baseado em um princípio diferente, mas todos compôe suas expressões com a mesma estrutura de dados, IT.</p>
-
-            <p class="text-justify">Para qualificar os algoritmos, usamos o score. O score é uma classificação para a expressão de acordo com o quão distante a equação gerada está dos dados de entrada, e varia de 0 a 1. O score é calculado por:</p>
-
-            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
-            
-            <p class="text-justify">Onde o MAE (desvio médio absoluto) é a soma das diferenças entre todos os valores de y da entrada e os valores da equação que o algoritmo está avaliando:</p>
-
-            <br><p class="text-center"><img src="http://mathurl.com/ydxewnc9.png"></p><br>
-
-            <p class="text-justify">Nos algoritmos implementados, temos as seguintes operações:</p>
-
-            <br><p class="text-center"><i>identidade, seno, cosseno, tangente, valor absoluto, raiz quadrada, exponencial, logaritmo</i></p><br>
-
-            <p class="text-justify">Então cada expressão formada sempre será uma expressão linear (<img src="http://mathurl.com/ydb48h6c.png">)onde cada termo x<sub>i</sub> é uma das operações acima, multiplicada por um coeficiente.</p>
             
             <h3 class="text-center" id="IT">A estrutura de dados IT</h3>
 
-            <p class="text-justify">Devido à limitações da estrutura de dados (IT) utilizada para compor as expressões, existem funções que nunca serão criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT.</p>
-            <p class="text-justify">Cada estrutura IT guarda dentro dela um vetor de n expoentes e uma operação. Então, para calcular seu valor, a estrutura recebe um vetor que corresponde a uma linha de entrada e eleva todas as variáveis da linha de entrada aos seus respectivos expoentes. Após isso, multiplica todas as variáveis da linha de entrada e, por fim, resolve a operação com o valor obtido.</p>
+            <p class="text-justify">A estrutura de dados IT guarda internamente um conjunto de expoentes e uma operação:</p> 
+            
+            <br><p class="text-center"><img src="http://mathurl.com/ycu72p2p.png"></p><br>
 
-            <br><p class="text-center"><img src="http://mathurl.com/ya9nq6ys.png"></p><br>
+            <p class="text-justify">O conjunto de expoentes tem sempre o mesmo tamanho de X<sub>i</sub>, e as possíveis operações são:</p>
+                
+            <br><p class="text-center"><i>identidade, seno, cosseno, tangente, valor absoluto, raiz quadrada, exponencial e logaritmo</i></p><br>
 
-            <p class="text-justify">Para facilitar a compreensão, tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
+            <p class="text-justify">Por se tratar da unidade elementar para construir todas as expressões lineares, esta estrutura deve ser interpretada como um número em função das variáveis explicativas. Seu valor numérico é calculado a partir de um valor do DATASET: primeiro, dado um conjunto X<sub>i</sub>, eleva-se cada um dos elementos de X<sub>i</sub> ao expoente e<sub>i</sub> (pertencente ao conjunto interno de expoentes). Após isso, todos estes expoentes são multiplicados e, por fim, a operação da estrutura é aplicada em cima do valor obtido:</p>
+
+            <p class="text-center"><img src="http://mathurl.com/yaahevps.png"></p>
+
+            <p class="text-justify">Então cada expressão formada sempre será uma expressão linear (<img src="http://mathurl.com/ydb48h6c.png">) onde cada termo x<sub>i</sub> é uma estrutura IT multiplicada por um coeficiente.</p>
+
+            <p class="text-justify">A estrutura de dados IT possui limitações que impede que algumas funções nunca possam ser criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT. Tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
 
             <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
 
@@ -108,7 +101,6 @@
 
             <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
 
-            <p class="text-justify">Note que não necessariamente a quantidade de variáveis é igual a quantidade de estruturas IT; mas toda estrutura IT tem uma quantidade de expoentes igual a quantidade de variáveis.</p>
             <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
                             
             <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
@@ -129,23 +121,35 @@
             
             <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
 
+            <h3 class="text-center">Algoritmos implementados e seus funcionamentos</h3>
+            
+            <p class="text-justify">Os três algoritmos implementados no site tem execução rápida, sem perder a capacidade de encontrar uma solução adequada quando esta existe e é possível de ser encontrada dentro dos parâmetros de cada algoritmo. Cada um dos algoritmos funciona baseado em um princípio diferente, mas todos compôem suas expressões com a mesma estrutura de dados, a estrutura <i>Interaction Transformation</i> (IT).</p>
+
+            <p class="text-justify">Para qualificar as expressões criadas pelos algoritmos, usamos o score. O score é uma classificação para a expressão, de acordo com o quão bem esta expressão se ajusta ao DATASET de entrada, e varia de 0 a 1. O score é calculado por:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
+            
+            <p class="text-justify">Onde o MAE (desvio médio absoluto) é igual ao somatório das diferenças entre os valores da variável dependente y<sub>i</sub> e os valores calculados pela expressão para X<sub>i</sub>:</p>
+
+            <br><p class="text-center"><img src="http://mathurl.com/ycsf5jf9.png"></p><br>
+
             <h4 id="SymTree" >O algoritmo SymTree</h4>
 
             <p class="text-justify">Este algoritmo inicia sua busca a partir de uma solução representando uma regressão linear. A cada iteração ele aplica as operações de interação entre as variáveis e transformação, gerando funções incrementalmente mais complexas. Esse algoritmo é executado por oito iterações. Mais detalhes pode ser visto em: </p>
 
-            <h5>abordagem com busca gulosa</h5>
+            abordagem: busca gulosa.
             
             <h4 id="IT-LS">O algoritmo IT-LS</h4>
 
             <p class="text-justify">O algoritmo funciona criando uma população inicial de expressões aleatórias e selecionando a melhor dentre elas. Após isso, executa uma busca local na equação, mudando ou as funções não-lineares ou os expoentes da equação, repetindo o processo até que não exista uma modificação que melhore ainda mais o score da equação. Esse algoritmo é executado até no máximo 50 iterações.</p>
 
-            <h5>mínimo local</h5>
+            Abordagem: busca local (problema: mínimo local).
 
             <h4 id="IT-ES">O algoritmo IT-ES</h4>
 
             <p class="text-justify">O algoritmo funciona criando uma população de expressões aleatórias, e então executa um algoritmo de Estratégia Evolutiva ES-(mu, lambda). Esse algoritmo foi executado apenas com mutação, mu=150,lambda=45 e 150 iterações</p>
 
-            <h5>mutação como elemento para busca</h5>
+            Abordagem: mutação e seleção por torneio como elemento para busca (problema: fator aleatório).
         </div>
 
         <div style="border-top: 1px solid darkgrey" class="page-header text-center" id="contact-us">
