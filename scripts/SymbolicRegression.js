@@ -683,7 +683,7 @@ function run_regression(algorithm){
     else if (algorithm==="ITES")
         expression = new IT_ES(150, 1, 3, 45, 50);
     else if (algorithm==="SymTree")
-        expression = new SymTree(8, 0.05, 3, 1);
+        expression = new SymTree(8, 0.05, 1, 1);
     else
         console.error("método inválido");
 
