@@ -88,7 +88,7 @@ function createTable(matrix, tableName){
     let expressionsNames = ["f(x) = x<sup>2</sup>", "f(x) = &radic;x", "f(x) = sin(x)", "f(x0, x1) = x0 + x1<sup>2</sup>", "f(x0, x1) = x0&middot;x1", "f(x0, x1) = cos(x0) + x1<sup>2</sup>"];
 
     for(let i=0; i<expressions.length; i++){
-        let mat = createMatrix(expressions[i], 10, false, (i==1 || i==5));
+        let mat = createMatrix(expressions[i], 20, false, (i==1 || i==5));
         tableHolder.innerHTML += '<div class="col-lg-4"><p>'+createTable(mat, expressionsNames[i])+'</p></div>';
     }
 })();

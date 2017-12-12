@@ -3,12 +3,10 @@
 
 //DETALHES:
 //TUDO deve seguir a regra (lei universal da prevenção de problemas: "sempre que recebe, copia. sempre que retorna, envia cópia."
-//TUDO marcado com "maybe" pode ser uma fonte de erro, e pode ser reescrito de uma maneira mais simples. caso o programa esteja dando erros, -> ctrl+f -> "maybe" -> modifica tudo.
 //PADRÃO ES6: não sei se todo browser suporta. PODE GERAR ERRO.
 //atributos modificáveis são publicos (modificar na fonte). para pegar cópias, existem o método copy em todas as classes que podem ser copiadas. USAR ELE para não infringir a LEI UNIVERSAL DA PREVENÇÃO DE PROBLEMAS.
 //coeficientes são vinculados com os termos, já que cada termpo sempre terá um coeficiente
 //ERROS são notificados com console.error. para debugar, usar console.log
-//coisas pendentes são marcadas com "TODO". para ver o que falta, fazer igual com o "maybe"
 
 
 //--CLASSES DA REGRESSÃO:-----------------------------------------------------//
@@ -150,7 +148,6 @@ class LR{
                     //ajustes dos learningRates
                     LE.terms[j].coeff += alpha*LE.terms[j].evaluate(inputPoints[i])*error;
                     if (Math.abs(LE.terms[j].coeff>100) && LE.terms.length>1){
-                        console.log("corta pra mim");
                         LE.terms.splice(j, 1);
                     }
                 }
@@ -671,59 +668,25 @@ class SymTree{
     }
 }
 
-//--FUNÇÃO DE TESTE-----------------------------------------------------------//
-(function(){
+//--MÉTODO PRINCIPAL----------------------------------------------------------//
 
-    console.log("starting test...");
-
-    //colocar aqui tudo que quiser testar
-
-    console.log("done");
-})();
-
-function run_ITLS(){
+function run_regression(algorithm){
     if (inputPoints[0]===undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
 
-    let expression = new IT_LS(150, 1, 3, 50);
-    expression.simplify(0.05);
+    let expression = undefined;
 
-    let expressionString = expression.printMe();
-    for(let i=0; i<labels.length; i++){
-        expressionString = expressionString.split("x"+i).join(labels[i]);
-    }
+    if (algorithm==="ITLS")
+        expression = new IT_LS(150, 1, 3, 50);
+    else if (algorithm==="ITES")
+        expression = new IT_ES(150, 1, 3, 45, 50);
+    else if (algorithm==="SymTree")
+        expression = new SymTree(8, 0.05, 3, 1);
+    else
+        console.error("método inválido");
 
-    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
-}
-
-function run_SymTree(){
-    if (inputPoints[0]===undefined){
-        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
-        return;
-    }
-
-    let expression = new SymTree(8, 0.05, 3, 1);
-    expression.simplify(0.05);
-
-    let expressionString = expression.printMe();
-    for(let i=0; i<labels.length; i++){
-        expressionString = expressionString.split("x"+i).join(labels[i]);
-    }
-
-    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
-}
-
-function run_ITES(){
-    if (inputPoints[0]===undefined){
-        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
-        return;
-    }
-
-    let expression = new IT_ES(150, 1, 3, 45, 50);
     expression.simplify(0.05);
 
     let expressionString = expression.printMe();

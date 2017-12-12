@@ -136,9 +136,9 @@
                 <p class="text-justify">Com os dados carregados, basta escolher um algoritmo abaixo:</p>
 
                 <p class="text-center">
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_SymTree()">Algoritmo SymTree (Symbolic Tree)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITLS()">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_ITES()">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('SymTree')">Algoritmo SymTree (Symbolic Tree)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITLS')">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITES')">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
                 </p>
 
                 <div id="results">
@@ -197,7 +197,7 @@
 	<!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/LoadFile.js></script>
 	<script type="text/javascript" src=./scripts/math.js></script>
-	<script type="text/javascript" src=./scripts/NEW-SymbolicRegression.js></script>
+	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
