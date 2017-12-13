@@ -2,11 +2,11 @@
 
 
 //DETALHES:
-//TUDO deve seguir a regra (lei universal da prevenção de problemas: "sempre que recebe, copia. sempre que retorna, envia cópia."
+//TUDO deve seguir a regra (lei universal da prevenção de problemas): "sempre que recebe, copia. sempre que retorna, envia cópia."
 //PADRÃO ES6: não sei se todo browser suporta. PODE GERAR ERRO.
 //atributos modificáveis são publicos (modificar na fonte). para pegar cópias, existem o método copy em todas as classes que podem ser copiadas. USAR ELE para não infringir a LEI UNIVERSAL DA PREVENÇÃO DE PROBLEMAS.
 //coeficientes são vinculados com os termos, já que cada termpo sempre terá um coeficiente
-//ERROS são notificados com console.error. para debugar, usar console.log
+//ERROS são notificados com console.error.
 
 
 //--CLASSES DA REGRESSÃO:-----------------------------------------------------//
@@ -93,7 +93,6 @@ class TermManager{
         return terms;
     };
     static createLE(terms, inputPoints){
-        
         let aux = new LE(terms);
         LR.adjustCoeffs(aux, inputPoints);
         
@@ -563,6 +562,7 @@ class SymTree{
         
         let leaves = [TermManager.createLE(TermManager.rootTerms(), inputPoints)];
         let BEST = leaves[0];
+        let previousBEST = BEST;
 
         while (++gen<generations){
             let nodes = [ ];
@@ -580,8 +580,10 @@ class SymTree{
                     BEST = leaves[i];
                 }
             }
-            if (BEST.score>0.99)
+            if (BEST.score==previousBEST.score) //não houve melhoria, retorna
                 return BEST;
+            else
+                previousBEST = BEST;
         }
         return BEST;
     };
