@@ -580,7 +580,7 @@ class SymTree{
                     BEST = leaves[i];
                 }
             }
-            if (BEST.score==previousBEST.score) //não houve melhoria, retorna
+            if (BEST.score==previousBEST.score || BEST.score > 0.99) //não houve melhoria, retorna
                 return BEST;
             else
                 previousBEST = BEST;
