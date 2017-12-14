@@ -237,7 +237,6 @@ class IT{
         if (!OP.isOp(operator))
             console.error('string do operador não existe dentro de OP');
 
-        //TUDO deve seguir a regra: "sempre que recebe, copia. sempre que retorna, envia cópia."
         this.coeff = 1; //TODO TERMO NOVO TEM COEFF = 0.1
         this.exp = exponents.slice(0); //copio o array de exp
         this.op = operator.slice(0);
@@ -262,7 +261,7 @@ class IT{
         if (this.op!='id')
             myExp = this.op + '(' + myExp + ')';
         return (this.coeff.toFixed(2) == 1.00? '' : this.coeff.toFixed(2) + '*') + myExp;
-    }
+    };
     evaluate(DataPoint){
         let value = 1.0;
 
@@ -285,7 +284,6 @@ class IT{
     isNull(){
         for (let i=0; i<this.exp.length; i++) 
             if (this.exp[i]!=0) return false;
-
         return true;
     };
     copy(){
@@ -324,7 +322,6 @@ class LE{
             if (push && !termsToUse[i].isNull())
                 this.terms.push(termsToUse[i].copy());
         }
-
         if (this.terms.length==0)
             this.terms = TermManager.rootTerms();
     };
@@ -333,7 +330,6 @@ class LE{
 
         for (let i in this.terms)
             myExp += this.terms[i].printMe() + (i==this.terms.length-1? '' : ' + ');
-
         return myExp;
     };
     evaluate(inputPoints){
@@ -503,9 +499,7 @@ class IT_LS{
                 bestExpression = this.pop[i];
             }
         }
-        let copied = TermManager.createLE(bestExpression.copy(), inputPoints);
-
-        return copied;
+        return TermManager.createLE(bestExpression.copy(), inputPoints);
     };
     localSearch(inputPoints){
         let candidates = [ ];
@@ -623,7 +617,6 @@ class SymTree{
             exp_list.push.apply(exp_list, this.inverse(leaf));
         if (minT)
             exp_list.push.apply(exp_list, this.transformation(leaf));
-
         return exp_list;
     };
     expand(leaf, threshold, minI, minT){
@@ -671,7 +664,6 @@ class SymTree{
 }
 
 //--MÉTODO PRINCIPAL----------------------------------------------------------//
-
 function run_regression(algorithm){
     if (inputPoints[0]===undefined){
         document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
