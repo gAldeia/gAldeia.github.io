@@ -670,7 +670,8 @@ function run_regression(algorithm){
         return;
     }
 
-    let expression = undefined;
+    let expression = undefined; //guardar a melhor expressão
+    let startTime = performance.now(); //medir o tempo de execução
 
     if (algorithm==="ITLS")
         expression = new IT_LS(150, 1, 3, 50);
@@ -681,9 +682,13 @@ function run_regression(algorithm){
     else
         console.error("método inválido");
 
-    expression.simplify(0.05);
+    let endTime = performance.now();
 
+    console.log("elapsed time:", endTime - startTime, "ms");
+
+    expression.simplify(0.05);
     let expressionString = expression.printMe();
+
     for(let i=0; i<labels.length; i++){
         expressionString = expressionString.split("x"+i).join(labels[i]);
     }
