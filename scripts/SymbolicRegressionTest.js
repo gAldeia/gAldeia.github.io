@@ -7,9 +7,9 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
         return;
     }
 
-    document.getElementById("results").innerHTML="<p>Algoritmo: "+ algorithm + "</p>";
+    document.getElementById("results").innerHTML="<p>Algoritmo: <strong>"+ algorithm + "</strong></p>";
 
-    let resultTable = '<p><table align="center" style="width:450px"><tr><th># Execução</th><th>Score</th><th>Tempo (ms)</th></tr>'
+    let resultTable = '<p><table align="center" style="width:100%"><tr><th># Execução</th><th>Equação</th><th>Score</th><th>Tempo (ms)</th></tr>'
 
     let numTests = 30;
     
@@ -50,7 +50,7 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
         sumScore += scores[i];
         sumTime += times[i];
 
-        resultTable +='<tr><td>'+i+'</td><td>'+scores[i]+'</td><td>'+times[i]+'</td></tr>';
+        resultTable +='<tr><td>'+i+'</td><td>'+expression.printMe()+'</td><td>'+scores[i]+'</td><td>'+times[i]+'</td></tr>';
     }
 
     sumScore/=numTests;
@@ -66,9 +66,9 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
     varScore/=numTests;
     varTime/=numTests;
     
-    resultTable += '<tr><td><strong>Média</strong></td><td>'+sumScore+'</td><td>'+sumTime+'</td></tr>';
-    resultTable += '<tr><td><strong>Variância</strong></td><td>'+varScore+'</td><td>'+varTime+'</td></tr>';
-    resultTable += '<tr><td><strong>Desvio padrão</strong></td><td>'+Math.sqrt(varScore)+'</td><td>'+Math.sqrt(varTime)+'</td></tr></table></p>';
+    resultTable += '<tr><td><strong>Média</strong></td><td>---</td><td><strong>'+sumScore+'</strong></td><td><strong>'+sumTime+'</strong></td></tr>';
+    resultTable += '<tr><td><strong>Variância</strong></td><td>---</td><td><strong>'+varScore+'</strong></td><td><strong>'+varTime+'</strong></td></tr>';
+    resultTable += '<tr><td><strong>Desvio padrão</strong><td>---</td></td><td><strong>'+Math.sqrt(varScore)+'</strong></td><td><strong>'+Math.sqrt(varTime)+'</strong></td></tr></table></p>';
 
     document.getElementById("results").innerHTML+= resultTable;
 
