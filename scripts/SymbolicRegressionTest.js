@@ -50,6 +50,8 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
         sumScore += scores[i];
         sumTime += times[i];
 
+        expression.simplify(0.05);
+
         resultTable +='<tr><td>'+i+'</td><td>'+expression.printMe()+'</td><td>'+scores[i]+'</td><td>'+times[i]+'</td></tr>';
     }
 
