@@ -79,4 +79,19 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
 
     document.getElementById("results").innerHTML+= resultTable;
 
+    document.getElementById("histogram1").innerHTML= "";
+    var dataS = [{
+        x: scores,
+        type: 'histogram',
+    }];
+    Plotly.newPlot('histogram1', dataS);
+    document.getElementById("histogram1").innerHTML+= "<p class='text-center'>(Gráfico 1: Histograma do score)</p>";
+    
+    document.getElementById("histogram2").innerHTML= "";
+    var dataT = [{
+        x: times,
+        type: 'histogram',
+    }];
+    Plotly.newPlot('histogram2', dataT);
+    document.getElementById("histogram2").innerHTML+= "<p class='text-center'>(Gráfico 2:Histograma do tempo)</p>";
 }
