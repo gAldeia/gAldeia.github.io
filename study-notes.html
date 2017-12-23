@@ -48,6 +48,7 @@
         <nav>
             <a href="./index.html">Página inicial</a>
             <a href="./input-examples.html">Exemplos de entrada</a>
+            <a href="./performance-test.html">Teste de performance</a>
             <a href="./study-notes.html" class="active">Notas de estudo</a>
             <a href="./feedback.html"><strong>Dê seu feedback</strong></a>
             <a href="./changelog.html">Registro de updates do site</a>
@@ -65,23 +66,23 @@
 
             <p class="text-justify">Regressão é o nome dado a processos estatísticos que tem como objetivo encontrar uma relação entre um conjunto de variáveis, descrevendo essa relação através de uma função.</p>
 
-            <p class="text-justify">Um conjunto de variáveis tem a forma <img src="http://mathurl.com/yajlfa4o.png">, onde x<sub>i1</sub>, x<sub>i2</sub>, ... são chamadas de variáveis explicativas e y<sub>i</sub> de variável dependente. Partimos da suposição de que y depende de X e que há relação entre y<sub>i</sub> e as variáveis explicativas. Um conjunto composto por vários conjuntos de variáveis é chamado de DATASET:</p>
+            <p class="text-justify">Um conjunto de variáveis tem a forma <img src="./images/equations/yajlfa4o.png">, onde x<sub>i1</sub>, x<sub>i2</sub>, ... são chamadas de variáveis explicativas e y<sub>i</sub> de variável dependente. Partimos da suposição de que y depende de X e que há relação entre y<sub>i</sub> e as variáveis explicativas. Um conjunto composto por vários conjuntos de variáveis é chamado de DATASET:</p>
             
-            <br><p class="text-center"><img src="http://mathurl.com/ydc7pph4.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/ydc7pph4.png"></p><br>
 
             <p class="text-justify">A regressão linear é um método de regressão amplamente conhecido, onde o palpite é de que a função que se ajusta ao conjunto de variáveis é uma composição linear de parâmetros. Em uma regressão linear simples ainda pode existir um termo independente.</p>
             
             <p class="text-justify">Os algoritmos desenvolvidos neste site funcionam construindo expressões lineares, mas cada algoritmo realiza esse processo utilizando uma abordagem diferente. Estes detalhes serão apresentados mais a frente.</p>
 
-            <p class="text-justify">Um modelo geral de regressão linear para um conjunto de variáveis <img src="http://mathurl.com/ybvltqmr.png"> é:</p>
+            <p class="text-justify">Um modelo geral de regressão linear para um conjunto de variáveis <img src="./images/equations/ybvltqmr.png"> é:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/ydb48h6c.png"></p>
+            <br><p class="text-center"><img src="./images/equations/ydb48h6c.png"></p>
             
             <h3 class="text-center" id="IT">A estrutura de dados IT</h3>
 
             <p class="text-justify">A estrutura de dados IT guarda internamente um conjunto de expoentes e uma operação:</p> 
             
-            <br><p class="text-center"><img src="http://mathurl.com/ycu72p2p.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/ycu72p2p.png"></p><br>
 
             <p class="text-justify">O conjunto de expoentes tem sempre o mesmo tamanho de X<sub>i</sub>, e as possíveis operações são:</p>
                 
@@ -89,35 +90,35 @@
 
             <p class="text-justify">Por se tratar da unidade elementar para construir todas as expressões lineares, esta estrutura deve ser interpretada como um número em função das variáveis explicativas. Seu valor numérico é calculado a partir de um valor do DATASET: primeiro, dado um conjunto X<sub>i</sub>, eleva-se cada um dos elementos de X<sub>i</sub> ao expoente e<sub>i</sub> (pertencente ao conjunto interno de expoentes). Após isso, todos os valores obtidos são multiplicados e, por fim, a operação da estrutura é aplicada em cima do valor obtido:</p>
 
-            <p class="text-center"><img src="http://mathurl.com/yaahevps.png"></p>
+            <p class="text-center"><img src="./images/equations/yaahevps.png"></p>
 
-            <p class="text-justify">Então cada expressão formada sempre será uma expressão linear (<img src="http://mathurl.com/ydb48h6c.png">) onde cada termo x<sub>i</sub> é uma estrutura IT multiplicada por um coeficiente.</p>
+            <p class="text-justify">Então cada expressão formada sempre será uma expressão linear (<img src="./images/equations/ydb48h6c.png">) onde cada termo x<sub>i</sub> é uma estrutura IT multiplicada por um coeficiente.</p>
 
             <p class="text-justify">A estrutura de dados IT possui limitações que impede que algumas funções possam ser criadas. Todos os algoritmos se baseiam nessa estrutura de dados, e suas expressões são compostas somando várias estruturas IT. Tome como exemplo a estrutura IT para um problema de 3 variáveis, e sua correspondente forma matemática:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/yc46lhbw.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/yc46lhbw.png"></p><br>
 
             <p class="text-justify">O algoritmo compôe uma expressão somando várias estruturas IT, onde cada uma tem um coeficiente. Isso quer dizer que toda expressão será da forma:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/y8vbfftq.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/y8vbfftq.png"></p><br>
 
             <p class="text-justify">Cada estrutura IT representa um termo. Uma possível equação que o algoritmo pode encontrar é:</p>
                             
-            <br><p class="text-center"><img src="http://mathurl.com/y9l44jxe.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/y9l44jxe.png"></p><br>
             
             <p class="text-justify">Mas perceba que a expressão:</p>
                 
-            <br><p class="text-center"><img src="http://mathurl.com/ybv67p4j.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/ybv67p4j.png"></p><br>
             
             <p class="text-justify">nunca será formada, pois uma estrutura IT está contendo outra estrutura IT. Por não ser possível formar a expressão, sua solução exata nunca será encontrada, embora possa existir alguma outra expressão que minimize o erro e consequentemente apresente um bom score. Abaixo estão mais alguns exemplos de expressões que não podem ser encontradas pelos algoritmos:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/y8fss2sq.png"></p>
-                <p class="text-center"><img src="http://mathurl.com/ycwj2v7w.png"></p>
-                <p class="text-center"><img src="http://mathurl.com/y7epyw9f.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/y8fss2sq.png"></p>
+                <p class="text-center"><img src="./images/equations/ycwj2v7w.png"></p>
+                <p class="text-center"><img src="./images/equations/y7epyw9f.png"></p><br>
 
             <p class="text-justify">De um ponto de vista, isso limita o campo de busca, que ao contrário do algoritmo genético, não tem restrições na forma das expressões. Mas, por outro lado, são improváveis os casos onde a equação que rege os dados de entrada possa ter várias funções encadeadas:</p>
 
-            <p class="text-center"><img src="http://mathurl.com/y7zzk96p.png"></p>
+            <p class="text-center"><img src="./images/equations/y7zzk96p.png"></p>
             
             <p class="text-justify">Além disso, ainda evita que expressões extremamente complexas sejam criadas e eventualmente selecionadas por acabarem se ajustando bem aos pontos de entrada. Isso garante uma maior simplicidade nos resultados.</p>
 
@@ -127,11 +128,11 @@
 
             <p class="text-justify">Para qualificar as expressões criadas pelos algoritmos, usamos o score. O score é uma classificação para a expressão, de acordo com o quão bem esta expressão se ajusta ao DATASET de entrada, e varia de 0 a 1. O score é calculado por:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/ybb9pq4h.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/ybb9pq4h.png"></p><br>
             
             <p class="text-justify">Onde o MAE (desvio médio absoluto) é igual ao somatório das diferenças entre os valores da variável dependente y<sub>i</sub> e os valores calculados pela expressão para X<sub>i</sub>:</p>
 
-            <br><p class="text-center"><img src="http://mathurl.com/ycsf5jf9.png"></p><br>
+            <br><p class="text-center"><img src="./images/equations/ycsf5jf9.png"></p><br>
 
             <h4 id="SymTree" >O algoritmo SymTree</h4>
 

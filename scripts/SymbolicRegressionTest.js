@@ -51,8 +51,13 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
         sumTime += times[i];
 
         expression.simplify(0.05);
+        let expressionString = expression.printMe();
 
-        resultTable +='<tr><td>'+i+'</td><td>'+expression.printMe()+'</td><td>'+scores[i]+'</td><td>'+times[i]+'</td></tr>';
+        for(let i=0; i<labels.length; i++){
+            expressionString = expressionString.split("x"+i).join(labels[i]);
+        }
+
+        resultTable +='<tr><td>'+i+'</td><td>'+expressionString+'</td><td>'+scores[i]+'</td><td>'+times[i]+'</td></tr>';
     }
 
     sumScore/=numTests;

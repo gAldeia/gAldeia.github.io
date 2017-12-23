@@ -21,6 +21,14 @@
         </button>
             <a class="navbar-brand" href="#"><u><strong>Regressão</strong> Simbólica</u></a>
         </div><!--logo do site-->
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="./index.html">Página inicial</a></li>
+                <li><a href="#input">Entrada de dados</a></li>
+                <li><a href="#output">Resultados</a></li>
+                <li><a href="#contact-us">Contato</a></li>
+            </ul><!--Lista de opções-->
+        </div><!--menu-->
     </div><!--container-->
 </nav><!--navbar-->
 
@@ -28,8 +36,9 @@
 
     <section id="sideMenu" class="well">
         <nav>
-            <a href="./index.html" class="active">Página inicial</a>
+            <a href="./index.html">Página inicial</a>
             <a href="./input-examples.html">Exemplos de entrada</a>
+            <a href="./performance-test.html" class="active">Teste de performance</a>
             <a href="./study-notes.html">Notas de estudo</a>
             <a href="./feedback.html"><strong>Dê seu feedback</strong></a>
             <a href="./changelog.html">Registro de updates do site</a>
@@ -43,7 +52,11 @@
             <div class="page-header">
                 <h2>Entrada de dados</h2>
 
-                <p class="text-justify">Pagina dedicada a medir o desempenho do algoritmo. Ao inserir os dados e selecionar um algoritmo, um script irá executá-lo 30 vezes, calculando seu desempenho médio e possibilitando uma análise geral do comportamento para a série de dados. <strong>O processamento dos dados é lento</strong>.</p>
+                <div class="alert alert-warning">
+                    <strong>Atenção!</strong> O processamento dos dados é lento, principalmente para funções que não podem ser encontradas. Se for testar alguma série de dados, faça um teste na página inicial e certifique-se que esta pode ser encontrada.
+                </div>
+
+                <p class="text-justify">Pagina dedicada a medir o desempenho do algoritmo. Ao inserir os dados e selecionar um algoritmo, um script irá executá-lo 30 vezes, calculando seu desempenho médio e possibilitando uma análise geral do comportamento para a série de dados. </p>
                 <div class="row">
                     <div class="col-lg-6">
                         <h4>Entrada manual de dados</h4>
@@ -80,14 +93,10 @@
                 <p class="text-justify">Com os dados carregados, basta escolher um algoritmo abaixo:</p>
 
                 <p class="text-center">
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('SymTree')">Algoritmo SymTree (Symbolic Tree)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITLS')">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITES')">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('SymTree')">SymTree</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITLS')">IT-LS</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITES')">IT-ES</button>
                 </p>
-
-                <div id="myProgress">
-                    <div id="myBar"></div>
-                </div>
 
                 <div id="results">
                 </div>
