@@ -21,12 +21,15 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
 
     //calcula e descarta a primeira, pois o tempo é muito diferente do restante. talvez na primeira vez tenha um processamento mais pesado.
     let expression = undefined; //guardar a melhor expressão
+
     if (algorithm==="ITLS")
         expression = new IT_LS(150, 1, 3, 50);
     else if (algorithm==="ITES")
         expression = new IT_ES(150, 1, 3, 45, 50);
     else if (algorithm==="SymTree")
         expression = new SymTree(5, 0.05, 0, 0);
+    else if (algorithm==="FastSymTree")
+        expression = new SymTree(2, 0.05, 0, 0);
     else
         console.error("método inválido");
 
@@ -41,6 +44,8 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
             expression = new IT_ES(150, 1, 3, 45, 50);
         else if (algorithm==="SymTree")
             expression = new SymTree(5, 0.05, 0, 0);
+        else if (algorithm==="FastSymTree")
+            expression = new SymTree(2, 0.05, 0, 0);
         else
             console.error("método inválido");
 

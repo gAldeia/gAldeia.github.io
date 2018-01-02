@@ -1,8 +1,13 @@
 //Generator.js
 
 
-function noise(){
-    return (Math.random()*0.6) -0.3;
+function noise(value){
+    //adiciona um erro nas medidas, de acordo com a porcentagem definida.
+
+    let percentError = 0.01;
+    value *=percentError;
+    
+    return Math.random()>0.5? value : -1*value;
 }
 
 function generateLines(){
@@ -54,7 +59,7 @@ function createMatrix(expression, range, useNoise, strictlyPositive){
             document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Alguma coisa está errada. Verifique se não esqueceu algum operador entre dois números e se funções matemáticas (seno, cosseno, raiz, etc) estão de acordo com a sintaxe da biblioteca Math do javascript (Math.sin(), Math.cos(), Math.sqrt()).</p></div>";
             return [];
         }
-        if (useNoise) result += noise();
+        if (useNoise) result += noise(result);
 
         line.push(result.toFixed(2));
         matrix.push(line);
