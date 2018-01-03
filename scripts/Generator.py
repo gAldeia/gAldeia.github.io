@@ -1,9 +1,10 @@
 import numpy as np
 from math import cos
+from math import log
 
 # conjuntos de permutacoes aleatorias
-p1 = np.random.permutation( np.arange(10, 500, 15) )
-p2 = np.random.permutation( np.arange(373, 473, 5) )
+p1 = np.random.permutation( np.arange(1.0e-8, 1.0e-5, 1.0e-8) )
+p2 = np.random.permutation(  np.arange(1.0e-12, 1.0e-10, 1.0e-12)  )
 p3 = np.random.permutation( np.arange(1, 10, 0.25) )
 
 cos = np.random.permutation( np.arange(-1, 1, 0.05) )
@@ -19,12 +20,14 @@ g = 9.807 #aceleracao da gravidade
 l = min(len(p1), len(p2));
 
 # funcao a ser criada W
-W  =  p1[:l]*p2[:l]*R/p3[:l]
+W  = p1[:l]/p2[:l]
+for i in range(l):
+    W[i] = 10*log(W[i])
 
 print "Tabela de testes:"
 for i in range(l):
-    print p1[i], p2[i], p3[i],W[i]
+    print p1[i], p2[i], W[i]
 
 print "\nTabela HTML:"
 for i in range(l):
-    print "<tr><td>"+str(p1[i])+"</td><td>"+str(p2[i])+"</td><td>"+str(p3[i])+"</td><td>"+str(W[i])+"</td></tr>"
+    print "<tr><td>"+str(p1[i])+"</td><td>"+str(p2[i])+"</td><td>"+str(W[i])+"</td></tr>"
