@@ -48,10 +48,10 @@ function run_regression_d(algorithm){ //versão para avaliar desempenho
             expression = new SymTree(2, 0.05, 0, 0);
         else
             console.error("método inválido");
-
-        scores.push(expression.score);
         times.push(performance.now() - startTime);
-        
+    
+        scores.push(expression.score);
+
         sumScore += scores[i];
         sumTime += times[i];
 
