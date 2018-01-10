@@ -129,7 +129,7 @@
 
                 <p class="text-center">
                     <input type="checkbox" id="labeled" value="true">
-                    <label for="noise">Usar a primeira linha da entrada como rótulo?</label>
+                    <label for="labeled">Usar a primeira linha da entrada como rótulo?</label>
 
                     <button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
                     <button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
@@ -153,6 +153,8 @@
                 </p>
 
                 <div id="results">
+                    <div id="sr-result"></div>
+                    <div id="sr-graphics"></div>
                 </div>
             </div>
         </section>
@@ -210,6 +212,7 @@
 	<script type="text/javascript" src=./scripts/math.js></script>
 	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>

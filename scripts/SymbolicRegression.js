@@ -230,14 +230,14 @@ class LR{
 
 
 class IT{
-    constructor(exponents, operator){
+    constructor(exponents, operator, co = 1){
         //check dos tipos
         if (exponents.constructor != Array)
             console.error('expoente não é array de números');
         if (!OP.isOp(operator))
             console.error('string do operador não existe dentro de OP');
 
-        this.coeff = 1; //TODO TERMO NOVO TEM COEFF = 0.1
+        this.coeff = co; //TODO TERMO NOVO TEM COEFF = 0.1
         this.exp = exponents.slice(0); //copio o array de exp
         this.op = operator.slice(0);
     };
@@ -263,7 +263,7 @@ class IT{
         return (this.coeff.toFixed(2) == 1.00? '' : this.coeff.toFixed(2) + '*') + myExp;
     };
     evaluate(DataPoint){
-        let value = 1.0;
+        let value = 1.0; //elemento neutro da multiplicação
 
         for (let i=0; i<this.exp.length; i++)
             value *= Math.pow(DataPoint.x[i], this.exp[i]);
@@ -287,7 +287,7 @@ class IT{
         return true;
     };
     copy(){
-        return new IT(this.exp, this.op); //tudo é copiado no construtor, então não há referências aqui
+        return new IT(this.exp, this.op, this.coeff); //tudo é copiado no construtor, então não há referências aqui
     };
 }
 
@@ -302,7 +302,7 @@ class LE{
         this.score = 0.0;
         this.terms = [ ];
 
-        for (let i in termsToUse){ //maybe
+        for (let i in termsToUse){ //maybe, por conta da notação
             let push = true;
             for (let j=0; j<this.terms.length && push; j++){
                 if (termsToUse[i].printMe_d()===this.terms[j].printMe_d())
@@ -332,16 +332,19 @@ class LE{
             myExp += this.terms[i].printMe() + (i==this.terms.length-1? '' : ' + ');
         return myExp;
     };
+    solve(inputPoint){ //recebe só um ponto
+        let aux = 0.0;
+
+        for(let j=0; j<this.terms.length; j++){
+            aux += this.terms[j].evaluate(inputPoint);
+        }
+        return aux;
+    };
     evaluate(inputPoints){
         let mae = 0.0;
 
         for(let i=0; i<inputPoints.length; i++){
-            let aux = 0.0;
-
-            for(let j=0; j<this.terms.length; j++){
-                aux += this.terms[j].evaluate(inputPoints[i]);
-            }
-            mae += Math.abs(aux -inputPoints[i].y);
+            mae += Math.abs(this.solve(inputPoints[i]) - inputPoints[i].y);
         }
         mae = mae/inputPoints.length;
 
@@ -664,13 +667,15 @@ class SymTree{
 }
 
 //--MÉTODO PRINCIPAL----------------------------------------------------------//
+var expression = undefined; //guarda o retorno do método de regressão simbólica utilizado
+
 function run_regression(algorithm){
     if (inputPoints[0]===undefined){
-        document.getElementById("results").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
+        document.getElementById("sr-result").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
 
-    let expression = undefined; //guardar a melhor expressão
+    expression = undefined; //guardar a melhor expressão
 
     if (algorithm==="ITLS")
         expression = new IT_LS(150, 1, 3, 50);
@@ -687,9 +692,42 @@ function run_regression(algorithm){
     for(let i=0; i<labels.length; i++){
         expressionString = expressionString.split("x"+i).join(labels[i]);
     }
+    document.getElementById("sr-result").innerHTML="<p>Resultado:</p>";
+    document.getElementById("sr-result").innerHTML+="<p><pre><p>Algoritmo: "+algorithm+"</p>Expressão: "+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
 
-    document.getElementById("results").innerHTML="<p>O melhor candidato encontrado foi:</p>";
-    document.getElementById("results").innerHTML+="<p><pre>Expressão:"+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
+    let checkboxes = "";
+    for(let i=0; i<expression.terms.length; i++){
+        checkboxes += "<input type='checkbox' id='check"+i+"' value='true'><label for='check"+i+"'>"+expression.terms[i].printMe()+"</label><br>";
+    }
+
+    document.getElementById("sr-graphics").innerHTML = "<p class='text-justify'>Aqui você pode analisar melhor o resultado. É possível ver o plot da expressão como um todo, assim como cada termo individualmente. Basta selecionar cada termo que gostaria de avaliar. Selecionar mais de um termo simultaneamente resulta numa combinação entre eles. Este plot é: resultado da expressão composta pelos termos selecionados versus resultados da entrada.</p><div class='row'><div class='col-md-4' id='func-composer'>"+checkboxes+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plotar grafico</button></div> <div class='col-md-7' id='func-ploter' style='height: 450px;'></div></div><br>";
 
     return expression;
+}
+
+
+function update_plot(){
+    let choosenTerms = [ ];
+    for (let i=0; i<expression.terms.length; i++){
+        if (document.getElementById("check"+i).checked){
+            choosenTerms.push(expression.terms[i].copy());
+        }
+    }
+    if (choosenTerms.length==0){
+        return;
+    }
+        
+    let plot = new LE(choosenTerms);
+
+    let x = [ ];
+    let y = [ ];
+
+    for(let i=0; i<inputPoints.length; i++){
+        x.push(plot.solve(inputPoints[i]));
+        y.push(inputPoints[i].y);
+    }
+
+    var trace = {x, y, mode: 'markers'};
+
+    Plotly.newPlot('func-ploter', [trace]);
 }

@@ -25,6 +25,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="./index.html">Página inicial</a></li>
+                    <li><a href="#todolist">To do list</a></li>
                     <li><a href="#changelog">Changelog</a></li>
                     <li><a href="#contact-us">Contato</a></li>
                 </ul><!--Lista de opções-->
@@ -49,6 +50,27 @@
 
     <section id="bodyContent" class="well">
 
+        <div class="page-header" id="todolist">
+            <h2>To do List</h2>
+
+            <div class="alert alert-info">
+                <p class="text-justify"><strong>Obs:</strong> O desenvolvedor não garante que estes itens serão implementados, mas, por questão de organização, todas as possíveis ideias são colocadas aqui, e são <strong>detalhes técnicos da implementação do projeto</strong>. Caso canceladas, serão riscadas; caso implementadas, serão marcadas em negrito.</p>
+            </div>
+
+            <p class="text-justify"> - Fazer com que a todolist e as updates possam ser contraídas/expandidas para diminuir o tamanho da página.</p>
+            <p class="text-justify"> - Revisar o código.</p>
+            <p class="text-justify"> - Fazer debug cuidadoso para ver se a última modificação no core da regressão simbólica não criou problemas (o IT recebe um coef no construtor, definido para 1 caso não seja passado; e quando retorna uma cópia, envia a cópia com seu atual coeficiente (a copia não começa com um coef =1, como antes)).</p>
+            <p class="text-justify"> - Criar um painel onde o usuário possa escolher por conta própria os parâmetros passados para cada algoritmo de regressão simbólica.</p>
+            <p class="text-justify"> - Ver se as grids do bootstrap não extrapolam os limites da página em diferentes resoluções de tela.</p>
+            <p class="text-justify"> - Remake na estrutura da página.</p>
+            <p class="text-justify"> - Fazer com que inputpoints seja ou global ou sempre passado como parâmetro no construtor de todos os métodos de regressão simbólica, para unificar o código e evitar problemas.</p>
+            <p class="text-justify"> - Colocar um readme no repositório do git.</p>
+            <p class="text-justify"> - Melhorar os comentários do symbolicregression.js.</p>
+            <p class="text-justify"> - script do loadFIle recebe o id do elemento html para ler, possibilitando várias caixas de leitura em uma mesma página.</p>
+            <p class="text-justify"> - Tentar melhorar todos os "ids" das páginas html.</p>
+            <p class="text-justify"> - Possibilitar que o IT receba no construtor o coeficiente, e tenha como coeficiente padrão caso nenhum seja passado o valor de 1, isso torna o código mais flexível para futuras implementações. Caso isso seja feito, terá de ser revisado o código do analisador da expressão na página inicial.</p>
+        </div>
+
         <div class="page-header" id="changelog">
 
             <h2>Updates <small>(desde a origem do site)</small></h2>
@@ -56,6 +78,14 @@
             <div class="alert alert-info">
                 <p class="text-justify"><strong>Obs:</strong> Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a>. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
             </div>
+
+            <p class="text-justify"><b>10/01/2018</b></p>
+            <p class="text-justify"> - Nova função em LE, "solve", que simplesmente calcula o valor dela passados os valores para suas variáveis. Ao contrário de "evaluate", não calcula o MAE nem atualiza o score.</p>
+            <p class="text-justify"> - "solve" é utilizado no evaluate.</p>
+            <p class="text-justify"> - Nova lista de tarefas pendentes.</p>
+            <p class="text-justify"> - No resultado é indicado também o algoritmo utilizado.</p>
+            <p class="text-justify"> - Construtor de IT recebe o coeficiente também, caso seja passado. Caso não, define como 1.</p>
+            <p class="text-justify"> - Na página inicial é possível fazer uma análise detalhada da expressão obtida.</p>
 
             <p class="text-justify"><b>04/01/2018</b></p>
             <p class="text-justify"> - Tabelas da página em inglês traduzidas.</p>
