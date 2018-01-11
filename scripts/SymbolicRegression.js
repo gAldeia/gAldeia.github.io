@@ -36,7 +36,7 @@ class OP{
         return ops[Math.floor(Math.random() * (-7 + 1)) + 7];
     };
     static length(){
-        return 8;
+        return 8; //deve ser alterado caso seja acrescentado novos operadores
     };
     static solve(op, value){
         if (op==='id')
@@ -230,14 +230,14 @@ class LR{
 
 
 class IT{
-    constructor(exponents, operator, co = 1){
+    constructor(exponents, operator, coefficient = 1){
         //check dos tipos
         if (exponents.constructor != Array)
             console.error('expoente não é array de números');
         if (!OP.isOp(operator))
             console.error('string do operador não existe dentro de OP');
 
-        this.coeff = co; //TODO TERMO NOVO TEM COEFF = 0.1
+        this.coeff = coefficient; //TODO TERMO NOVO TEM COEFF = 0.1
         this.exp = exponents.slice(0); //copio o array de exp
         this.op = operator.slice(0);
     };
@@ -249,7 +249,7 @@ class IT{
 
         return myExp + '], ' + this.op + ')';
     };
-    printMe(){ //imprime com marcadores HTML para exibir ao usuário
+    printMe(){ //imprime com marcadores HTML para exibir ao usuário (forma legível)
         let myExp = "";
     
         for (let i in this.exp) //maybe
@@ -332,7 +332,7 @@ class LE{
             myExp += this.terms[i].printMe() + (i==this.terms.length-1? '' : ' + ');
         return myExp;
     };
-    solve(inputPoint){ //recebe só um ponto
+    solve(inputPoint){ //recebe só um ponto. Para usar uma LE como aprendizagem de máquina (por exemplo, predizer valores, é deve-se usar essa função solve).
         let aux = 0.0;
 
         for(let j=0; j<this.terms.length; j++){
@@ -676,6 +676,7 @@ function run_regression(algorithm){
     }
 
     expression = undefined; //guardar a melhor expressão
+    let startTime = performance.now(); //medir o tempo de execução
 
     if (algorithm==="ITLS")
         expression = new IT_LS(150, 1, 3, 50);
@@ -686,6 +687,8 @@ function run_regression(algorithm){
     else
         console.error("método inválido");
 
+    let elapsedTime = performance.now() - startTime;
+
     expression.simplify(0.05);
     let expressionString = expression.printMe();
 
@@ -693,14 +696,20 @@ function run_regression(algorithm){
         expressionString = expressionString.split("x"+i).join(labels[i]);
     }
     document.getElementById("sr-result").innerHTML="<p>Resultado:</p>";
-    document.getElementById("sr-result").innerHTML+="<p><pre><p>Algoritmo: "+algorithm+"</p>Expressão: "+ expressionString+ "</p><p>Score: "+expression.score+"<p>";
+    document.getElementById("sr-result").innerHTML+="<p><pre><p>Algoritmo: "+algorithm+"</p><p>Expressão: "+ expressionString+ "</p><p>Score: "+expression.score+"</p><p>Tempo (ms): "+elapsedTime+"</p></pre></p>";
 
     let checkboxes = "";
     for(let i=0; i<expression.terms.length; i++){
         checkboxes += "<input type='checkbox' id='check"+i+"' value='true'><label for='check"+i+"'>"+expression.terms[i].printMe()+"</label><br>";
     }
 
-    document.getElementById("sr-graphics").innerHTML = "<p class='text-justify'>Aqui você pode analisar melhor o resultado. É possível ver o plot da expressão como um todo, assim como cada termo individualmente. Basta selecionar cada termo que gostaria de avaliar. Selecionar mais de um termo simultaneamente resulta numa combinação entre eles. Este plot é: resultado da expressão composta pelos termos selecionados versus resultados da entrada.</p><div class='row'><div class='col-md-4' id='func-composer'>"+checkboxes+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plotar grafico</button></div> <div class='col-md-7' id='func-ploter' style='height: 450px;'></div></div><br>";
+    let Xplot = "<form>";
+    for (let i=0; i<inputPoints[0].x.length; i++){
+        Xplot += "<input type='radio' name='variable' id='x"+i+"'><label for='x"+i+"'>" + (i+1) +"º variável</label><br>";
+    }
+    Xplot += "</form>";
+
+    document.getElementById("sr-graphics").innerHTML = "<div class='row'><div class='col-md-4' id='func-composer'><p class='text-justify'>Aqui você pode analisar melhor o resultado. É possível ver o plot da expressão como um todo, assim como cada termo individualmente. Basta selecionar cada termo que gostaria de avaliar. Selecionar mais de um termo simultaneamente resulta numa combinação entre eles. Este plot é: resultado da expressão composta pelos termos selecionados versus resultados da entrada.</p>"+checkboxes+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plotar grafico T x Y</button><br><p class='text-justify'>Estas opções são para isolar uma variável e plotar o gráfico da função composta acima para o intervalo de dados da entrada</p>"+Xplot+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_variable_plot()'>Plotar grafico X x T</button></div> <div class='col-md-7' id='func-ploter' style='height: 450px;'></div></div><br>";
 
     return expression;
 }
@@ -727,7 +736,64 @@ function update_plot(){
         y.push(inputPoints[i].y);
     }
 
-    var trace = {x, y, mode: 'markers'};
+    let trace = {x, y, mode: 'markers'};
 
     Plotly.newPlot('func-ploter', [trace]);
+}
+
+function update_variable_plot(){
+    let index = -1;
+
+    for (let i=0; i<inputPoints[0].x.length; i++){
+        if (document.getElementById("x"+i).checked==true){
+            index = i;
+            console.log(i);
+            break;
+        }
+    }
+
+    if (index>=0){
+        let choosenTerms = [ ];
+        for (let i=0; i<expression.terms.length; i++){
+            if (document.getElementById("check"+i).checked){
+                choosenTerms.push(expression.terms[i].copy());
+            }
+        }
+        if (choosenTerms.length==0){
+            return;
+        }
+            
+        let plot = new LE(choosenTerms);
+
+        let newPoints = [ ];
+        let min = Infinity;
+        let max = -Infinity;
+
+        for (let i=0; i<inputPoints.length; i++){
+            if (inputPoints[i].x[index]>max)
+                max = inputPoints[i].x[index];
+            if (inputPoints[i].x[index]<min)
+                min = inputPoints[i].x[index];    
+        }
+        let h = (max-min)*0.02;
+
+        let x = [ ];
+        let y = [ ];
+
+        for (let i=0; i<50; i++){ //50 valores
+            let aux = [ ];
+            for (let j=0; j<inputPoints[0].x.length; j++){
+                if (j!=index)
+                    aux.push(1);
+                else
+                    aux.push(min + h*i);
+            }
+            console.log(aux);
+            x.push(min + h*i);
+            y.push(plot.solve(new DataPoint(aux, 1)));
+        }
+        let trace = {x, y, mode: 'markers'};
+
+        Plotly.newPlot('func-ploter', [trace]);
+    }
 }
