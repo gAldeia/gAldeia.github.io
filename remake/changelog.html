@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+   <meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!--meta name="viewport" content="width=device-width, initial-scale=1"-->
+
+   <link rel="stylesheet" href="./style/style.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+   <title>Assistente de Laboratório: Registro de updates</title>
+</head>
+
+<body class="body body-background container">
+    <!--NAVBAR!-->
+    <nav class="navbar nav navbar-fixed-top green-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="btn btn-default navbar-btn navbar-toggle" data-toggle="collapse" data-target="#Navbar"><span class="glyphicon glyphicon-menu-hamburger"></span> Menu</button>
+                <a class="navbar-brand" href="./index.html" style="color: #333"><strong>Assistente </strong>de Laboratório</a>
+            </div>
+            <div class="collapse navbar-collapse" id="Navbar">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href='./index.html'><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li><a href="./input-examples.html"><span class="glyphicon glyphicon-folder-open"></span> Exemplos</a></li>
+                        <li><a href="./feedback.html"><span class="glyphicon glyphicon-list-alt"></span> Feedback</a></li>
+                        <li><a href="./performance-test.html"><span class="glyphicon glyphicon-hourglass"></span> Performance</a></li>
+                        <li><a href="./study-notes.html"><span class="glyphicon glyphicon-book"></span> Notas de estudo</a></li>
+                        <li class='active'><a href="./changelog.html"><span class="glyphicon glyphicon-tasks"></span> Changelog</a></li>
+                    </ul>
+            </div>
+        </div>
+    </nav>
+    <!--INTRO-->
+    <div class="well">
+        <div class="content">
+            <div class="content-title">
+                <h1 class="text-center"><strong>Registro</strong> de updates</h1>
+            </div>
+            <div class="content-text">
+                    <p class="text-justify">O desenvolvedor não garante que os itens na lista de afazeres serão implementados, mas, por questão de organização, todas as possíveis ideias são colocadas anotadas lá, e são <strong>detalhes técnicos da implementação do projeto</strong>. Caso canceladas, serão riscadas, e conforme forem sendo resolvidas, serão movidas para a lista de updates.</p>
+                    <p class="text-justify">Para acompanhar cada detalhe do que foi feito, visite o <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub</a> do projeto. O repositório é sempre atualizado ao mesmo tempo que este quadro de updates.</p>
+            </div>
+        </div>
+        <!--TODO LIST-->
+        <div class="content">
+            <div class="content-description">
+                <h1 class="text-center">Lista de afazeres</h1>
+            </div>
+            <div class="content-text">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a class="panel-title" data-toggle="collapse" href="#collapse1"><strong>Expandir lista</strong> (to-do list)</a>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse">
+                            <div class="text-justify panel-body">Revisar o código.</div>
+                            <div class="text-justify panel-body">Fazer debug cuidadoso para ver se a última modificação no core da regressão simbólica não criou problemas (o IT recebe um coef no construtor, definido para 1 caso não seja passado; e quando retorna uma cópia, envia a cópia com seu atual coeficiente (a copia não começa com um coef =1, como antes)).</div>
+                            <div class="text-justify panel-body">Criar um painel onde o usuário possa escolher por conta própria os parâmetros passados para cada algoritmo de regressão simbólica.</div>
+                            <div class="text-justify panel-body">Ver se as grids do bootstrap não extrapolam os limites da página em diferentes resoluções de tela.</div>
+                            <div class="text-justify panel-body">Revisar códigos html.</div>
+                            <div class="text-justify panel-body">Debugar o código para encontrar os pontos onde existem comandos inalcanáveis devido a "return".</div>
+                            <div class="text-justify panel-body">Criar uma pasta com a versão final do IC quando foi submetido o artigo.</div>
+                            <div class="text-justify panel-body">Fazer com que inputpoints seja ou global ou sempre passado como parâmetro no construtor de todos os métodos de regressão simbólica, para unificar o código e evitar problemas.</div>
+                            <div class="text-justify panel-body">Colocar um readme no repositório do git.</div>
+                            <div class="text-justify panel-body">Otimizar a página para ser encontrada por sites de busca (meta content, description, etc).</div>
+                            <div class="text-justify panel-body">Melhorar os comentários do symbolicregression.js.</div>
+                            <div class="text-justify panel-body">script do loadFIle recebe o id do elemento html para ler, possibilitando várias caixas de leitura em uma mesma página.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--INPUT-->
+        <div class="content">
+            <div class="content-description">
+                <h1 class="text-center">Lista de updates</h1>
+            </div>
+            <div class="content-text">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a class="panel-title" data-toggle="collapse" href="#collapse2"><strong>Expandir lista</strong> (updates list)</a>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="text-justify panel-body">
+                                    <p class="text-justify"><b>14/01/2018</b></p>
+                                    <ul>
+                                        <li class="text-justify">Remake do layout da página (remoção da barra lateral).</li>
+                                        <li class="text-justify">Textos antes gerados por script agora estão em pt e ing (faltam os avisos).</li>
+                                    </ul> 
+                                </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>11/01/2018</b></p>
+                                <ul>
+                                    <li class="text-justify">Todolist e as updates podem ser contraídas/expandidas para diminuir o tamanho da página.</li>
+                                    <li class="text-justify">Informação do tempo de execução sendo mostrada ao usuário.</li>
+                                    <li class="text-justify">Possível plotar o gráfico de termos isolados de acordo com o range da entrada.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>10/01/2018</b></p>
+                                <ul>
+                                    <li class="text-justify">Nova função em LE, "solve", que simplesmente calcula o valor dela passados os valores para suas variáveis. Ao contrário de "evaluate", não calcula o MAE nem atualiza o score.</li>
+                                    <li class="text-justify">"solve" é utilizado no evaluate.</li>
+                                    <li class="text-justify">Nova lista de tarefas pendentes.</li>
+                                    <li class="text-justify">No resultado é indicado também o algoritmo utilizado.</li>
+                                    <li class="text-justify">Construtor de IT recebe o coeficiente também, caso seja passado. Caso não, define como 1.</li>
+                                    <li class="text-justify">Na página inicial é possível fazer uma análise detalhada da expressão obtida.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>02/01/2018</b></p>
+                                <ul>
+                                    <li class="text-justify">Ruido no gerador agora usa porcentagem de erro, não valores aleatórios pequenos (erro é proporcional aos dados).</li>
+                                    <li class="text-justify">Página de testes tem opção de rodar o SymTree com apenas 2 iterações.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>23/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Labels funcionam na página de teste de performance.</li>
+                                    <li class="text-justify">Menu de páginas atualizado.</li>
+                                    <li class="text-justify">Uso do ploty.js.</li>
+                                    <li class="text-justify">Plot da distribuição do tempo e score na página de teste de performance.</li>
+                                    <li class="text-justify">Imagens seguras.</li>
+                                    <li class="text-justify">Mensagens de aviso ao usuário na página de teste de performance.</li>
+                                    <li class="text-justify">Novas equações na página de exemplos de entrada que podem ser encontradas.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>21/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Mais linhas de entradas nos algoritmos de exemplo.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                    <p class="text-justify"><b>18/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Página de teste de performance dos algoritmos.</li>
+                                    <li class="text-justify">Contagem do tempo de execução e do score médio.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                    <p class="text-justify"><b>16/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Incorporação do google analytics.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>14/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novas tabelas de teste.</li>
+                                    <li class="text-justify">Tabelas na versão em inglês adicionadas.</li>
+                                    <li class="text-justify">Remoção dos links de imagem inseguros.</li>
+                                    <li class="text-justify">Novo formulário de feedback.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>13/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Revisão no código SymTree.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>11/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Simplify em todos os métodos.</li>
+                                    <li class="text-justify">Removidas redundâncias no código.</li>
+                                    <li class="text-justify">Melhoria na impressão dos termos, para torná-los mais legíveis.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>09/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novo texto de estudo.</li>
+                                    <li class="text-justify">Novas expressões para criar tabelas.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>08/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novos hiperlinks para o site da universidade.</li>
+                                    <li class="text-justify">Corrigido bug com rótulos das colunas.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>06/12/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novos textos na página de notas de estudo e novas tabelas de teste.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>26/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Melhoria nas tabelas geradas na página de testes.</li>
+                                    <li class="text-justify">Revisão dos textos da página de testes.</li>
+                                    <li class="text-justify">Mensagens de alerta ao usuário caso a entrada do gerador de dados esteja incorreta.</li>
+                                    <li class="text-justify">As tabelas geradas podem ter valores negativos.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>25/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novo texto explicativo na página de exemplos.</li>
+                                    <li class="text-justify">Entrada de dados gerada na página de exemplos não cria entradas que gerem uma matriz de determinante zero nos algoritmos de regressão.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>24/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Correção na atribuição de rótulos das colunas de entrada.</li>
+                                    <li class="text-justify">Controle da entrada na função exponencial, eliminando os casos de NaN.</li>
+                                    <li class="text-justify">Correção num erro no cálculo dos coeficientes, onde o algoritmo parava de funcionar.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>23/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Rótulos das colunas de entrada.</li>
+                                    <li class="text-justify">Entrada invertida, agora é x1, x2, ... y. (falta aplicar a modificação em todo texto que explica como inserir a entrada e em todas as tabelas/gerador)</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>22/11/2017</b></p>
+                                <ul>
+                                    <p class="text-justify">Remake das páginas, com um menu de navegação lateral.</p>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>18/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Implementado método alternativo de regressão linear, método dos mínimos quadrados.</li>
+                                    <li class="text-justify">Pequenas melhorias no código.</li>
+                                    <li class="text-justify">Ajuste dos coeficientes agora é feita de forma híbrida (quando possível, mínimos quadrados, se não, gradiente descendente).</li>
+                                    <li class="text-justify">Reescrita completa do código, unificando todas as classes e eliminando redundâncias.</li>
+                                    <li class="text-justify">Página de changelog.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>13/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Pequenas melhorias no código.</li>
+                                    <li class="text-justify">A biblioteca <a href="http://mathjs.org/index.html">math.js</a> está de volta.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>11/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Opção de ruído nos dados do gerador.</li>
+                                    <li class="text-justify">IT-ES usa agora o construtor na mutação para evitar alguns problemas de referência de variáveis que estava tendo com o JS.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>09/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Gerador de dados simples na página de exemplos.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>08/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">IT-ES implementado.</li>
+                                    <li class="text-justify">Nova página com alguns dados para testes.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>06/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Controle para evitar termos repetidos em expressões.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>05/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Busca local agora percorre também expoentes.</li>
+                                    <li class="text-justify">Início da implementação do IT-ES.</li>
+                                    <li class="text-justify">Todos os métodos get que envolvem arrays agora retornam novas cópias de todos os objetos (antes era retornado a referência para o array, e o método de busca local acabava não funcionando caso não houvesse melhorias na busca local).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>04/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Correção da busca local de operadores em IT-LS.</li>
+                                    <li class="text-justify">(quase) todas as variáveis agora são declaradas com "let". Isso faz com que não existam no escopo da função, e sim no escopo de bloco (evita erros principalmente em laços for).</li>
+                                    <li class="text-justify">Método simplify agora anula também termos onde os expoentes são todos zero.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>03/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Progresso na unificação das classes dos códigos.</li>
+                                    <li class="text-justify">novo IT-LS faz busca local nos operadores (faltam os expoentes).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>01/11/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Revisão do código da página, do IT-LS e do SymTree.</li>
+                                    <li class="text-justify">Critério de parada para regressão linear nos dois algoritmos.</li>
+                                    <li class="text-justify">Operação de transformação em expressões do SymTree habilitada.</li>
+                                    <li class="text-justify">Mensagem de erro caso não tenha entrada e o usuário tente executar o algoritmo.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>29/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Correção da regressão linear.</li>
+                                    <li class="text-justify">Correção de variáveis de classes em SymTree e IT-LS.</li>
+                                    <li class="text-justify">Mudança do texto de resultados.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>21/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">SymTree agora escreve os resultados na página.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>19/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Início da implementação de um novo método interno no ajuste dos coeficientes, que faz com que o ajuste seja mais preciso e mais rápido em menos iterações.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>14/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Entrada pode ser separada com tabulação também (ou com espaços ou vírgulas ou as 3 coisas juntas).</li>
+                                    <li class="text-justify">Corrigidos erros no ajuste dos coeficientes.</li>
+                                    <li class="text-justify">Busca local em ITLS corrigida e aprimorada.</li>
+                                    <li class="text-justify">Corrigidas algumas inconsistências encontradas no expand de SymTree.</li>
+                                    <li class="text-justify">Classe operator incorporada no ITLS.</li>
+                                    <li class="text-justify">Removidos backgrounds fixos (segundo fontes, tem um peso no desempenho do site, inclusive os backgrounds fixos são ignorados quando acessados por dispositivos mobile).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>13/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">ITLS agora cria tamanhos diferentes de expressões numa mesma população.</li>
+                                    <li class="text-justify">Nova mensagem para o usuário quando não há arquivo enviado e tenta usar os dados de arquivo enviado.</li>
+                                    <li class="text-justify">Algoritmo principal do SymTree implementado (em fase de revisão).</li>
+                                    <li class="text-justify">Ajuste de coeficientes tem um critério de parada novo. Antes ele repetia uma quantidade fixa de iterações, mas agora ele também para quando o erro é muito pequeno (o que for válido primeiro gera a parada) Isso permite learningRates menores e mais precisão.</li>
+                                    <li class="text-justify">Algoritmo principal do SymTree implementado (em fase de revisão).</li>
+                                    <li class="text-justify">Nova classe para cuidar dos operadores em SymTree (será migrada para ITLS também).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>12/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Calculo do score criado.</li>
+                                    <li class="text-justify">Ajuste dos coeficientes.</li>
+                                    <li class="text-justify">Criado laço principal do SymTree (ainda não funcional).</li>
+                                    <li class="text-justify">Simplificação de expressões criada.</li>
+                                    <li class="text-justify">operação de interação criada.</li>
+                                    <li class="text-justify">operação de interação inversa criada.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>10/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Critério de parada para o algoritmo IT-LS.</li>
+                                    <li class="text-justify">Início da implementação do novo algoritmo SymTree: Objetos termo e expressão linear criados.</li>
+                                    <li class="text-justify">Criação da raiz da regressão (root).</li>
+                                    <li class="text-justify">Reorganização de métodos e variáveis no código, para que exista uma base "universal", que rode em qualquer algoritmo de regressão e não tenha nenhum fragmento de código dependente de outro a não ser da base (Base é o atual algoritmo loadFile, que faz leitura, validação e processamento da entrada).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>07/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Textos e códigos revisados.</li>
+                                    <li class="text-justify">Pequena otimização no loading da página.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>03/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Validação da entrada do usuário.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>02/10/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Cálculo do coeficiente arrumado.</li>
+                                    <li class="text-justify">Corrigido individuos com alto mse se destacando na primeira pop.</li>
+                                    <li class="text-justify">Remake visual. Remoção de algumas coisas desnecessárias.</li>
+                                    <li class="text-justify">Saída de dados agora não usa canvas e é selecionável.</li>
+                                    <li class="text-justify">Textos revisados.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>28/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Busca local agora faz uma varredura nos expoentes de cada mini termo também, incrementando e decrementando 1 unidade.</li>
+                                    <li class="text-justify">NOVO ISSUE NO GITHUB, PARA MELHORAR O DESEMPENHO DA BUSCA LOCAL (aquilo ainda pode ser muito otimizado)</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>26/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Impressão do MSE na tela</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>24/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Local search (primitivo) implementado: busca a melhor opção de operação para cada um dos minitermos</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>21/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Corrigido erro (feio) na busca do melhor indivíduo</li>
+                                    <li class="text-justify">Revisão do código da regressão linear</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>20/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Reescritas as classes no modelo singletron, para conseguir definir métodos/variáveis privados/públicos</li>
+                                    <li class="text-justify">Regressão linear corrigida (ainda não sabemos se está 100% correta)</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>14/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Novo visual do site!</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>13/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Regressão linear para ajustar parâmetros implementada e funcionando. Coeficientes voltaram a ser ajustados (sem certeza de que está certo).</li>
+                                    <li class="text-justify">Removida a biblioteca math.js.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>12/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Revisão do código que cuida da leitura da entrada, agora mais modular e comentado.</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>11/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Percebido inconsistência no ajuste dos coeficientes, código removido.</li>
+                                    <li class="text-justify">Nova classe, Population, para conter métodos de "gerenciamento" das expressões (mutação, crossover e seleção)</li>
+                                    <li class="text-justify">Population -> novo método para encontrar o indivíduo de melhor fitness</li>
+                                    <li class="text-justify">Population -> mutação implementada, que percorre cada termo de cada expressão e quando sorteado o termo é modificado. </li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>08/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Calculo do MSE totalmente funcional (ainda não está livre de eventuais bugs).</li>
+                                    <li class="text-justify">Coeficientes agora são ajustados utilizando regressão linear.</li>
+                                    <li class="text-justify">Incorporação da biblioteca math.js no código, pela licensa Apache-2.0. Link da biblioteca <a href="http://mathjs.org/index.html">aqui</a>. </li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>07/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Cálculo do MSE funcionando com coeficientes nulos.</li>
+                                    <li class="text-justify">Melhoramentos visuais (ao menos eu achei melhor, não sou webdesigner).</li>
+                                </ul> 
+                            </div>
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>06/09/2017</b></p>
+                                <ul>
+                                    <li class="text-justify">Leitura de dados funcionando e convertendo os valores para dataPoint.</li>
+                                    <li class="text-justify">Novo quadro de avisos e updates no início da página</li>
+                                </ul> 
+                            </div>
+                            <!-- EXEMPLO
+                            <div class="text-justify panel-body">
+                                <p class="text-justify"><b>Data</b></p>
+                                <ul>
+                                    <li class="text-justify">updates</li>
+                                </ul> 
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <!--CONTACT-US-->
+        <div class="content">
+            <div class="text-justify content-description">
+                <h1 class="text-center">Contato</h1>
+            </div>
+            <div class="content-text" style="padding-bottom: 0px !important;">
+                <p class="text-center">Dúvidas, críticas ou sugestões?</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p>
+                            Orientador:<br>
+                            <span class="glyphicon glyphicon-user"></span> Prof. Dr. Fabrício Olivetti de França<br>
+                            <span class="glyphicon glyphicon-envelope"></span> folivetti@ufabc.edu.br
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>
+                            Discente:<br>
+                            <span class="glyphicon glyphicon-user"></span> Guilherme Seidyo Imai Aldeia<br>
+                            <span class="glyphicon glyphicon-envelope"></span> guilherme.aldeia@aluno.ufabc.edu.br
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>
+                            <span class="glyphicon glyphicon-education"></span> Universidade Federal do ABC<br>
+                            <span class="glyphicon glyphicon-globe"></span> Avenida dos Estados, 5001 - Bairro Santa Terezinha, Santo André - CEP: 09210-580<br>
+                            <span class="glyphicon glyphicon-earphone"></span> (11) 4996-0001</p>
+                    </div>
+                </div>
+                <p class="text-center">
+                    <img style="align-content: center; max-height: 100px; max-width: 500px;" src="./images/logotipo-ufabc-extenso.png"></img>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--EXEMPLO DE NOVO TÓPICO NO SITE:
+    <div class="content">
+        <div class="page-header content-title">
+            <h1 class="text-center">Título</h1>
+        </div>
+        <div class="text-justify content-description">
+            <p>Descrição curta</p>
+        </div>
+        <div class="text-justify content-text">
+            <p>Texto denso (fonte é menor)</p>
+        </div>
+    </div>
+    -->
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+    
+<html>

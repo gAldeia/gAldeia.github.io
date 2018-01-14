@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+   <meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!--meta name="viewport" content="width=device-width, initial-scale=1"-->
+
+   <link rel="stylesheet" href="./style/style.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+   <title>Assistente de Laboratório: Teste de performance de algoritmos</title>
+</head>
+
+<body class="body body-background container">
+    <!--NAVBAR!-->
+    <nav class="navbar nav navbar-fixed-top green-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="btn btn-default navbar-btn navbar-toggle" data-toggle="collapse" data-target="#Navbar"><span class="glyphicon glyphicon-menu-hamburger"></span> Menu</button>
+                <a class="navbar-brand" href="./index.html" style="color: #333"><strong>Assistente </strong>de Laboratório</a>
+            </div>
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href='./index.html'><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="./input-examples.html"><span class="glyphicon glyphicon-folder-open"></span> Exemplos</a></li>
+                    <li><a href="./feedback.html"><span class="glyphicon glyphicon-list-alt"></span> Feedback</a></li>
+                    <li class='active'><a href="./performance-test.html"><span class="glyphicon glyphicon-hourglass"></span> Performance</a></li>
+                    <li><a href="./study-notes.html"><span class="glyphicon glyphicon-book"></span> Notas de estudo</a></li>
+                    <li><a href="./changelog.html"><span class="glyphicon glyphicon-tasks"></span> Changelog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--INTRO-->
+    <div class="well">
+        <div class="content">
+            <div class="content-title">
+                <h1 class="text-center"><strong>Teste</strong> de performance</h1>
+            </div>
+            <div class="content-text">
+                <p class="text-justify">Pagina dedicada a medir o desempenho do algoritmo. Ao inserir os dados e selecionar um algoritmo, um script irá executá-lo 30 vezes, calculando seu desempenho médio e possibilitando uma análise geral do comportamento para a série de dados. </p>
+                <div class="alert alert-warning">
+                    <strong>Atenção!</strong> O processamento dos dados é lento, principalmente para funções que não podem ser encontradas. Se for testar alguma série de dados, é recomendado realizar um teste na página inicial para certificar-se de que a equação pode ser encontrada.
+                </div>
+            </div>
+        </div>
+        <!--INPUT-->
+        <div class="content">
+            <div class="text-justify content-description">
+                <h1>Entrada de dados</h1>
+            </div>
+            <div class="content-text">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4>Entrada manual de dados</h4>
+                        
+                        <textarea style="max-width: 100%; min-width:100%" class="form-control" rows="10" placeholder="Digite os dados aqui. Um ponto em cada linha, separados por vírgulas, espaços ou tabulações" id="my-manualinput"></textarea>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h4>Upload de arquivo local</h4>
+
+                        <span class="btn btn-default btn-file">
+                            <input type="file" id="my-csvinput" accept=".csv" />
+                        </span><hr>
+                    </div>
+                </div><br>
+
+                <p class="text-center">
+                    <input type="checkbox" id="labeled" value="true">
+                    <label for="labeled">Usar a primeira linha da entrada como rótulo?</label>
+
+                    <div class="row">
+                        <div class="col-lg-6"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button></div>
+                        <div class="col-lg-6"><button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button></div>
+                    </div>
+                </p>
+
+                <div id="notification">
+                </div>
+            </div>
+        </div>
+        <!--ENTRADA DE DADOS-->
+        <div class="content">
+            <div class="text-justify content-description">
+                <h1>Resultados</h1>
+            </div>
+            <div class="content-text">
+                <p class="text-justify">Com os dados carregados, basta escolher um algoritmo abaixo:</p>
+
+                <p class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('SymTree')">SymTree</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('FastSymTree')">Fast SymTree (apenas 2 interações)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITLS')">IT-LS</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITES')">IT-ES</button>
+                </p>
+
+                <div id="results">
+                </div>
+
+                <div class="text-center" id="histogram1">
+                </div>
+
+                <div class="text-center" id="histogram2">
+                </div>
+            </div>
+        </div>
+        <!--CONTACT-US-->
+        <div class="content">
+            <div class="text-justify content-description">
+                <h1 class="text-center">Contato</h1>
+            </div>
+            <div class="content-text" style="padding-bottom: 0px !important;">
+                <p class="text-center">Dúvidas, críticas ou sugestões?</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p>
+                            Orientador:<br>
+                            <span class="glyphicon glyphicon-user"></span> Prof. Dr. Fabrício Olivetti de França<br>
+                            <span class="glyphicon glyphicon-envelope"></span> folivetti@ufabc.edu.br
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>
+                            Discente:<br>
+                            <span class="glyphicon glyphicon-user"></span> Guilherme Seidyo Imai Aldeia<br>
+                            <span class="glyphicon glyphicon-envelope"></span> guilherme.aldeia@aluno.ufabc.edu.br
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>
+                            <span class="glyphicon glyphicon-education"></span> Universidade Federal do ABC<br>
+                            <span class="glyphicon glyphicon-globe"></span> Avenida dos Estados, 5001 - Bairro Santa Terezinha, Santo André - CEP: 09210-580<br>
+                            <span class="glyphicon glyphicon-earphone"></span> (11) 4996-0001</p>
+                    </div>
+                </div>
+                <p class="text-center">
+                    <img style="align-content: center; max-height: 100px; max-width: 500px;" src="./images/logotipo-ufabc-extenso.png"></img>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--EXEMPLO DE NOVO TÓPICO NO SITE:
+    <div class="content">
+        <div class="page-header content-title">
+            <h1 class="text-center">Título</h1>
+        </div>
+        <div class="text-justify content-description">
+            <h1>Descrição curta</h1>
+        </div>
+        <div class="text-justify content-text">
+            <p>Texto denso (fonte é menor)</p>
+        </div>
+    </div>
+    -->
+    
+    <!-- scripts dos algoritmos de regressão simbólica-->
+	<script type="text/javascript" src=./scripts/LoadFile.js></script>
+	<script type="text/javascript" src=./scripts/math.js></script>
+    <script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
+    <script type="text/javascript" src=./scripts/SymbolicRegressionTest.js></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+    
+<html>
