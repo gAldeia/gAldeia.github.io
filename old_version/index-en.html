@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+
+<html lan="en">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
+    
+	<title>Lab Assistant: Lightweight Symbolic Regression.</title>
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+    <div class="container">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+        </button>
+            <a class="navbar-brand" href="#"><u><strong>Symbolic</strong> Regression</u></a>
+        </div><!--logo do site-->
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="#intro">Description</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">Symbolic Regression<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#guide">How to use it</a></li>
+                        <li><a href="#input">Data input</a></li>
+                        <li><a href="#output">Results</a></li>
+                        <li><a href="#explain">Expected results</a></li>
+                    </ul>
+                </li>
+		        <li><a href="#about">About the project</a></li>
+                <li><a href="#contact-us">Contact</a></li>
+            </ul><!--Lista de opções-->
+            <ul class="nav navbar-nav navbar-right">
+                <button class="btn btn-default navbar-btn" onclick="window.location='index.html'">Versão em português</button>
+            </ul>
+        </div><!--menu-->
+    </div><!--container-->
+</nav><!--navbar-->
+
+<body class="body body-background container">
+
+    <section id="sideMenu" class="well">
+        <nav>
+            <a href="./index-en.html" class="active">Home</a>
+            <a href="./input-examples-en.html">Input examples</a>
+            <a href="./performance-test.html">Performance test</a>
+            <a href="./study-notes.html">Study notes (in portuguese)</a>
+            <a href="./feedback.html"><strong>Send us your feedback</strong></a>
+            <a href="./changelog.html">Roadmap (in portuguese)</a>
+            <a href="https://github.com/gAldeia/gAldeia.github.io">Project GitHub<br><small>(external link)</small></a>
+            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">Author's GitHub<br><small>(external link)</small></a>
+        </nav>
+    </section>
+
+    <section id="bodyContent" class="well">
+        <section id="intro">
+            <div class="page-header">
+                <h2>Laboratory Assistant</h2>
+
+                <p class="text-justify">This webpage was developed to show the possibility of applying the SymTree algorithm as a lightweight alternative to common Symbolic Regression algorithms. This tool can be used as an assistent to physics and engineering experimental labs to verify equations and functions seen in theory classes. The algorithm was entirely developed in JavaScript and, as such, it runs in browser without any further requirements. Experiment and enjoy!</p>
+		    
+		    <div class="alert alert-info">
+                    <p class="text-justify"><strong>Announcements</strong><br> This site is still under development. Some problems may occur during the execution of the experiments. Criticism and Suggestions are welcome.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="guide">
+            <div class="page-header">
+                <h2>How to use it</h2>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h4>1 - Data input</h4>
+
+                        <p class="text-justify">The input data can be typed or loaded through a local file in <strong>.csv</strong> format. 
+                          The input format should have the input variables first followed by the measured value: x1, x2, ..., y. Optionally, the first line may contain the variable names (click on the corresponding box to activate such option);</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4>2 - Run the algorithm</h4>
+
+                        <p class="text-justify">Click on the name of the algorithm you wish to run;</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4>3 - Verify the result</h4>
+
+                        <p class="text-justify">After finishing processing, the site will display the best expression found by the algorithm.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="input">
+            <div class="page-header">
+                <h2>Data input</h2>
+
+                <p class="text-justify">Data can be typed manually, or you can upload a local <strong>csv</strong> file. Optionally, the first line may contain the name of the variables. In <a href=".\input-examples.html">example input data</a> you can find some examples.;</p>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4>Manual input</h4>
+                        
+                        <textarea style="max-width: 100%; min-width:100%" class="form-control" rows="10" placeholder="Type your data here. Each data point for line and each line separated by comma, space or tab" id="my-manualinput"></textarea>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h4>Upload local file</h4>
+
+                        <span class="btn btn-default btn-file">
+                            <input type="file" id="my-csvinput" accept=".csv" />
+                        </span><hr>
+                    </div>
+                </div><br>
+
+                <p class="text-center">
+                    <input type="checkbox" id="labeled" value="true">
+                    <label for="noise">Use first line as variable names?</label>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Use typed values</button>
+                    <button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Use local file</button>
+                </p>
+
+                <div id="notification">
+                </div>
+            </div>
+        </section>
+
+        <section id="output">
+            <div class="page-header">
+                <h2>Results</h2>
+
+                
+
+                <p class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('SymTree')">SymTree (Symbolic Tree)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITLS')">IT-LS (Interaction Transformation Local Search)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITES')">IT-ES (Interaction Transformation Evolution Strategies)</button>
+                </p>
+
+                <div id="results">
+                    <div id="sr-result"></div>
+                    <div id="sr-graphics"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="explain">
+            <div class="page-header">
+                <h2>The obtained result was satisfactory?</h2>
+
+                <p class="text-justify">The score is a way to quantify the performance of each algorithm. The value can range from 0 to 1, being 1 a perfect fit. This score is calculated by:</p>
+
+                <br><p class="text-center"><img src="./images/equations/ybb9pq4h.png"></p><br>
+                
+                <p class="text-justify">where MAE is the Mean Absolute Error:</p>
+
+                <br><p class="text-center"><img src="./images/equations/ycsf5jf9.png"></p><br>
+                
+                <p class="text-justify"><b>Algoritmo SymTree</b></p>
+                <p class="text-justify">This algorithm starts with a single solution representing a simple linear regression. At every iteration it improves the current expression by applying interaction and transformation operators on their current terms. More details can be seen at: </p>
+
+                <p class="text-justify"><b>Algoritmo IT-LS</b></p>
+                <p class="text-justify">This algorithm first creates an initial population of random solutions and choose the best one among them. Afterwards, it runs a simple best first local search with the neighborhood defined as the change in a polynomial degree or change in transformation function.</p>
+
+                <p class="text-justify"><b>Algoritmo IT-ES</b></p>
+                <p class="text-justify">This is a simple Evolutionary Strategies adapted from IT-LS using ES(mu, sigma) strategy.</p>
+            </div>
+        </section> 
+	    
+	     <section id="about">
+            <div class="page-header">
+                <h2>Sobre</h2>
+
+                <p class="text-justify">Symbolic Regression tries to find a generator function for a sampled data. It differs from other types of regression for it does not have a fixed form like linear regression, polynomial regression or neural networks. Usually, Symbolic Regression is performed by means of Evolutionary Algorithm (i.e., Genetic Programming), but these are usually time consuming even for a few samples in lower dimensions.</p>
+                <p class="text-justify">This project has the main goal of showing the potential of SymTree algorithm as a lightweight Symbolic Regression algorithm to help with simple equation learner for Physics, Engineering, etc.</p>
+              
+              <p class="text-justify">This project was developed by Guilherme Aldeia as part of his undergraduation research project advised by prof. Fabricio Olivetti de França at <a href="http://www.ufabc.edu.br/">Universidade Federal do ABC</a>.</p>
+		    
+            </div>
+        </section>
+        
+        <section id="contact-us">
+            <div style="border-top: 1px solid darkgrey" class="page-header text-center">
+                <h2>Contato</h2>
+
+                <p>Doubts, criticism, suggestions?</p> 
+                <p>Contact the developer: guilherme.aldeia@aluno.ufabc.edu.br</p> 
+              <p>or the advisor: folivett@ufabc.edu.br</p> 
+                <p>See also other <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">algorithms</a> developed during this research project!</p>
+            </div>
+        </section>
+    </section>
+
+
+	<!-- scripts dos algoritmos de regressão simbólica-->
+	<script type="text/javascript" src=./scripts/LoadFile.js></script>
+	<script type="text/javascript" src=./scripts/math.js></script>
+	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+</html>

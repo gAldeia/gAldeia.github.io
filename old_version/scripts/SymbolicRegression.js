@@ -675,8 +675,6 @@ function run_regression(algorithm){
         return;
     }
 
-    document.getElementById("results").style.display = "inline";
-
     expression = undefined; //guardar a melhor expressão
     let startTime = performance.now(); //medir o tempo de execução
 
@@ -697,21 +695,21 @@ function run_regression(algorithm){
     for(let i=0; i<labels.length; i++){
         expressionString = expressionString.split("x"+i).join(labels[i]);
     }
-    document.getElementById("sr-result").innerHTML="<p><pre><p>Algorithm: "+algorithm+"</p><p>Expression: "+ expressionString+ "</p><p>Score: "+expression.score+"</p><p>Time (in ms): "+elapsedTime+"</p></pre></p>";
+    document.getElementById("sr-result").innerHTML="<p>Resultado:</p>";
+    document.getElementById("sr-result").innerHTML+="<p><pre><p>Algoritmo: "+algorithm+"</p><p>Expressão: "+ expressionString+ "</p><p>Score: "+expression.score+"</p><p>Tempo (ms): "+elapsedTime+"</p></pre></p>";
 
-    let checkboxes = "<strong> T</strong>:<br><form>";
+    let checkboxes = "";
     for(let i=0; i<expression.terms.length; i++){
-        checkboxes += "<input type='checkbox' id='check"+i+"' value='true'> <label for='check"+i+"'> "+expression.terms[i].printMe()+"</label><br>";
+        checkboxes += "<input type='checkbox' id='check"+i+"' value='true'><label for='check"+i+"'>"+expression.terms[i].printMe()+"</label><br>";
     }
-    checkboxes += "</form>";
 
-    let Xplot = "<strong> X</strong>:<br><form>";
+    let Xplot = "<form>";
     for (let i=0; i<inputPoints[0].x.length; i++){
-        Xplot += "<input type='radio' name='variable' id='x"+i+"'> <label for='x"+i+"'> x" + i +"</label><br>";
+        Xplot += "<input type='radio' name='variable' id='x"+i+"'><label for='x"+i+"'>" + (i+1) +"º variável</label><br>";
     }
     Xplot += "</form>";
 
-    document.getElementById("sr-graphics").innerHTML = checkboxes+Xplot;
+    document.getElementById("sr-graphics").innerHTML = "<div class='row'><div class='col-md-4' id='func-composer'><p class='text-justify'>Aqui você pode analisar melhor o resultado. É possível ver o plot da expressão como um todo, assim como cada termo individualmente. Basta selecionar cada termo que gostaria de avaliar. Selecionar mais de um termo simultaneamente resulta numa combinação entre eles. Este plot é: resultado da expressão composta pelos termos selecionados versus resultados da entrada.</p>"+checkboxes+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plotar grafico T x Y</button><br><p class='text-justify'>Estas opções são para isolar uma variável e plotar o gráfico da função composta acima para o intervalo de dados da entrada</p>"+Xplot+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_variable_plot()'>Plotar grafico X x T</button></div> <div class='col-md-7' id='func-ploter' style='height: 450px;'></div></div><br>";
 
     return expression;
 }

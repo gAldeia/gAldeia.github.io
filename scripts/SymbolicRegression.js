@@ -1,4 +1,4 @@
-//NEW-SymbolicRegression.js
+//SymbolicRegression.js
 
 
 //DETALHES:
@@ -23,7 +23,7 @@
 //  -IT_ES;
 
 
-class OP{
+class OP{ //classe que representa uma operação matemática
     static id(){
         return 'id';
     };
@@ -68,7 +68,7 @@ class OP{
 }
 
 
-class TermManager{
+class TermManager{ //classe auxiliar para simplificar operações
     static rootTerms(){
         let terms = [ ];
 
@@ -123,7 +123,7 @@ class TermManager{
 }
 
 
-class LR{
+class LR{ //classe contendo métodos de ajuste de coeficientes
     static gradientDescent(LE, inputPoints, numIterations){
         let iteration = -1;
         let alpha = 0.001;
@@ -217,7 +217,7 @@ class LR{
             LE.terms[i].coeff = w[i][0];
         }
     };
-    static adjustCoeffs(LE, inputPoints){
+    static adjustCoeffs(LE, inputPoints){ //tenta usar OLS, caso falhe, usa GradDesc
         try{
             LR.leastSquares(LE, inputPoints);
         }
@@ -229,7 +229,7 @@ class LR{
 }
 
 
-class IT{
+class IT{ //estrutura de dados para compor expressões lineares
     constructor(exponents, operator, coefficient = 1){
         //check dos tipos
         if (exponents.constructor != Array)
@@ -237,16 +237,15 @@ class IT{
         if (!OP.isOp(operator))
             console.error('string do operador não existe dentro de OP');
 
-        this.coeff = coefficient; //TODO TERMO NOVO TEM COEFF = 0.1
-        this.exp = exponents.slice(0); //copio o array de exp
+        this.coeff = coefficient;
+        this.exp = exponents.slice(0); //cria cópia dos arrays
         this.op = operator.slice(0);
     };
-    printMe_d(){ //imprime o termo sem modificações. usado para comparações entre dois termos (ver se são idênticos)
+    printMe_d(){ //imprime o termo sem modificações. usado para comparações lógicas (igualdade de termos)
         let myExp = this.coeff.toFixed(2) + '*([';
 
         for (let i in this.exp) //maybe
             myExp += 'x' + i + '^' + this.exp[i] + (i==this.exp.length-1? '' : ',');
-
         return myExp + '], ' + this.op + ')';
     };
     printMe(){ //imprime com marcadores HTML para exibir ao usuário (forma legível)
@@ -292,7 +291,7 @@ class IT{
 }
 
 
-class LE{
+class LE{ //classe que forma uma expressão linear com estruturas IT
     constructor(termsToUse){
         if(termsToUse.constructor != Array)
             console.error('termsToUse não é array de IT');
@@ -666,7 +665,8 @@ class SymTree{
     }
 }
 
-//--MÉTODO PRINCIPAL----------------------------------------------------------//
+
+//--MÉTODOS PRINCIPAIS----------------------------------------------------------//
 var expression = undefined; //guarda o retorno do método de regressão simbólica utilizado
 
 function run_regression(algorithm){
@@ -674,6 +674,8 @@ function run_regression(algorithm){
         document.getElementById("sr-result").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não enviou nenhuma entrada de dados para o site!</p></div>";
         return;
     }
+
+    document.getElementById("results").style.display = "inline";
 
     expression = undefined; //guardar a melhor expressão
     let startTime = performance.now(); //medir o tempo de execução
@@ -695,21 +697,21 @@ function run_regression(algorithm){
     for(let i=0; i<labels.length; i++){
         expressionString = expressionString.split("x"+i).join(labels[i]);
     }
-    document.getElementById("sr-result").innerHTML="<p>Resultado:</p>";
-    document.getElementById("sr-result").innerHTML+="<p><pre><p>Algoritmo: "+algorithm+"</p><p>Expressão: "+ expressionString+ "</p><p>Score: "+expression.score+"</p><p>Tempo (ms): "+elapsedTime+"</p></pre></p>";
+    document.getElementById("sr-result").innerHTML="<p><pre><p>Algorithm: "+algorithm+"</p><p>Expression: "+ expressionString+ "</p><p>Score: "+expression.score+"</p><p>Time (in ms): "+elapsedTime+"</p></pre></p>";
 
-    let checkboxes = "";
+    let checkboxes = "<strong> T</strong>:<br><form>";
     for(let i=0; i<expression.terms.length; i++){
-        checkboxes += "<input type='checkbox' id='check"+i+"' value='true'><label for='check"+i+"'>"+expression.terms[i].printMe()+"</label><br>";
+        checkboxes += "<input type='checkbox' id='check"+i+"' value='true'> <label for='check"+i+"'> "+expression.terms[i].printMe()+"</label><br>";
     }
+    checkboxes += "</form>";
 
-    let Xplot = "<form>";
+    let Xplot = "<strong> X</strong>:<br><form>";
     for (let i=0; i<inputPoints[0].x.length; i++){
-        Xplot += "<input type='radio' name='variable' id='x"+i+"'><label for='x"+i+"'>" + (i+1) +"º variável</label><br>";
+        Xplot += "<input type='radio' name='variable' id='x"+i+"'> <label for='x"+i+"'> x" + i +"</label><br>";
     }
     Xplot += "</form>";
 
-    document.getElementById("sr-graphics").innerHTML = "<div class='row'><div class='col-md-4' id='func-composer'><p class='text-justify'>Aqui você pode analisar melhor o resultado. É possível ver o plot da expressão como um todo, assim como cada termo individualmente. Basta selecionar cada termo que gostaria de avaliar. Selecionar mais de um termo simultaneamente resulta numa combinação entre eles. Este plot é: resultado da expressão composta pelos termos selecionados versus resultados da entrada.</p>"+checkboxes+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plotar grafico T x Y</button><br><p class='text-justify'>Estas opções são para isolar uma variável e plotar o gráfico da função composta acima para o intervalo de dados da entrada</p>"+Xplot+"<button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_variable_plot()'>Plotar grafico X x T</button></div> <div class='col-md-7' id='func-ploter' style='height: 450px;'></div></div><br>";
+    document.getElementById("sr-graphics").innerHTML = checkboxes+Xplot;
 
     return expression;
 }

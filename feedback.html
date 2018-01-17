@@ -3,80 +3,83 @@
 <html lan="pt-br">
 
 <head>
+   <meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!--meta name="viewport" content="width=device-width, initial-scale=1"-->
 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="text/html"/>
-	<meta charset="UTF-8"/>
+   <link rel="stylesheet" href="./style/style.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./style/style.css">
-
-	<title>Regressão Simbólica - Feedback</title>
+   <title>Assistente de Laboratório: Feedback</title>
 </head>
 
-    <!--Cabeçalho da página-->
-    <nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+<body class="body body-background container">
+    <!--NAVBAR!-->
+    <nav class="navbar nav navbar-fixed-top green-navbar">
         <div class="container">
             <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
-            </button>
-                <a class="navbar-brand" href="./index.html"><u><strong>Regressão</strong> Simbólica</u></a>
-            </div><!--logo do site-->
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="./index.html">Página inicial</a></li>
-                    <li><a href="#form">Formulário</a></li>
-                    <li><a href="#contact-us">Contato</a></li>
-                </ul><!--Lista de opções-->
-            </div><!--menu-->
-        </div><!--container-->
-    </nav><!--navbar-->
-
-<body class="body body-background container">
-
-    <section id="sideMenu" class="well">
-        <nav>
-            <a href="./index.html">Página inicial</a>
-            <a href="./input-examples.html">Exemplos de entrada</a>
-            <a href="./performance-test.html">Teste de performance</a>
-            <a href="./study-notes.html">Notas de estudo</a>
-            <a href="./feedback.html" class="active"><strong>Dê seu feedback</strong></a>
-            <a href="./changelog.html">Registro de updates do site</a>
-            <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub do projeto <br><small>(página externa)</small></a>
-            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">GitHub dos estudos <br><small>(página externa)</small></a>
-        </nav>
-    </section>
-
-    <section id="bodyContent" class="well">
-        
-        <div class="page-header" id="form">
-
-            <h2>Conte-nos o que achou do site!</h2>
-
-            <p class="text-justify">
-                
-            </p>
-
-            <p class="text-center">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfD7LBgsV5N0jyHMVk1D49F1p0LCgcK5-fH1GvZwBDtPzsTIw/viewform?embedded=true" width="760" height="1250" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-            </p>
+                <button type="button" class="btn btn-default navbar-btn navbar-toggle" data-toggle="collapse" data-target="#Navbar"><span class="glyphicon glyphicon-menu-hamburger"></span> Menu</button>
+                <a class="navbar-brand" href="./index.html" style="color: #333"><strong>Assistente </strong>de Laboratório</a>
+            </div>
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href='./index.html'><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="./input-examples.html"><span class="glyphicon glyphicon-folder-open"></span> Exemplos</a></li>
+                    <li class='active'><a href="./feedback.html"><span class="glyphicon glyphicon-list-alt"></span> Feedback</a></li>
+                    <li><a href="./performance-test.html"><span class="glyphicon glyphicon-hourglass"></span> Performance</a></li>
+                    <li><a href="./study-notes.html"><span class="glyphicon glyphicon-book"></span> Notas de estudo</a></li>
+                    <li><a href="./changelog.html"><span class="glyphicon glyphicon-tasks"></span> Changelog</a></li>
+                </ul>
+            </div>
         </div>
-
-        <div style="border-top: 1px solid darkgrey" class="page-header text-center" id="contact-us">
-
-            <h2>Contato</h2>
-
-            <p>Dúvidas, críticas ou sugestões?</p> 
-            <p>Contate o desenvolvedor pelo email: guilherme.aldeia@aluno.ufabc.edu.br</p> 
-            <p>Além disso, veja os <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">algoritmos</a> desenvolvidos durante os estudos do projeto!</p>
-
+    </nav>
+    
+    <div class="well"><!--PAGE BODY-->
+        <!--INTRO-->
+        <div class="content">
+            <div class="content-title">
+                <h1 class="text-center"><strong>Feedback</strong></h1>
+            </div>
+            <div class="content-text">
+                <p class="text-center">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfD7LBgsV5N0jyHMVk1D49F1p0LCgcK5-fH1GvZwBDtPzsTIw/viewform?embedded=true" width="760" height="1250" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+                </p>
+            </div>
         </div>
-        
-    </section>
+        <!--CONTACT-US-->
+        <div class="content">
+            <div class="text-justify content-description">
+                <h1 class="text-center">Contato</h1>
+            </div>
+            <div class="content-text" style="padding-bottom: 0px !important;">
+                <p class="text-center">Dúvidas, críticas ou sugestões?</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p>Orientador:<br>
+                        <span class="glyphicon glyphicon-user"></span> Prof. Dr. Fabrício Olivetti de França<br>
+                        <span class="glyphicon glyphicon-envelope"></span> folivetti@ufabc.edu.br</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>Discente:<br>
+                        <span class="glyphicon glyphicon-user"></span> Guilherme Seidyo Imai Aldeia<br>
+                        <span class="glyphicon glyphicon-envelope"></span> guilherme.aldeia@aluno.ufabc.edu.br</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p><span class="glyphicon glyphicon-education"></span> Universidade Federal do ABC<br>
+                        <span class="glyphicon glyphicon-globe"></span> Avenida dos Estados, 5001 - Bairro Santa Terezinha, Santo André - CEP: 09210-580<br>
+                        <span class="glyphicon glyphicon-earphone"></span> (11) 4996-0001</p>
+                    </div>
+                </div>
+                <p class="text-center">
+                    <img style="align-content: center; max-height: 100px; max-width: 500px;" src="./images/logotipo-ufabc-extenso.png"></img>
+                </p>
+            </div>
+        </div>
+    </div>
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 </body>
-
-</html>
+    
+<html>

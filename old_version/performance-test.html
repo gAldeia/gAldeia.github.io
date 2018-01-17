@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+
+<html lan="pt-br">
+
+<head>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="text/html"/>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
+
+    <title>Assistente de Laboratório: Regressão Simbólica para Funções simples</title>
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top"> <!--NAVBAR-->
+    <div class="container">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">Menu
+        </button>
+            <a class="navbar-brand" href="#"><u><strong>Regressão</strong> Simbólica</u></a>
+        </div><!--logo do site-->
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="./index.html">Página inicial</a></li>
+                <li><a href="#input">Entrada de dados</a></li>
+                <li><a href="#output">Resultados</a></li>
+                <li><a href="#contact-us">Contato</a></li>
+            </ul><!--Lista de opções-->
+        </div><!--menu-->
+    </div><!--container-->
+</nav><!--navbar-->
+
+<body class="body body-background container">
+
+    <section id="sideMenu" class="well">
+        <nav>
+            <a href="./index.html">Página inicial</a>
+            <a href="./input-examples.html">Exemplos de entrada</a>
+            <a href="./performance-test.html" class="active">Teste de performance</a>
+            <a href="./study-notes.html">Notas de estudo</a>
+            <a href="./feedback.html"><strong>Dê seu feedback</strong></a>
+            <a href="./changelog.html">Registro de updates do site</a>
+            <a href="https://github.com/gAldeia/gAldeia.github.io">GitHub do projeto <br><small>(página externa)</small></a>
+            <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">GitHub dos estudos <br><small>(página externa)</small></a>
+        </nav>
+    </section>
+
+    <section id="bodyContent" class="well">
+        <section id="input">
+            <div class="page-header">
+                <h2>Entrada de dados</h2>
+
+                <div class="alert alert-warning">
+                    <strong>Atenção!</strong> O processamento dos dados é lento, principalmente para funções que não podem ser encontradas. Se for testar alguma série de dados, faça um teste na página inicial e certifique-se que esta pode ser encontrada.
+                </div>
+
+                <p class="text-justify">Pagina dedicada a medir o desempenho do algoritmo. Ao inserir os dados e selecionar um algoritmo, um script irá executá-lo 30 vezes, calculando seu desempenho médio e possibilitando uma análise geral do comportamento para a série de dados. </p>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4>Entrada manual de dados</h4>
+                        
+                        <textarea style="max-width: 100%; min-width:100%" class="form-control" rows="10" placeholder="Digite os dados aqui. Um ponto em cada linha, separados por vírgulas, espaços ou tabulações" id="my-manualinput"></textarea>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h4>Upload de arquivo local</h4>
+
+                        <span class="btn btn-default btn-file">
+                            <input type="file" id="my-csvinput" accept=".csv" />
+                        </span><hr>
+                    </div>
+                </div><br>
+
+                <p class="text-center">
+                    <input type="checkbox" id="labeled" value="true">
+                    <label for="noise">Usar a primeira linha da entrada como rótulo?</label>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button>
+                    <button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button>
+                </p>
+
+                <div id="notification">
+                </div>
+            </div>
+        </section>
+
+        <section id="output">
+            <div class="page-header">
+                <h2>Resultados</h2>
+
+                <p class="text-justify">Com os dados carregados, basta escolher um algoritmo abaixo:</p>
+
+                <p class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('SymTree')">SymTree</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('FastSymTree')">Fast SymTree (apenas 2 interações)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITLS')">IT-LS</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression_d('ITES')">IT-ES</button>
+                </p>
+
+                <div id="results">
+                </div>
+
+                <div class="text-center" id="histogram1">
+                </div>
+
+                <div class="text-center" id="histogram2">
+                </div>
+            </div>
+        </section>
+        <section id="contact-us">
+            <div style="border-top: 1px solid darkgrey" class="page-header text-center">
+                <h2>Contato</h2>
+
+                <p>Dúvidas, críticas ou sugestões?</p> 
+                <p>Contate o desenvolvedor pelo email: guilherme.aldeia@aluno.ufabc.edu.br</p> 
+		    <p>ou seu orientador: folivetti@ufabc.edu.br</p> 
+                <p>Além disso, veja os <a href="https://github.com/gAldeia/Genetic-algorithm-symbolic-regression">algoritmos</a> desenvolvidos durante os estudos do projeto!</p>
+            </div>
+        </section>
+    </section>
+
+
+	<!-- scripts dos algoritmos de regressão simbólica-->
+	<script type="text/javascript" src=./scripts/LoadFile.js></script>
+	<script type="text/javascript" src=./scripts/math.js></script>
+    <script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
+    <script type="text/javascript" src=./scripts/SymbolicRegressionTest.js></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+</html>

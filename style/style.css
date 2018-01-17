@@ -1,51 +1,81 @@
+/*CONFIGURAÇÕES GERAIS--------------------------------------------------------*/
 *{
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 body {
-    font-family: sans-serif;
-}
-.navbar {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-top: 125px !important;
 }
 .body-background {
-    background: url("../images/main-bg.png") repeat center center fixed;
+  background: url("../images/bg.png") repeat center center fixed;
 }
-section#sideMenu{
-    max-width: 240px;
-    min-width: 240px;
-    min-height: calc(100% - 70px);
-    margin-top: 38px;
-    padding-top: 50px;
-    position: fixed;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-section#bodyContent{
-    position: relative;
-    margin-left: 280px;
-    margin-top: 70px;
-}
-section#sideMenu nav a.active{
-    background: lightgreen;
-    text-decoration: none;
-    border-left: 5px solid #92CF48;
-}
-section#sideMenu nav a:hover{
-    background: lightgreen;
-    text-decoration: none;
-    border-left: 5px solid #92CF48;
-}
-section#sideMenu nav a{
-    text-decoration: none;
-    color: #000;
-    padding: 10px 5px;
-    display: block;
-    border-bottom: 1px solid #92CF48;
-}
-.well{
-    border-radius: 12px 12px 12px 12px;
-    box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82);
+.well {
+  width: 100%;
+  box-shadow: 3px 3px 32px 5px rgba(0,0,0,0.82) !important;
 }
 table, th, td {
-    border: 1px solid black;
-    text-align: center;
+  border: 1px solid black;
+  text-align: center !important;
+}
+
+/*NAVBAR----------------------------------------------------------------------*/
+.green-navbar {
+  background-color: #fff;
+  border-bottom: 3px solid #47c9af !important;
+  box-shadow: 5px 5px 5px 5px rgba(71, 201, 175, 0.92);
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+#Navbar {
+  list-style: none;
+}
+#Navbar > ul > li > a {
+  z-index: 2;
+  padding: 15px 10px 15px 10px;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  color: #333;
+}
+#Navbar > ul > li.active > a,
+#Navbar > ul > li:hover > a,
+#Navbar > ul > li > a:hover {
+  color: #fff;
+  background: #fff;
+}
+#Navbar > ul > li > a:after {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  width: 100%;
+  height: 90%;
+  border-radius: 10px 10px 0px 0px;
+  content: "";
+}
+#Navbar > ul > li.active > a:after,
+#Navbar > ul > li > a:hover:after {
+  background: #47c9af;
+}
+
+/*CONTEUDO DE CADA TOPICO-----------------------------------------------------*/
+.content{
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  color: #000;
+  width: 100%;
+}
+.content-description{
+  padding: 0px 50px 0px 50px;
+  border-bottom: 2px dashed #ddd;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+.content-title{
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  padding: 20px 0px 20px 0px;
+  border-bottom: 2px dashed #ddd;
+}
+.content-text{
+  padding: 50px 50px 75px 50px;
 }
