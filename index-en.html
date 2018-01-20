@@ -104,8 +104,8 @@
                     <label for="noise">Use first line as variable names?</label>
 
                     <div class="row">
-                        <div class="col-lg-6"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Use typed values</button></div>
-                        <div class="col-lg-6"><button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Use local file</button></div>
+                        <div class="col-lg-6"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="user_upload('my-manualinput', 'ing', 'manual');">Use typed values</button></div>
+                        <div class="col-lg-6"><button type="button" class="btn btn-info btn-lg btn-block" onclick="user_upload('my-csvinput', 'ing', 'csv');">Use local file</button></div>
                     </div>
                 </p>
 
@@ -215,7 +215,8 @@
     <!-- scripts dos algoritmos de regressão simbólica-->
 	<script type="text/javascript" src=./scripts/LoadFile.js></script>
 	<script type="text/javascript" src=./scripts/math.js></script>
-	<script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
+    <script type="text/javascript" src=./scripts/SymbolicRegression.js></script>
+    <script type="text/javascript" src=./scripts/main.js></script>
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

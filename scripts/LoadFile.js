@@ -1,37 +1,38 @@
 //loadFile.js
 
 
-//VARIÁVEIS GLOBAIS-------------------------------------------------------------
+//script simples para leitura de dados do usuário e armazenamento.
+//também oferece uma nova classe, feita para organizar melhor os dados lidos.
+
+
+// --VARIÁVEIS GLOBAIS------------------------------------------------------- //
 var lines = [];
-//variável que armazena os valores numa matriz. A entrada deve ser feita
-//no seguinte esquema:
-//[ [y, [x1, x2, x3, ...]], [y, [x1, x2, x3, ...]], ... ] 
-//e os valores serão salvos (sem separar os x-zes em uma nova dimensão:
-//[ [y, x1, x2, ...], [y, x1, x2, ...] ]
+//variável que armazena os valores de leitura numa matriz. Todas as linhas devem
+//seguir a ordem:
+//	x1, x2, x3, ..., xn, y
 
 //conjunto dos pontos de entrada
 var inputPoints = [ ];
 
+//rótulos, caso sejam passados
 var labels = [ ];
 
+//variável de controle de utilização de rótulo
 var firstLineAsLabel;
 
 
-// --CLASSES DO ALGORITMO GENÉTICO------------------------------------------- //
+// --CLASSES DE ARMAZENAMENTO DE DADOS--------------------------------------- //
 var DataPoint = function(x, y){
-	
-		//ponto de entrada. Objeto para representar melhor os pontos 
-		//digitados na entrada do programa
-	
-		this.x = x;
-		this.y = y;
+	//ponto de entrada. Objeto para representar melhor os pontos 
+	//digitados na entrada do programa
+
+	this.x = x;
+	this.y = y;
 }
 
 function linesToDataPoint(){
-	
-	//Converte os pontos lidos para DataPoint. DataPoint é uma classe
-	//da expressão genética. é apenas um rearranjo de points, porem
-	//com uma notação mais "intuitiva"
+	//Converte os pontos lidos para DataPoint (apenas um rearranjo de points,
+	//porem com uma notação mais "intuitiva"
 
 	var Points = [];
 	var aux;
@@ -41,7 +42,6 @@ function linesToDataPoint(){
 
 		for(var j=0; j<lines[i].length-1; j++)
 			aux.push(lines[i][j]);
-		
 		Points.push(new DataPoint(aux, lines[i][lines[i].length-1]) );
 	}
 	return Points;
@@ -49,19 +49,17 @@ function linesToDataPoint(){
 
 
 //MÉTODOS DE LEITURA------------------------------------------------------------
-function csv_upload(){
+function csv_upload(element){
 
 	//função que é chamada para ler um arquivo enviado localmente. O arquivo
 	//deve ser do tipo .csv, e os dados separados por vírgulas. o resultado
 	//será carregar lines com os valores lidos.
 
 	var reader = new FileReader();
-	var csv = document.getElementById("my-csvinput").files[0];
+	var csv = document.getElementById(element).files[0];
 
 	if (csv==undefined){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O site só aceita arquivos de extensão .csv, e o algoritmo precisa de pelo menos uma linha de entrada para funcionar.</p></div>";
-
-		return;
+		throw "undefined csv";
 	}
 	
 	reader.readAsText(csv);
@@ -71,12 +69,12 @@ function csv_upload(){
 	}
 }
 
-function manual_upload(){
+function manual_upload(element){
 
 	//função que lê os dados digitados pelo usuário. funciona da mesma forma
 	//que a anterior, porém retira os valores de um lugar diferente.
 
-	var textArea = document.getElementById("my-manualinput").value;
+	var textArea = document.getElementById(element).value;
 
 	return loadHandler(textArea);
 }
@@ -96,10 +94,9 @@ function loadHandler(inputData){
 	if (document.getElementById("labeled").checked){
 		
 		let aux = allTextLines[0].split(/\ |,|\t/);
-		for(let i=0; i<aux.length; i++){
+		for(let i=0; i<aux.length; i++)
 			if (aux[i].length>0)
 				labels.push(aux[i]);
-		}
 
 		firstLineAsLabel = 1;
 	}
@@ -125,25 +122,18 @@ function loadHandler(inputData){
 		}
 		if (tarr.length>0) {
 			lines.push(tarr);
-			if (lines[0].length != tarr.length){
-
-				document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Nem todas as suas linhas de entrada contém a mesma quantidade de números!</p></div>";
-
-				return;
-			}
+			if (lines[0].length != tarr.length)
+				throw "corrupted lines";
 		}
 	}
 
-	//avisos ao usuário
-	if (lines.length==0){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> O algoritmo precisa de pelo menos uma linha de entrada para funcionar.</p></div>";
-	}
-	else if (lines[0].length==1){
-		document.getElementById("notification").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> cada linha precisa de pelo menos 2 valores!</p></div>";
-	}
-	else {
-		document.getElementById("notification").innerHTML="<div class='alert alert-success'><strong>Sucesso!</strong> Os dados foram carregados.</div>";
+	//erros de entrada incoerente
+	if (lines.length==0) 
+		throw "no data";
 
+	else if (lines[0].length==1)
+		throw "only 1 value";
+
+	else
 		inputPoints = linesToDataPoint();
-	}
 }

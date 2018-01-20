@@ -60,9 +60,9 @@
         <!--GUIDE-->
         <div class="content">
             <div class="content-description">
-                <h1 class="text-center">Como utilizar a ferramenta online</h1>
+                <h1 class="text-center">Como utilizar a ferramenta online <a data-toggle="collapse" href="#collapse1" onclick="changeIcon('guide-icon');"><span id="guide-icon" class="glyphicon glyphicon-triangle-bottom"></span></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse1" class="panel-collapse collapse content-text">
                 <div class="row">
                     <div class="col-lg-4">
                         <h4>1 - Digite os dados</h4>
@@ -104,8 +104,8 @@
                     <input type="checkbox" id="labeled" value="true">
                     <label for="labeled">Usar a primeira linha da entrada como rótulo?</label>
                     <div class="row">
-                        <div class="col-lg-6"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="user_upload('my-manualinput', 'pt', 'manual');">Usar valores digitados</button></div>
-                        <div class="col-lg-6"><button type="button" class="btn btn-info btn-lg btn-block" onclick="user_upload('my-csvinput', 'pt', 'csv');">Usar arquivo enviado</button></div>
+                        <div class="col-lg-6"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="manual_upload()">Usar valores digitados</button></div>
+                        <div class="col-lg-6"><button type="button" class="btn btn-info btn-lg btn-block" onclick="csv_upload()">Usar arquivo enviado</button></div>
                     </div>
                 </p>
                 <div id="notification"></div>
@@ -123,7 +123,6 @@
                     <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITLS')">Algoritmo IT-LS (Interaction Transformation Local Search)</button>
                     <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITES')">Algoritmo IT-ES (Interaction Transformation Evolution Strategies)</button>
                 </p>
-                <div id="sr-notification"></div>
                 <div id="results" style="display: none;">
                     <p>Resultado:</p>
                     <div id="sr-result"></div>
@@ -142,9 +141,9 @@
         <!--EXPLAIN-->
         <div class="content">
             <div class="content-description">
-                <h1 class="text-center">O resultado obtido foi satisfatório?</h1>
+                <h1 class="text-center">O resultado obtido foi satisfatório? <a data-toggle="collapse" href="#collapse2" onclick="changeIcon('explain-icon');"><span id="explain-icon" class="glyphicon glyphicon-triangle-bottom"></span></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse2" class="panel-collapse collapse content-text">
                 <p class="text-justify">Para qualificar as expressões criadas pelos algoritmos, usamos o score. O score é uma classificação para a expressão, de acordo com o quão bem esta expressão se ajusta ao DATASET de entrada, e varia de 0 a 1. O score é calculado por:</p>
                 <br><p class="text-center"><img src="./images/equations/ybb9pq4h.png"></p><br>
                 <p class="text-justify">Onde o MAE (desvio médio absoluto) é igual ao somatório das diferenças entre os valores da variável dependente y<sub>i</sub> e os valores calculados pela expressão para X<sub>i</sub>:</p>
@@ -168,9 +167,9 @@
         <!--ABOUT-->
         <div class="content">
             <div class="text-justify content-description">
-                <h1 class="text-center">Sobre</h1>
+                <h1 class="text-center">Sobre <a data-toggle="collapse" href="#collapse3" onclick="changeIcon('about-icon');"><span id="about-icon" class="glyphicon glyphicon-triangle-bottom"></span></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse3" class="panel-collapse collapse content-text">
                 <p class="text-justify">A Regressão Simbólica tem por objetivo encontrar a função geradora de uma base de dados amostrais. Ela difere de outros tipos de regressão pois não está restrito a uma forma fixa como em métodos de regressão linear, polinomial e redes neurais. Normalmente, a Regressão Simbólica é feita através de Algoritmos Evolutivos (ex.: Programação Genética), mas esses costumam ser computacionalmente custosos, mesmo em bases de dados de baixa dimensão.</p>
                 <p class="text-justify">Esse projeto tem como objetivo mostrar o potencial do algoritmo SymTree para dados de baixa dimensão e gerados por funções conhecidas da Física, Matemática e Engenharia.</p>
                 <p class="text-justify">Esse projeto foi desenvolvido por Guilherme Aldeia como parte de sua iniciação científica orientado pelo prof. Fabricio Olivetti de França na <a href="http://www.ufabc.edu.br/">Universidade Federal do ABC</a>.</p>

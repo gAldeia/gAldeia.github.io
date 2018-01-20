@@ -59,14 +59,16 @@ table, th, td {
 
 /*CONTEUDO DE CADA TOPICO-----------------------------------------------------*/
 .content{
-  border-bottom: 1px solid #ddd;
-  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #dedede;
+  border-top: 1px solid #dedede;
   color: #000;
   width: 100%;
 }
 .content-description{
   padding: 0px 50px 0px 50px;
+  margin: 20px 0px 20px 0px;
   border-bottom: 2px dashed #ddd;
+  color: #000;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 .content-title{
