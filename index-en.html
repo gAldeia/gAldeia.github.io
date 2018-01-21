@@ -53,9 +53,9 @@
         <!--GUIDE-->
         <div class="content">
             <div class="content-description">
-                <h1 class="text-center">How to use it</h1>
+                <h1 class="text-center">How to use it <a data-toggle="collapse" href="#collapse1" onclick="changeIcon('guide-icon');"><small><span id="guide-icon" class="glyphicon glyphicon-triangle-bottom"></span></small></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse1" class="panel-collapse collapse content-text">
                 <div class="row">
                     <div class="col-lg-4">
                         <h4>1 - Data input</h4>
@@ -120,10 +120,11 @@
             </div>
             <div class="content-text">
                 <p class="text-center">
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('SymTree')">SymTree (Symbolic Tree)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITLS')">IT-LS (Interaction Transformation Local Search)</button>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITES')">IT-ES (Interaction Transformation Evolution Strategies)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('SymTree', 'ing')">SymTree (Symbolic Tree)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITLS', 'ing')">IT-LS (Interaction Transformation Local Search)</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="run_regression('ITES', 'ing')">IT-ES (Interaction Transformation Evolution Strategies)</button>
                 </p>
+                <div id="sr-notification"></div>
                 <div id="results" style="display: none;">
                     <p>Results:</p>
                     <div id="sr-result"></div>
@@ -133,7 +134,7 @@
                             <div id="sr-graphics"></div>
                             <button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_plot()'>Plot T <i>x</i> Y graphic</button><br>
                             <button type='button' class='btn btn-primary btn-lg btn-block' onclick='update_variable_plot()'>Plot T <i>x</i> X graphic</button></div>
-                        <div class='col-md-8' id='func-ploter' style='height: 450px;'>
+                        <div class='col-md-7' id='func-ploter' style='height: 450px;'>
                         </div>
                     </div><br>
                 </div>
@@ -142,9 +143,9 @@
         <!--EXPLAIN-->
         <div class="content">
             <div class="content-description">
-                <h1 class="text-center">The obtained result was satisfactory?</h1>
+                <h1 class="text-center">The obtained result was satisfactory? <a data-toggle="collapse" href="#collapse2" onclick="changeIcon('explain-icon');"><small><span id="explain-icon" class="glyphicon glyphicon-triangle-bottom"></span></small></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse2" class="panel-collapse collapse content-text">
                 <p class="text-justify">The score is a way to quantify the performance of each algorithm. The value can range from 0 to 1, being 1 a perfect fit. This score is calculated by:</p>
 
                 <br><p class="text-center"><img src="./images/equations/ybb9pq4h.png"></p><br>
@@ -172,9 +173,9 @@
         <!--ABOUT-->
         <div class="content">
             <div class="text-justify content-description">
-                <h1 class="text-center">About</h1>
+                <h1 class="text-center">About <a data-toggle="collapse" href="#collapse3" onclick="changeIcon('about-icon');"><small><span id="about-icon" class="glyphicon glyphicon-triangle-bottom"></span></small></a></h1>
             </div>
-            <div class="content-text">
+            <div id="collapse3" class="panel-collapse collapse content-text">
                 <p class="text-justify">Symbolic Regression tries to find a generator function for a sampled data. It differs from other types of regression for it does not have a fixed form like linear regression, polynomial regression or neural networks. Usually, Symbolic Regression is performed by means of Evolutionary Algorithm (i.e., Genetic Programming), but these are usually time consuming even for a few samples in lower dimensions.</p>
                 <p class="text-justify">This project has the main goal of showing the potential of SymTree algorithm as a lightweight Symbolic Regression algorithm to help with simple equation learner for Physics, Engineering, etc.</p>
                 

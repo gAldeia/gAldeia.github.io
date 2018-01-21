@@ -10,15 +10,15 @@ function noise(value){
     return Math.random()>0.5? value : -1*value;
 }
 
-function generateLines(){
+function generateLines(language){
     let userExp = document.getElementById("expressionInput").value;
     
     if (userExp.length==0){
-        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Você não digitou uma expressão.</p></div>";
+        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'>" + (language=='pt' ? "<strong>Atenção!</strong> Você não digitou uma expressão.</p></div>" : "<strong>Attention!</strong> You have not entered an expression.</p></div>");
         return;
     }
     if (userExp.indexOf("x0")==-1){
-        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> A equação não começa com o x0.</p></div>";
+        document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'>" + (language=='pt' ? "<strong>Atenção!</strong> As variáveis não começam com o 'x0'.</p></div>" : "<strong>Attention!</strong> The variables doesn't start with 'x0'");
         return;
 	}
 
@@ -56,7 +56,7 @@ function createMatrix(expression, range, useNoise, strictlyPositive){
             result = eval(expressionAux);
         }
         catch(err){
-            document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'><strong>Atenção!</strong> Alguma coisa está errada. Verifique se não esqueceu algum operador entre dois números e se funções matemáticas (seno, cosseno, raiz, etc) estão de acordo com a sintaxe da biblioteca Math do javascript (Math.sin(), Math.cos(), Math.sqrt()).</p></div>";
+            document.getElementById("expressionOutput").innerHTML="<div class='alert alert-danger'><p class='text-justify'>" + (language=='pt'? "<strong>Atenção!</strong> Alguma coisa está errada. Verifique se não esqueceu algum operador entre dois números e se funções matemáticas (seno, cosseno, raiz, etc) estão de acordo com a sintaxe da biblioteca Math do javascript (Math.sin(), Math.cos(), Math.sqrt()).</p></div>" : "<strong>Attention!</strong> Something is wrong. Make sure you have not forgotten an operator between two numbers, and if math functions (sine, cosine, root, etc.) are in accordance with the javascript library's Math syntax (Math.sin (), Math.cos (), Math.sqrt )). </p></div>");
             return [];
         }
         if (useNoise) result += noise(result);
