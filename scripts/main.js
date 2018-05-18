@@ -18,6 +18,11 @@ function changeIcon(element, language){
         document.getElementById(element).className=down;
 }
 
+function get_example(element, language, type){
+    document.getElementById(element).value = localStorage.getItem("chosen-example");
+
+    user_upload(element, language, type);
+}
 
 function user_upload(element, language, type){
     //função para tratar o upload de dados e exibir erros para entradas 

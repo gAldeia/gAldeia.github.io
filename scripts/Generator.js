@@ -1,6 +1,22 @@
 //Generator.js
 
 
+function set_example(element){
+    console.log(element);
+    
+    var table = element.innerHTML;
+
+    let start = table.indexOf("<tbody>"); 
+    let end = table.indexOf("<\/tbody>");
+
+    table = table.slice(start +7, end);
+
+    table = table.replace(/<tr>|<\/tr>|<th>|<td>|\t/g,"");
+    table = table.replace(/<\/th>|<\/td>/g, " ");
+ 
+    localStorage.setItem("chosen-example", table);
+}
+
 function noise(value){
     //adiciona um erro nas medidas, de acordo com a porcentagem definida.
 
@@ -70,20 +86,20 @@ function createMatrix(expression, range, useNoise, strictlyPositive){
 
 function createTable(matrix, tableName){
 
-    let header = '<tr>';
+    let header = '<tbody><tr>';
     for(let i=0; i<matrix[0].length-1; i++)
-        header+= '<th>' + ('x' + i) + '</th>';
-    header += '<th>f(X)</th><tr>';
+        header+= '<th>' + ('x' + i) + '<\/th>';
+    header += '<th>f(X)<\/th><tr>';
 
     let lines = '';
     for(let i=0; i<matrix.length; i++){
         lines += '<tr>';
         for(let j=0; j<matrix[i].length; j++)
-            lines+='<td>' + matrix[i][j] + '</td>';
-        lines +='</tr>';
+            lines+='<td>' + matrix[i][j] + '<\/td>';
+        lines +='<\/tr>\n';
     }
 
-    return '<table align="center" style="width:' + matrix[0].length*65 + 'px">'+header+lines+'<caption class="text-center">'+tableName+'</caption></table>';
+    return '<\/tbody><table align="center" style="width:' + matrix[0].length*65 + 'px">'+header+lines+'<caption class="text-center">'+tableName+' <button onclick="set_example(this.parentElement.parentElement)"><span class="glyphicon glyphicon-share"><\/span><\/button><\/caption><\/table>';
 }
 
 (function(){
