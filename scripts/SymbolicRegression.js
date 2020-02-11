@@ -570,13 +570,16 @@ class SymTree{ //regressão de busca gulosa baseada em árvore
     
             //leaves <- nodes
             leaves = nodes;
-    
-            for (let i=0; i<leaves.length; i++){
+            
+            BEST = leaves[0];
+
+            for (let i=1; i<leaves.length; i++){
                 if (leaves[i].score>BEST.score){
                     BEST = leaves[i];
                 }
             }
             if (BEST.score==previousBEST.score || BEST.score > 0.99) //não houve melhoria, retorna
+            //if (BEST.score > 0.99) //não houve melhoria, retorna
                 return BEST;
             else
                 previousBEST = BEST;
@@ -596,8 +599,9 @@ class SymTree{ //regressão de busca gulosa baseada em árvore
     inverse(leaf){
         let result = [ ];
         for (let i=0; i<leaf.terms.length; i++){
-            for (let j=i; j<leaf.terms.length; j++){
-                result.push( new IT(TermManager.vSub(leaf.terms[i].exp, leaf.terms[j].exp), OP.id()) );
+            for (let j=0; j<leaf.terms.length; j++){
+                if (i!=j)
+                    result.push( new IT(TermManager.vSub(leaf.terms[i].exp, leaf.terms[j].exp), OP.id()) );
             }
         }
         return result;
@@ -630,10 +634,10 @@ class SymTree{ //regressão de busca gulosa baseada em árvore
     
         for (let i=0; i<exp_list.length; i++){
             let aux_terms = leaf.copy();
-            aux_terms = aux_terms.concat(exp_list[i].copy());
+            aux_terms = aux_terms.concat(exp_list[i]);
             let aux = TermManager.createLE(aux_terms, inputPoints);
             if (aux.score > leaf.score){//score é calculado no construtor
-                refined_exp_list.push(exp_list[i].copy());
+                refined_exp_list.push(exp_list[i]);
             }
         }
     
@@ -646,16 +650,22 @@ class SymTree{ //regressão de busca gulosa baseada em árvore
     
             for(let i=refined_exp_list.length-1; i>=0; i--){
                 let aux_terms = best.copy();
-                aux_terms = aux_terms.concat(refined_exp_list[i].copy());
+                aux_terms = aux_terms.concat(refined_exp_list[i]);
                 let aux = TermManager.createLE(aux_terms, inputPoints);
     
                 if (aux.score > best.score){
                     best = aux;
                     refined_exp_list.splice(i, 1);
                 }
-            } //fim da greedy search 
-            best.simplify(threshold);
-            children.push(best);
+            } //fim da greedy search
+            if (best !== leaf){
+                console.log("dif");
+                best.simplify(threshold);
+                children.push(best);
+            }
+            else{
+                console.log("same");
+            }
         }
     
         if (children.length>0) 
