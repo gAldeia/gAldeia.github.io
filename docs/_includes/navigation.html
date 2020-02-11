@@ -1,0 +1,46 @@
+<nav class="navbar fixed-top navbar-expand-xl navbar-light bg-light green-navbar">
+  <div class="container d-flex justify-content-between">
+
+      
+      
+      {%if page.language == 'pt-br' %}
+        <a class="navbar-brand" href="{{ site.url }}{{ site.baseurl }}/index.html"><strong>Assistente</strong> de Laboratório</a>
+      {%else%}
+        <a class="navbar-brand" href="{{ site.url }}{{ site.baseurl }}/index-en.html"><strong>Laboratory</strong> Assistant</a>
+      {%endif%}
+      
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        
+          {% assign items = site.html_pages | where: "language", page.language | sort: 'order'%}
+          {% for item in items %}
+            {% if item.page_title != '404' %}
+              <li class="nav-item {% if item.url == page.url %} active {% endif %}">
+                <a class="nav-link" href="{{ site.url }}{{ site.baseurl }}{{ item.url }}"><i class="{{ item.icon }}"></i> {{ item.page_title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <div class="navbar-nav ml-auto">
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary disabled">
+              <input type="radio" name="options" id="Language" disabled><i class="fas fa-language"></i> Language
+            </label>
+            
+            <label class="btn btn-secondary {%if page.language == 'pt-br' %}active{%endif%}">
+              <input type="radio" name="options" id="Brazilian Portuguese" autocomplete="off" {%if page.language == 'pt-br' %}checked=""{%endif%} onclick="javascript:window.location.href='{{ site.url }}{{ site.baseurl }}/index.html'; return false;"> PT-BR
+            </label>
+
+            <label class="btn btn-secondary {%if page.language == 'en-us' %}active{%endif%}">
+              <input type="radio" name="options" id="United States English" autocomplete="off" {%if page.language == 'en-us' %}checked=""{%endif%} onclick="javascript:window.location.href='{{ site.url }}{{ site.baseurl }}/index-en.html'; return false;"> EN-US
+            </label>
+          </div>
+        </div>
+      </div>
+  </div>
+</nav>
