@@ -24,43 +24,98 @@ In case you only want the algorithm source code, you'll need to download and inc
   
 ### Pre requisites
 
-The project depends on the [math.js](http://mathjs.org/) library to handle matrix operations.
+The project depends on the [math.js](http://mathjs.org/) library to handle matrix operations, [ploty.js](https://plot.ly/javascript/) for plotting the results, [Mathajax](https://www.mathjax.org/) for displaying LaTeX equations, [Bootstrap](https://getbootstrap.com/) for the structure of the site, [jQuery](https://jquery.com/) for the interactiveness, and [Font Awesome](https://fontawesome.com/) for the icons on the menus.
+
+It is important to notice that is possible to use those libraries without installing it (via CDN).
 
 ### Running
 
 1. Read the user input using one of the methods:
   ```javascript
-    manual_upload('input-text-tag-id');
-    csv_upload('input-file-tag-id');
-    
-    //both methods will create a global array of DataPoints
+    performUpload('my-manualinput', 'manual');
+    performUpload('my-csvinput', 'csv');
   ```
   
 2. Use one of the regression algorithms and store the result in a variable:
   ```javascript
-    let eITLS = new IT_LS(150, 1, 3, 50);
-    let eITES = new IT_ES(150, 1, 3, 45, 50);
-    let eSymTree = new SymTree(3, 0.05, 0, 0);
-    
-    /*
-    those parameters are a good choice if you don't know what they are or what values to use.
-    
-    Those algorithms can be very slow, but those values were tested during the development,
-    and showed good performance while keeping a satisfactory expression pool to explore.
-    
-    They will return a object called LE - Linear Expression.
-    */
+    performRegression('SymTree');
+    performRegression('ITLS');
+    performRegression('ITES');
    ```
    
-3. Now to retrieve informations from the returned LE:
+3. The performRegression method will search for some tags to set the parameters of the models:
+```javascript
+ if (algorithm==="SymTree"){
+        let iteractions = parseInt($('#symtree-iteractions').val());
+        let minI        = parseInt($('#symtree-inv').val());
+        let minT        = parseInt($('#symtree-transf').val());
+        let threshold   = parseFloat($('#symtree-threshold').val());
+        let stopscore   = parseFloat($('#symtree-stopscore').val());
+
+        configuration = {
+            iteractions       : iteractions,
+            threshold         : threshold,
+            minInverse        : minI,
+            minTransformation : minT,
+            stopscore         : stopscore
+        }
+        
+        //(Xs, ts, iterations, threshold, minI, minT, stopScore)
+        expression = SYMTREE(Xtemp, ytemp, iteractions, threshold, minI, minT, stopscore);
+    }
+
+    if (algorithm==="ITLS"){
+        let popsize     = Number($('#itls-popsize').val());
+        let startsize   = Number($('#itls-startsize').val());
+        let endsize     = Number($('#itls-endsize').val());
+        let expolim     = Number($('#itls-expolim').val());
+        let iteractions = Number($('#itls-iteractions').val());
+        let stopscore   = Number($('#itls-stopscore').val());
+
+        configuration = {
+            popsize     : popsize,
+            startsize   : startsize,
+            endsize     : endsize,
+            expolim     : expolim,
+            iteractions : iteractions,
+            stopscore   : stopscore   
+        }
+
+        //(Xs, ys, popSize, minSize, maxSize, expolim, iterations, stopScore)
+        expression = ITLS(Xtemp, ytemp, popsize, startsize, startsize+endsize, expolim, iteractions, stopscore);
+    }
+        
+    if (algorithm==="ITES"){
+        let popsize    = Number($('#ites-popsize').val());
+        let startsize  = Number($('#ites-startsize').val());
+        let endsize    = Number($('#ites-endsize').val());
+        let selecsize  = Number($('#ites-selecsize').val());
+        let expolim    = Number($('#ites-expolim').val());
+        let gens       = Number($('#ites-gens').val());
+        let stopscore  = Number($('#ites-stopscore').val());
+        
+        configuration = {
+            popsize    : popsize,
+            startsize  : startsize,
+            endsize    : endsize,
+            selecsize  : selecsize,
+            expolim    : expolim,
+            gens       : gens,
+            stopscore  : stopscore
+        }
+
+        //(Xs, ys, popSize, selectedSize, minSize, maxSize, expolim, generations, stopScore)
+        expression = ITES(Xtemp, ytemp, popsize, selecsize, startsize, startsize+endsize, expolim, gens, stopscore);
+    }
+```
+
+4. Now to retrieve informations from the returned expression:
   ```javascript
-    eSymTree.printMe(); //returns a string for printing the expression
-    eITLS.score; //returns the score of the expression
-    eITES.solve(DataPoint); //returns a predicted value for a certain datapoint
+    let exp_str   = printIT_html(expression);
+    let exp_latex = printIT_latex(expression);
   ```
-  
 ---
 
 ## License
 
-This project is licensed under the Apache License - see the [LICENSE.md](LICENSE.md) file for details
+See the [LICENSE.md](LICENSE.md) file for details.
